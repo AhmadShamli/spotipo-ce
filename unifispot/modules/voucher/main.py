@@ -160,13 +160,6 @@ class VoucherAPI(SiteModuleElementAPI):
         itemform.populate()
         if itemform.validate_on_submit(): 
             try:
-                item = self.get_modal_obj()
-                item.populate_from_form(itemform)
-                item.save()
-                #always assign siteid while creation
-                item.siteid = siteid
-                item.populate_from_dict(self.get_extrafields_modal())
-
                 cnt = 0               
                 while cnt < int(itemform.number.data):                         
                     try:
