@@ -202,7 +202,7 @@ def redirect_guest(wifisite,guesttrack):
 def assign_guest_entry(wifisite,guesttrack,form=None,fbprofile=None):
     #method to add/update guest entry and trigger export plugins
     new = False
-    
+    guest = None
     if form:
         #check if this guest data is already logged
         if hasattr(form,'email'):
