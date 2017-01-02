@@ -501,8 +501,11 @@ class GuestViewAPI(SiteDataViewAPI):
         'phonenumber','agerange','details','created_at']
 
     def _show_details(row):
-        return ','.join('{}:{}'.format(k, v) for k,v in \
+        if row and row.details:
+            return ','.join('{}:{}'.format(k, v) for k,v in \
                     sorted(row.details.items()))
+        else:
+            return ''
 
     def _show_date(row):
         return arrow.get(row.created_at).format('DD-MM-YYYY') 
