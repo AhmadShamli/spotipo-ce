@@ -36,7 +36,7 @@ class FbConfigAPI(SiteModuleAPI):
     def get_config_template(self):
         return 'module_config_facebook.html'
 
-FbConfigAPI.register(module, route_base='/s/<siteid>/fb/config')
+FbConfigAPI.register(module, route_base='/s/<siteid>/facebook/config')
 
 def validate_fbconfig(f):
     '''Decorator for validating fbconfig detials. 

@@ -29,33 +29,77 @@
                               </span>
               </a>
             </li>
+            {% set stepcount = 2 %}
+            {% if config['GUESTPRELOGIN_MODULES'] %}
             <li>
-              <a href="#step-2">
-                <span class="step_no">2</span>
+              <a href="#step-{{stepcount}}">
+                <span class="step_no">{{stepcount}}</span>
+                <span class="step_descr">
+                                  {{('Prelogin')}}<br />
+                                  <small>{{('Pre Login methods')}}</small>
+                              </span>
+              </a>
+            </li>
+            {% set stepcount = stepcount + 1 %}
+            {% endif %}
+
+            {% if config['GUESTLOGIN_MODULES'] %}
+            <li>
+              <a href="#step-{{stepcount}}">
+                <span class="step_no">{{stepcount}}</span>
                 <span class="step_descr">
                                   {{('Authentication')}}<br />
                                   <small>{{('Authentication methods')}}</small>
                               </span>
               </a>
             </li>
+            {% set stepcount = stepcount + 1 %}
+            {% endif %}
+            {% if config['GUESTPOSTLOGIN_MODULES'] %}
             <li>
-              <a href="#step-3">
-                <span class="step_no">3</span>
+              <a href="#step-{{stepcount}}">
+                <span class="step_no">{{stepcount}}</span>
+                <span class="step_descr">
+                                  {{('Postlogin')}}<br />
+                                  <small>{{('Postlogin methods')}}</small>
+                              </span>
+              </a>
+            </li>
+            {% set stepcount = stepcount + 1 %}
+            {% endif %}   
+            {% if config['GUESTEXPORT_MODULES'] %}
+            <li>
+              <a href="#step-{{stepcount}}">
+                <span class="step_no">{{stepcount}}</span>
+                <span class="step_descr">
+                                  {{('Exports')}}<br />
+                                  <small>{{('Export methods')}}</small>
+                              </span>
+              </a>
+            </li>
+            {% set stepcount = stepcount + 1 %}
+            {% endif %}                       
+            <li>
+            
+              <a href="#step-{{stepcount}}">
+                <span class="step_no">{{stepcount}}</span>
                 <span class="step_descr">
                                   {{('Report')}}<br />
                                   <small>{{('Configure reports')}}</small>
                               </span>
               </a>
+            {% set stepcount = stepcount + 1 %}
             </li>
             <li>
-              <a href="#step-5">
-                <span class="step_no">5</span>
+              <a href="#step-{{stepcount}}">
+                <span class="step_no">{{stepcount}}</span>
                 <span class="step_descr">
                                   {{('Redirect')}}<br />
                                   <small>{{('Redirect guest after login')}}</small>
                               </span>
               </a>
-            </li>            
+            </li>      
+            {% set stepcount = stepcount + 1 %}      
           </ul>
           <form  id='sitesettingsform'>
           <div id="step-1">
@@ -69,7 +113,24 @@
               </div>
 
           </div>
-          <div id="step-2">
+          {% set stepcount = 2 %}
+          {% if config['GUESTPRELOGIN_MODULES'] %}
+          <div id="step-{{stepcount}}">
+            <div class="form-horizontal">
+                {% for field in siteform %}
+                    <!--render login types -->
+                    {% if field.id is is_prelogin_method%}
+                    {{render_method_field(field)}}
+                    {%endif%}
+
+                {% endfor %}
+            </div>
+          {% set stepcount = stepcount + 1 %}
+          </div>
+          {% endif %}
+
+          {% if config['GUESTLOGIN_MODULES'] %}
+          <div id="step-{{stepcount}}">
             <div class="form-horizontal">
                 {% for field in siteform %}
                     <!--render login types -->
@@ -79,16 +140,50 @@
 
                 {% endfor %}
             </div>
-
+          {% set stepcount = stepcount + 1 %}
           </div>
-          <div id="step-3">
+          {% endif %}
+
+
+          {% if config['GUESTPOSTLOGIN_MODULES'] %}
+          <div id="step-{{stepcount}}">
+            <div class="form-horizontal">
+                {% for field in siteform %}
+                    <!--render login types -->
+                    {% if field.id is is_postlogin_method%}
+                    {{render_method_field(field)}}
+                    {%endif%}
+
+                {% endfor %}
+            </div>
+          {% set stepcount = stepcount + 1 %}
+          </div>
+          {% endif %}
+
+          {% if config['GUESTEXPORT_MODULES'] %}
+          <div id="step-{{stepcount}}">
+            <div class="form-horizontal">
+                {% for field in siteform %}
+                    <!--render login types -->
+                    {% if field.id is is_export_method%}
+                    {{render_method_field(field)}}
+                    {%endif%}
+
+                {% endfor %}
+            </div>
+          {% set stepcount = stepcount + 1 %}
+          </div>
+          {% endif %}
+
+
+          <div id="step-{{stepcount}}">
             <div class="form-horizontal"> 
                 {{render_field_with_erros(siteform.reports_type)}}
                 {{render_field_with_erros(siteform.reports_list)}}                
             </div>
-
+          {% set stepcount = stepcount + 1 %}
           </div>
-          <div id="step-5">
+          <div id="step-{{stepcount}}">
                 <div class="form-horizontal"> 
                     {{render_field_with_erros(siteform.redirect_url)}}
                     
@@ -96,7 +191,7 @@
 
                 <button id='sitesettingsform-save-button' class='fake-submit' value="{{siteid}}"></button>
 
-            
+          {% set stepcount = stepcount + 1 %}  
           </div>
           </form>
         </div>
@@ -126,17 +221,25 @@
 
          var siteform = new AjaxForm("{{url_for('WifisiteAPI:index')}}",'sitesettingsform',"{{siteid}}");
 
-          var generalmodal = new ModuleGeneralForm('general_modal');
 
-          var emailform = new ModuleForm("/s/{{siteid}}/email/config/",'general_modal','auth_email-btn')
+          //conig options for different modules
 
-          var fbconfigform = new ModuleForm("/s/{{siteid}}/fb/config/",'general_modal','auth_facebook-btn')
+          {% for mod in config['GUESTLOGIN_MODULES'] %}
+              new ModuleForm("/s/{{siteid}}/{{mod}}/config/",'general_modal','auth_{{mod}}-btn')
+          {% endfor %}
 
-          var fbconfigform = new ModuleForm("/s/{{siteid}}/voucher/config/",'general_modal','auth_voucher-btn')
+          {% for mod in config['GUESTPRELOGIN_MODULES'] %}
+              new ModuleForm("/s/{{siteid}}/{{mod}}/config/",'general_modal','preauth_{{mod}}-btn')
+          {% endfor %}                  
 
-          var fbconfigform = new ModuleForm("/s/{{siteid}}/payment/config/",'general_modal','auth_payment-btn')      
+          {% for mod in config['GUESTPOSTLOGIN_MODULES'] %}
+              new ModuleForm("/s/{{siteid}}/{{mod}}/config/",'general_modal','postauth_{{mod}}-btn')
+          {% endfor %}       
 
-          var fbconfigform = new ModuleForm("/s/{{siteid}}/phone/config/",'general_modal','auth_phone-btn')   
+
+          {% for mod in config['GUESTEXPORT_MODULES'] %}
+              new ModuleForm("/s/{{siteid}}/{{mod}}/config/",'general_modal','export_{{mod}}-btn')
+          {% endfor %}              
 
          //Hide the fake submit link
          $('.fake-submit').hide();
@@ -158,31 +261,38 @@
         //---------------Input login config boxes
         $('input[type="checkbox"]').change(function(){ 
 
-            if($('#auth_email' ).is(":checked")){
-                $('#auth_email-btn').show();
-            }else{
-                $('#auth_email-btn').hide();
-            }
-            if($('#auth_facebook' ).is(":checked")){
-                $('#auth_facebook-btn').show();
-            }else{
-                $('#auth_facebook-btn').hide();
-            }
-            if($('#auth_phone' ).is(":checked")){
-                $('#auth_phone-btn').show();
-            }else{
-                $('#auth_phone-btn').hide();
-            }
-            if($('#auth_voucher' ).is(":checked")){
-                $('#auth_voucher-btn').show();
-            }else{
-                $('#auth_voucher-btn').hide();
-            }
-            if($('#auth_payment' ).is(":checked")){
-                $('#auth_payment-btn').show();
-            }else{
-                $('#auth_payment-btn').hide();
-            }
+          {% for mod in config['GUESTLOGIN_MODULES'] %}
+              if($('#auth_{{mod}}' ).is(":checked")){
+                  $('#auth_{{mod}}-btn').show();
+              }else{
+                  $('#auth_{{mod}}-btn').hide();
+              }
+          {% endfor %}
+
+          {% for mod in config['GUESTPRELOGIN_MODULES'] %}
+              if($('#preauth_{{mod}}' ).is(":checked")){
+                  $('#preauth_{{mod}}-btn').show();
+              }else{
+                  $('#preauth_{{mod}}-btn').hide();
+              }
+          {% endfor %}                  
+
+          {% for mod in config['GUESTPOSTLOGIN_MODULES'] %}
+              if($('#postauth_{{mod}}' ).is(":checked")){
+                  $('#postauth_{{mod}}-btn').show();
+              }else{
+                  $('#postauth_{{mod}}-btn').hide();
+              }
+          {% endfor %}       
+
+
+          {% for mod in config['GUESTEXPORT_MODULES'] %}
+              if($('#export_{{mod}}' ).is(":checked")){
+                  $('#export_{{mod}}-btn').show();
+              }else{
+                  $('#export_{{mod}}-btn').hide();
+              }
+          {% endfor %}             
 
 
         });  

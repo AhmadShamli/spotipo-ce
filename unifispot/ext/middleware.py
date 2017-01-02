@@ -19,6 +19,40 @@ def configure(app):
             return True
         else:
             return False
+
+    #create test to check if a fieldname 
+    #in siteform points to a prelogin method
+    @app.template_test('is_prelogin_method')
+    def is_prelogin_method(fieldname):
+        preloginmethods = app.config['GUESTPRELOGIN_MODULES']          
+        if fieldname.split('_')[0] == 'preauth' and \
+                fieldname.split('_')[1] in preloginmethods:
+            return True
+        else:
+            return False
+
+    #create test to check if a fieldname 
+    #in siteform points to a postlogin method
+    @app.template_test('is_postlogin_method')
+    def is_postlogin_method(fieldname):
+        postloginmethods = app.config['GUESTPOSTLOGIN_MODULES']          
+        if fieldname.split('_')[0] == 'postauth' and \
+                fieldname.split('_')[1] in postloginmethods:
+            return True
+        else:
+            return False
+
+    #create test to check if a fieldname 
+    #in siteform points to a export method
+    @app.template_test('is_export_method')
+    def is_export_method(fieldname):
+        exportmethods = app.config['GUESTEXPORT_MODULES']          
+        if fieldname.split('_')[0] == 'export' and \
+                fieldname.split('_')[1] in exportmethods:
+            return True
+        else:
+            return False
+
                 
     @app.template_filter()
     def toint(value):

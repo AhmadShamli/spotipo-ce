@@ -105,7 +105,20 @@ def get_wifisite_form(baseform=False):
             fieldlabel = _l('%s Login'%lmethod.title())
             setattr(F,fieldname,TextField(fieldlabel))        
 
-       
+        for method in current_app.config['GUESTPRELOGIN_MODULES']:
+            fieldname = 'preauth_%s'%method
+            fieldlabel = _l('Prelogin %s '%method.title())
+            setattr(F,fieldname,TextField(fieldlabel)) 
+ 
+        for method in current_app.config['GUESTPOSTLOGIN_MODULES']:
+            fieldname = 'postauth_%s'%method
+            fieldlabel = _l('Postlogin %s '%method.title())
+            setattr(F,fieldname,TextField(fieldlabel)) 
+
+        for method in current_app.config['GUESTEXPORT_MODULES']:
+            fieldname = 'export_%s'%method
+            fieldlabel = _l('Prelogin %s '%method.title())
+            setattr(F,fieldname,TextField(fieldlabel))                    
 
     return F() 
 

@@ -50,10 +50,21 @@ def load_from_folder(app):
             url_prefix = app.config.get(fname.upper() + '_URL_PREFIX','')
             app.register_blueprint(blueprint,url_prefix=url_prefix)
 
-            #find and register login methods
+            #find and register modules
             if blueprint.mtype == 'login':
-                logger.info("registering loginmethod: %s" % fname)
+                logger.info("registering login module: %s" % fname)
                 app.config['GUESTLOGIN_MODULES'].append(fname)
+            elif blueprint.mtype == 'prelogin':
+                logger.info("registering prelogin module: %s" % fname)
+                app.config['GUESTPRELOGIN_MODULES'].append(fname)
+            elif blueprint.mtype == 'postlogin':
+                logger.info("registering postlogin module: %s" % fname)
+                app.config['GUESTPOSTLOGIN_MODULES'].append(fname)
+            elif blueprint.mtype == 'export':
+                logger.info("registering export module: %s" % fname)
+                app.config['GUESTEXPORT_MODULES'].append(fname)
+
+
 
             #load all celery tasks
 
