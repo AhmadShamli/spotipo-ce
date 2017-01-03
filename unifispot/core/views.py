@@ -243,7 +243,7 @@ class WifisiteAPI(RESTView):
         itemform.populate()
         if itemform.validate_on_submit(): 
             try:
-                item = self.get_modal_obj()
+                item = self.get_modal_obj()()
                 item.site_from_baseform(itemform)
                 item.populate_from_dict(self.get_extrafields_modal())
                 item.save()
