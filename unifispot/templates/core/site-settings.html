@@ -221,24 +221,25 @@
 
          var siteform = new AjaxForm("{{url_for('WifisiteAPI:index')}}",'sitesettingsform',"{{siteid}}");
 
+         var generalmodal = new ModuleGeneralForm('general_modal');
 
           //conig options for different modules
 
           {% for mod in config['GUESTLOGIN_MODULES'] %}
-              new ModuleForm("/s/{{siteid}}/{{mod}}/config/",'general_modal','auth_{{mod}}-btn')
+              new ModuleForm("/s/{{siteid}}/{{mod}}/config/",'general_modal','auth_{{mod}}-btn');
           {% endfor %}
 
           {% for mod in config['GUESTPRELOGIN_MODULES'] %}
-              new ModuleForm("/s/{{siteid}}/{{mod}}/config/",'general_modal','preauth_{{mod}}-btn')
+              new ModuleForm("/s/{{siteid}}/{{mod}}/config/",'general_modal','preauth_{{mod}}-btn');
           {% endfor %}                  
 
           {% for mod in config['GUESTPOSTLOGIN_MODULES'] %}
-              new ModuleForm("/s/{{siteid}}/{{mod}}/config/",'general_modal','postauth_{{mod}}-btn')
+              new ModuleForm("/s/{{siteid}}/{{mod}}/config/",'general_modal','postauth_{{mod}}-btn');
           {% endfor %}       
 
 
           {% for mod in config['GUESTEXPORT_MODULES'] %}
-              new ModuleForm("/s/{{siteid}}/{{mod}}/config/",'general_modal','export_{{mod}}-btn')
+              new ModuleForm("/s/{{siteid}}/{{mod}}/config/",'general_modal','export_{{mod}}-btn');
           {% endfor %}              
 
          //Hide the fake submit link
