@@ -57,7 +57,7 @@ class RESTView(FlaskView):
                 columns.append(ColumnDT(col))
 
         # defining the initial query depending on your purpose
-        query = self.get_modal_obj().get_query()
+        query = self.get_modal_obj()().get_query()
 
         # instantiating a DataTable for the query and table needed
         rowTable = DataTables(request.args, self.get_modal_obj(), query, columns)
@@ -66,7 +66,7 @@ class RESTView(FlaskView):
         return jsonify(rowTable.output_result())             
         
     def get(self,id):        
-        item = self.get_modal_obj().query.get(id)    
+        item = self.get_modal_obj()().query.get(id)    
         if item:
             return jsonify({'status':1,'data':item.to_dict()})   
         else:
@@ -80,7 +80,7 @@ class RESTView(FlaskView):
         itemform.populate()
         if itemform.validate_on_submit(): 
             try:
-                item = self.get_modal_obj()
+                item = self.get_modal_obj()()
                 item.populate_from_form(itemform)
                 item.save()
                 item.populate_from_dict(self.get_extrafields_modal())
@@ -103,7 +103,7 @@ class RESTView(FlaskView):
             return jsonify({'status':0,'data':{}, 'msg':get_form_errors(itemform)})
 
     def put(self,id):
-        item = self.get_modal_obj().query.get(id) 
+        item = self.get_modal_obj()().query.get(id) 
         if item:
             itemform = self.get_form_obj()
             itemform.populate()
@@ -136,7 +136,7 @@ class RESTView(FlaskView):
                     specified',name=self.get_name())})
 
     def delete(self,id):
-        item = self.get_modal_obj().query.get(id)    
+        item = self.get_modal_obj()().query.get(id)    
         if item:
             try:
                 item.delete()
@@ -185,9 +185,9 @@ class SiteModuleAPI(FlaskView):
 
     def index(self,siteid):
         #this view is used to populate 
-        item = self.get_modal_obj().query.filter_by(siteid=siteid).first()
+        item = self.get_modal_obj()().query.filter_by(siteid=siteid).first()
         if not item:
-            item = self.get_modal_obj()
+            item = self.get_modal_obj()()
             item.siteid = siteid
             item.save()  
 
@@ -202,9 +202,9 @@ class SiteModuleAPI(FlaskView):
         return render_template(self.get_config_template(),itemform=itemform)        
 
     def post(self,siteid):
-        item = self.get_modal_obj().query.filter_by(siteid=siteid).first()  
+        item = self.get_modal_obj()().query.filter_by(siteid=siteid).first()  
         if not item:
-            item =  self.get_modal_obj()
+            item =  self.get_modal_obj()()
             item.siteid = siteid
         itemform = self.get_form_obj()
         itemform.populate()
@@ -271,8 +271,8 @@ class SiteDataViewAPI(FlaskView):
             enddate = today.replace(days=1)
 
         if download:
-            csvHeading = ','.join(self.get_modal_obj().get_titles())
-            elements = self.get_modal_obj().get_query(siteid=siteid,startdate=startdate,
+            csvHeading = ','.join(self.get_modal_obj()().get_titles())
+            elements = self.get_modal_obj()().get_query(siteid=siteid,startdate=startdate,
                                     enddate=enddate).all()
             csvList = '\n'.join(','.join(row.to_row()) for row in elements) 
 
@@ -301,7 +301,7 @@ class SiteDataViewAPI(FlaskView):
                     columns.append(ColumnDT(col))
 
             # defining the initial query depending on your purpose
-            query = self.get_modal_obj().get_query(siteid=siteid,startdate=startdate,
+            query = self.get_modal_obj()().get_query(siteid=siteid,startdate=startdate,
                                     enddate=enddate)
             
 
@@ -360,8 +360,8 @@ class SiteModuleElementAPI(FlaskView):
             enddate = today.replace(days=1)
 
         if download:
-            csvHeading = ','.join(self.get_modal_obj().get_titles())
-            elements = self.get_modal_obj().get_query(siteid=siteid,startdate=startdate,
+            csvHeading = ','.join(self.get_modal_obj()().get_titles())
+            elements = self.get_modal_obj()().get_query(siteid=siteid,startdate=startdate,
                                     enddate=enddate).all()
             csvList = '\n'.join(','.join(row.to_list()) for row in elements) 
 
@@ -390,7 +390,7 @@ class SiteModuleElementAPI(FlaskView):
                     columns.append(ColumnDT(col))
 
             # defining the initial query depending on your purpose
-            query = self.get_modal_obj().get_query(siteid=siteid,startdate=startdate,
+            query = self.get_modal_obj()().get_query(siteid=siteid,startdate=startdate,
                                     enddate=enddate)
 
             # instantiating a DataTable for the query and table needed
@@ -400,7 +400,7 @@ class SiteModuleElementAPI(FlaskView):
             return jsonify(rowTable.output_result())              
         
     def get(self,siteid,id):        
-        item = self.get_modal_obj().query.get(id)    
+        item = self.get_modal_obj()().query.get(id)    
         if item:
             return jsonify({'status':1,'data':item.to_dict()})   
         else:
@@ -414,7 +414,7 @@ class SiteModuleElementAPI(FlaskView):
         itemform.populate()
         if itemform.validate_on_submit(): 
             try:
-                item = self.get_modal_obj()
+                item = self.get_modal_obj()()
                 item.populate_from_form(itemform)
                 item.save()
                 #always assign siteid while creation
@@ -439,7 +439,7 @@ class SiteModuleElementAPI(FlaskView):
             return jsonify({'status':0,'data':{}, 'msg':get_form_errors(itemform)})
 
     def put(self,siteid,id):
-        item = self.get_modal_obj().query.get(id) 
+        item = self.get_modal_obj()().query.get(id) 
         if item:
             itemform = self.get_form_obj()
             itemform.populate()
@@ -472,7 +472,7 @@ class SiteModuleElementAPI(FlaskView):
                     specified',name=self.get_name())})
 
     def delete(self,siteid,id):
-        item = self.get_modal_obj().query.get(id)    
+        item = self.get_modal_obj()().query.get(id)    
         if item:
             try:
                 item.delete()

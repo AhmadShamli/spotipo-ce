@@ -31,7 +31,7 @@ class FbConfigAPI(SiteModuleAPI):
         return self.__class__.__name__
 
     def get_modal_obj(self): 
-        return Fbconfig()
+        return Fbconfig
 
     def get_config_template(self):
         return 'module_config_facebook.html'

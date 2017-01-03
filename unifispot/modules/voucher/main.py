@@ -43,7 +43,7 @@ class VoucherConfigAPI(SiteModuleAPI):
         return self.__class__.__name__
 
     def get_modal_obj(self): 
-        return Voucherconfig()
+        return Voucherconfig
 
     def get_config_template(self):
         return 'module_config_voucher.html'
@@ -59,7 +59,7 @@ class VoucherDesignAPI(SiteModuleAPI):
         return self.__class__.__name__
 
     def get_modal_obj(self): 
-        return Voucherdesign()
+        return Voucherdesign
 
     #index method will return json
     def index(self,siteid):
@@ -141,7 +141,7 @@ class VoucherAPI(SiteModuleElementAPI):
                         'duration_val':_show_duration,'bytes_t':_show_details}
 
     def get_modal_obj(self):
-        return Voucher()
+        return Voucher
 
     def get_form_obj(self):
         return VoucherForm()
@@ -163,7 +163,7 @@ class VoucherAPI(SiteModuleElementAPI):
                 cnt = 0               
                 while cnt < int(itemform.number.data):                         
                     try:
-                        item = self.get_modal_obj()  
+                        item = self.get_modal_obj()()  
                         item.populate_from_form(itemform)          
                         #create voucher
                         item.voucher = '%s%s'%(itemform.batchid.data,

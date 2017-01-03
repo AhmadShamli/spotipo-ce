@@ -37,7 +37,7 @@ class EmailConfigAPI(SiteModuleAPI):
         return self.__class__.__name__
 
     def get_modal_obj(self): 
-        return Emailconfig()
+        return Emailconfig
 
     def get_config_template(self):
         return 'module_config_email.html'

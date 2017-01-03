@@ -56,7 +56,7 @@ class UserAPI(RESTView):
     decorators = [login_required,allow_only_self]
 
     def get_modal_obj(self):
-        return User()
+        return User
 
     def get_form_obj(self):
         return UserForm()
@@ -86,7 +86,7 @@ class AdminAPI(RESTView):
     displayfilters = {'id' :render_dt_buttons}
 
     def get_modal_obj(self):
-        return Admin()
+        return Admin
 
     def get_form_obj(self):
         return UserForm()
@@ -117,7 +117,7 @@ class ClientAPI(RESTView):
     displayfilters = {'id' :render_dt_buttons}    
 
     def get_modal_obj(self):
-        return Client()
+        return Client
 
     def get_form_obj(self):
         return UserForm()
@@ -142,7 +142,7 @@ class NotificationAPI(RESTView):
     decorators = [login_required]
 
     def get_modal_obj(self):
-        return User()
+        return User
 
     def get_form_obj(self):
         return UserForm()
@@ -173,7 +173,7 @@ class AccountAPI(RESTView):
     decorators = [login_required,admin_required]
 
     def get_modal_obj(self):
-        return Account()
+        return Account
 
     def get_form_obj(self):
         return AccountForm()
@@ -206,7 +206,7 @@ class WifisiteAPI(RESTView):
     displaycolumns = []
 
     def get_modal_obj(self):
-        return Wifisite()
+        return Wifisite
 
     def get_form_obj(self):
         return get_wifisite_form()
@@ -382,7 +382,7 @@ class FileAPI(SiteModuleAPI):
     '''
 
     def get_modal_obj(self):
-        return Sitefile()
+        return Sitefile
 
     def get_name(self):
         return 'File'
@@ -520,7 +520,7 @@ class GuestViewAPI(SiteDataViewAPI):
         return 'Guest'
 
     def get_modal_obj(self): 
-        return Guest()   
+        return Guest   
 
 class GuestDataManage(FlaskView):
     decorators = [login_required,admin_required]
