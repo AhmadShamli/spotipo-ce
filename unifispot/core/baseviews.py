@@ -358,12 +358,12 @@ class SiteModuleElementAPI(FlaskView):
         else:
             startdate = today.replace(days=1 - today.day)
             enddate = today.replace(days=1)
-
+            
         if download:
             csvHeading = ','.join(self.get_modal_obj()().get_titles())
             elements = self.get_modal_obj()().get_query(siteid=siteid,startdate=startdate,
                                     enddate=enddate).all()
-            csvList = '\n'.join(','.join(row.to_list()) for row in elements) 
+            csvList = '\n'.join(','.join(row.to_row()) for row in elements) 
 
             # We need to modify the response, so the first thing we 
             # need to do is create a response out of the CSV string
@@ -379,7 +379,7 @@ class SiteModuleElementAPI(FlaskView):
             content_header = "attachment; filename=%s-%s-%s.csv"%(self.get_name(),
                                         tstart,tend)
             response.headers["Content-Disposition"] = content_header
-            return response            
+            return response               
         else:
             columns = []
             for col in self.displaycolumns:

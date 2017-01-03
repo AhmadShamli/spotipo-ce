@@ -178,4 +178,6 @@ var DataTableWithEdit = function(table_id,datatable_config,api_url,modal,pagerel
         data_table.ajax.reload();
     });
 
+    return data_table;
+
 };
