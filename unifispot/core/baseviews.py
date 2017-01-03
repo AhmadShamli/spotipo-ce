@@ -267,7 +267,7 @@ class SiteDataViewAPI(FlaskView):
             enddate =  arrow.get(r_enddate,'DD/MM/YYYY',
                                     tzinfo=tzinfo).replace(days=1)          
         else:
-            startdate = today.replace(days=1 - today.day)
+            startdate = today.replace(days=-30)
             enddate = today.replace(days=1)
 
         if download:
@@ -356,7 +356,7 @@ class SiteModuleElementAPI(FlaskView):
             enddate =  arrow.get(r_enddate,'DD/MM/YYYY',
                                     tzinfo=tzinfo).replace(days=1)          
         else:
-            startdate = today.replace(days=1 - today.day)
+            startdate = today.replace(days=-30)
             enddate = today.replace(days=1)
             
         if download:
