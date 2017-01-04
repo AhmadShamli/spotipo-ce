@@ -70,10 +70,12 @@ GUESTPOSTLOGIN_MODULES = []
 
 GUESTEXPORT_MODULES = []
 
-DEFAULT_POST_AUTH_URL = 'http://unifispot.com'
+DEFAULT_POST_AUTH_URL = 'http://spotipo.com'
 TEMPLATES_AUTO_RELOAD = True
 
 NO_UNIFI=False
 
 
 NOTIFICATION_URL = 'http://spotipo.com/notifications/'
+
+LOGO_URL= 'https://spotipo.com/static/mainsite/images/logo_small_email.png'

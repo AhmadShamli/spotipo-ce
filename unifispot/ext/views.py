@@ -53,13 +53,16 @@ def configure(app):
 
     @app.context_processor
     def inject_userform():
-        userform = UserForm()
-        userform.populate()            
-        return dict(userform=userform)
+        if current_user and current_user.is_authenticated:
+            userform = UserForm()
+            userform.populate()            
+            return dict(userform=userform)
+        else:
+             return {}            
 
     @app.context_processor
     def inject_newsiteform():
-        if current_user.is_authenticated:
+        if current_user and current_user.is_authenticated:
             newsiteform = get_wifisite_form(baseform=True)
             newsiteform.populate()            
             return dict(newsiteform=newsiteform)
