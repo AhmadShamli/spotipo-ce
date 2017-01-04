@@ -15,6 +15,7 @@ from unifispot.core.models import Wifisite,Guesttrack,Device,Guest,\
                                 Landingpage
 from unifispot.core.const import *
 from unifispot.utils.translation import _l,_n,_
+from unifispot.core.signals import newguest_signup,guest_loggedin
 
 logger = logging.getLogger()
 
@@ -228,10 +229,14 @@ def assign_guest_entry(wifisite,guesttrack,form=None,fbprofile=None):
         #update guest
         guest.populate_from_fb_profile(fbprofile,wifisite)
         guest.save()
-    #call export function if its a new guest
+
+    #send desired signals
+    guest_details = {'siteid':wifisite.id,'track':guesttrack.id,
+                        'guest':guest.id}
     if new:
-        pass
-        #celery_export_api.delay(guest.id) 
+        newguest_signup.send(guest_details)
+    guest_loggedin.send(guest_details)
+
     return guest
 
 
