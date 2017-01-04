@@ -746,7 +746,7 @@ class Guesttrack(CRUDMixin,SerializerMixin,db.Model):
         '''method to update extrainfo value for this track
 
         '''
-        oldinfo = dict(self.extrainfo)
+        oldinfo = dict(self.extrainfo) if self.extrainfo else {}
         oldinfo[key] = val
         self.extrainfo = oldinfo
         self.save()
