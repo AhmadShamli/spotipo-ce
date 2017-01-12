@@ -202,7 +202,7 @@ class WifisiteAPI(RESTView):
     ''' View used for Wifisite api, returns rendered form when calling form
 
     '''
-    decorators = [login_required,admin_required,get_account_validator('Wifisite')]
+    decorators = [login_required,get_account_validator('Wifisite')]
     displaycolumns = []
 
     def get_modal_obj(self):
@@ -224,8 +224,12 @@ class WifisiteAPI(RESTView):
         '''
         try:
             data = []
-            sites = self.get_modal_obj().query.filter_by(account_id=
+            if current_user.type =='admin':
+                sites = self.get_modal_obj().query.filter_by(account_id=
                         current_user.account_id).all()
+            else:
+                sites = self.get_modal_obj().query.filter_by(account_id=
+                        current_user.account_id,client_id=current_user.id).all()                
             for site in sites:
                 data.append({'id':site.id,'name':site.name,
                                 'url':url_for('SiteDashboard:index',siteid=site.id)})
@@ -299,10 +303,10 @@ class WifisiteAPI(RESTView):
 
 
 class WifisiteManage(FlaskView):
-    decorators = [login_required,admin_required]
+    decorators = [login_required,validate_site_ownership]
 
     @classy_menu_item('.settings', _l('Settings'),icon='fa-cogs',
-                            visible_when=admin_site_menu,order=1)
+                            visible_when=site_menu,order=1)
     def index(self,siteid):
         wifisite = Wifisite.query.get(siteid)
         siteform = get_wifisite_form()
@@ -325,7 +329,7 @@ class LandingpageAPI(FlaskView):
     ''' View used for Landingpage api
 
     '''
-    decorators = [login_required,admin_required,validate_site_ownership]
+    decorators = [login_required,validate_site_ownership]
 
     def get_modal_obj(self):
         return Landingpage()
@@ -459,10 +463,10 @@ class FileAPI(SiteModuleAPI):
 
     
 class LandingpageManage(FlaskView):
-    decorators = [login_required,admin_required]
+    decorators = [login_required,validate_site_ownership]
 
     @classy_menu_item('.landingpage', _l('Landingpage'),icon='fa-desktop',
-                            visible_when=admin_site_menu,order=2)
+                            visible_when=site_menu,order=2)
     def index(self,siteid):
         landingform = LandingPageForm()
         landingform.populate()
@@ -476,7 +480,7 @@ class LandingpageManage(FlaskView):
                                 landingfilesform=landingfilesform,wifisite=wifisite)        
 
 class LandingpagePreview(FlaskView):
-    decorators = [login_required,admin_required]
+    decorators = [login_required,validate_site_ownership]
 
     def index(self,siteid):
         wifisite = Wifisite.query.get(siteid)
@@ -499,6 +503,8 @@ class GuestViewAPI(SiteDataViewAPI):
     #columns that will be shown in the datatable
     displaycolumns = ['email','firstname','lastname',
         'phonenumber','agerange','details','created_at']
+
+    decorators = [login_required,validate_site_ownership]
 
     def _show_details(row):
         if row and row.details:
@@ -523,10 +529,10 @@ class GuestViewAPI(SiteDataViewAPI):
         return Guest   
 
 class GuestDataManage(FlaskView):
-    decorators = [login_required,admin_required]
+    decorators = [login_required]
 
     @classy_menu_item('.guestdata', _l('Guests'),icon='fa-users',
-                            visible_when=admin_site_menu,order=3)
+                            visible_when=site_menu,order=3)
     def index(self,siteid):
         wifisite = Wifisite.query.get(siteid)
         return render_template('core/site-guestdata.html',siteid=siteid,

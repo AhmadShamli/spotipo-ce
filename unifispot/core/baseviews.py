@@ -163,7 +163,7 @@ class SiteModuleAPI(FlaskView):
         Index return rendered HTMl for config modal
 
     '''
-    decorators = [login_required,admin_required,validate_site_ownership]
+    decorators = [login_required,validate_site_ownership]
 
 
     def get_form_obj(self):

@@ -65,7 +65,6 @@ def celery_session_history(*args, **kwargs):
     #get all sites in mongodb and try to map to an equivalent wifisite
     site_dict = {}
     for site in sites.find():
-        print site
         wifisite = Wifisite.query.filter_by(sitekey=site['name']).first()
         siteid = None
         if wifisite:
