@@ -15,6 +15,7 @@ from unifispot.core.models import Wifisite,Guesttrack,Device,Guest,\
                                 Landingpage
 from unifispot.core.const import *
 from unifispot.utils.translation import _l,_n,_
+from unifispot.core.signals import newguest_signup,guest_loggedin
 
 logger = logging.getLogger()
 
@@ -129,8 +130,14 @@ def redirect_guest(wifisite,guesttrack):
     ##check preauth settings for this site
     if guesttrack.state == GUESTTRACK_PRELOGIN:
         #check if any pre login methods are configured for this site
-        guesttrack.state = GUESTTRACK_LOGIN
-        guesttrack.save()
+        prelogins = wifisite.get_methods('preauth_methods')
+        if prelogins:
+            preauth_module = prelogins[0].split('_')[1]
+            return  redirect(url_for('unifispot.modules.%s.guest_prelogin'%\
+                                preauth_module,trackid=guesttrack.trackid))
+        else:
+            guesttrack.state = GUESTTRACK_LOGIN
+            guesttrack.save()
 
 
     if guesttrack.state == GUESTTRACK_LOGIN:
@@ -184,9 +191,13 @@ def redirect_guest(wifisite,guesttrack):
         return redirect(url_for('unifispot.modules.%s.guest_auth'%\
                 wifisite.backend_type,trackid=guesttrack.trackid))
 
+                   
 
-    if guesttrack.state == GUESTTRACK_POST_AUTH:
-        #redirect guest to POST AUTH methods
+        guestlog_warn('unknown state :%s for guestrack '%guesttrack.state,wifisite,guesttrack)
+        abort(404)        
+   
+def show_message(wifisite,guesttrack):
+    #function used for redirecting a guest after authorization   
         redirect_url = wifisite.redirect_url or \
                     current_app.config['DEFAULT_POST_AUTH_URL']
         landingpage = Landingpage.query.filter_by(siteid=wifisite.id).first()
@@ -194,10 +205,8 @@ def redirect_guest(wifisite,guesttrack):
                 wifisite=wifisite,landingpage=landingpage,trackid=guesttrack.trackid,
                 redirect_url=redirect_url) 
                     
+        
 
-        guestlog_warn('unknown state :%s for guestrack '%guesttrack.state,wifisite,guesttrack)
-        abort(404)        
-   
 
 def assign_guest_entry(wifisite,guesttrack,form=None,fbprofile=None):
     #method to add/update guest entry and trigger export plugins
@@ -228,10 +237,14 @@ def assign_guest_entry(wifisite,guesttrack,form=None,fbprofile=None):
         #update guest
         guest.populate_from_fb_profile(fbprofile,wifisite)
         guest.save()
-    #call export function if its a new guest
+
+    #send desired signals
+    guest_details = {'siteid':wifisite.id,'track':guesttrack.id,
+                        'guestid':guest.id}
     if new:
-        pass
-        #celery_export_api.delay(guest.id) 
+        newguest_signup.send(guest_details)
+    guest_loggedin.send(guest_details)
+
     return guest
 
 

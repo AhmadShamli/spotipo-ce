@@ -11,7 +11,7 @@ from unifispot.core.const import *
 from unifispot.core.models import Wifisite,Loginauth,Account,Guestsession
 from unifispot.core.guestutils import validate_track,init_track,redirect_guest,\
                                     guestlog_warn,guestlog_info,guestlog_exception,\
-                                    guestlog_exception
+                                    guestlog_exception,show_message
 
 logger =logging.getLogger('unifi')
 
@@ -140,8 +140,7 @@ def guest_auth(trackid,guesttrack,wifisite,guestdevice,account):
     try:
         c = Controller(account=account,sitekey=wifisite.sitekey)  
         c.authorize_guest(guesttrack.devicemac,duration,ap_mac=guesttrack.apmac,
-            up_bandwidth=loginauth.speed_ul,down_bandwidth=loginauth.speed_dl,
-            byte_quota=loginauth.data_limit)    
+            up_bandwidth=loginauth.speed_ul,down_bandwidth=loginauth.speed_dl)    
     except:
         guestlog_exception('exception while trying to authorize guest',wifisite,guesttrack)
         abort(500)   
@@ -155,10 +154,7 @@ def guest_auth(trackid,guesttrack,wifisite,guestdevice,account):
     guestsession.trackid= guesttrack.id
     guestsession.save()
 
-    guesttrack.state = GUESTTRACK_POST_AUTH
-    guesttrack.save()
-
-    return redirect_guest(wifisite,guesttrack) 
+    return show_message(wifisite,guesttrack) 
 
 @module.route('/unifi/tempauth/<trackid>/',methods = ['GET', 'POST'])
 @validate_track

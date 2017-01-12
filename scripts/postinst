@@ -119,9 +119,6 @@ case "$1" in
         cp /usr/share/nginx/spotipo/scripts/wifiapp.conf /etc/nginx/sites-available/wifiapp.conf
         ln -sf /etc/nginx/sites-available/wifiapp.conf /etc/nginx/sites-enabled/wifiapp
 
-    else
-        cp /usr/share/nginx/spotipo/scripts/wifiapp.conf /etc/nginx/sites-available/wifiapp.conf
-        ln -sf /etc/nginx/sites-available/wifiapp.conf /etc/nginx/sites-enabled/wifiapp
     fi
 
     if [ ! -f /etc/supervisor/conf.d/unifispot_celery.conf ]; then

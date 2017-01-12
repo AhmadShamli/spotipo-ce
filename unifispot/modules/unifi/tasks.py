@@ -17,7 +17,7 @@ from .controller import Controller
 
 logger =logging.getLogger('unifi.tasks')
 
-@periodic_task(run_every=(crontab(minute="*/5")))
+@periodic_task(run_every=(crontab(minute="*/1")))
 def celery_session_monitor(*args, **kwargs):
     logger.info('-----------Running celery_session_monitor-----------------------')
     sites = Wifisite.query.filter_by(backend_type='unifi').all()
@@ -54,7 +54,7 @@ def celery_session_monitor(*args, **kwargs):
 
 
 
-@periodic_task(run_every=(crontab(minute="*/5")))
+@periodic_task(run_every=(crontab(minute="*/1")))
 def celery_session_history(*args, **kwargs):
     logger.info('-----------Running celery_session_history-----------------------')
     client = MongoClient('localhost', 27117)
@@ -79,7 +79,7 @@ def celery_session_history(*args, **kwargs):
 
     logger.debug('Checking guest sessions')
 
-    for guest in guests.find({'end':{'$gt':utcwindow}}):
+    for guest in guests.find({'end':{'$gt':utcwindow},"authorized_by" : "api"}):
         start = arrow.get(guest.get('start')).humanize()
         end   = arrow.get(guest.get('end')).humanize()
         tx_bytes = guest.get('tx_bytes',0)

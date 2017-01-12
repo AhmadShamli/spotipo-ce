@@ -7,9 +7,10 @@ from celery.task.schedules import crontab
 from celery.decorators import periodic_task
 from dateutil import tz
 import requests
+import importlib
 
 
-from unifispot.core.models import Wifisite,Guestsession,Notification,Account
+from unifispot.core.models import Wifisite,Guestsession,Notification,Account,Guest
 from unifispot.ext.celeryext import celery
 from unifispot.core.utils import send_email,compare_versions
 from unifispot.version import version
@@ -44,3 +45,33 @@ def celery_get_notification(*args, **kwargs):
                 n.save()
          
     return 1
+
+@celery.task(autoretry_on=Exception,max_retries=5)
+def celery_run_exports(guestid,siteid):  
+    site = Wifisite.query.get(siteid)   
+    guest = Guest.query.get(guestid)
+    if not site or not guest:
+        logger.error('-------Invalid  guest:%s or site:%s'%(guestid,siteid))
+        return 0
+    logger.debug('-------Running exports for guest:%s site:%s'%(guestid,siteid))
+    #get all the export methods configured for this site
+    export_methods = site.get_methods('export_methods')
+    if not export_methods:
+        logger.debug('No export modules configured for site:%s guest:%s'%(siteid,guestid))
+        return 0
+
+    for m in export_methods:
+        mod_name = m.split('_')[1]
+        try:
+            expmodule = importlib.import_module('unifispot.modules.%s.main'%mod_name)
+            expmodule.export_guest(guest,site)
+        except:
+            logger.exception('-------Invalid export module:%s for  guest:%s or site:%s'%
+                        (mod_name,guestid,siteid))
+        
+
+
+
+
+
+

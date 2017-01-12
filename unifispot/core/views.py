@@ -437,8 +437,8 @@ class FileAPI(SiteModuleAPI):
                 filetoupload = self.__handleUpload(upload_file)   
                 if not filetoupload  :
                     return jsonify({'status': '0','msg':_('Error Occured \
-                                         hwwebmile trying to upload file')})
-                newfile = self.get_modal_obj()
+                                         while trying to upload file')})
+                newfile = self.get_modal_obj()()
                 newfile.file_location   = filetoupload['filename']
                 newfile.file_label = secure_filename(upload_file.filename)
                 newfile.siteid = siteid

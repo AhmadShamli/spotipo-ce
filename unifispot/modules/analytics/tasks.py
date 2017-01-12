@@ -29,10 +29,3 @@ def celery_update_stat(*args, **kwargs):
             #process yesterday's stats as well
             yesterday = now.replace(days=-1)
             update_daily_stat(site,yesterday)
-
-@celery.task(autoretry_on=Exception,max_retries=5)
-def celery_test(guestid=None):     
-    logger.info('-----------Running TESTSTSSTSS-----------------------')       
-    sites = Wifisite.query.all()
-    for site in sites: 
-        logger.info('-----------SITE NAME:-----------------------'%site.name)

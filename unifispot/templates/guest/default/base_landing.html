@@ -12,6 +12,12 @@
 
     <title>{{_('Welcome To Our Hotspot')}}</title>
 
+    <!-- Bootstrap -->
+    <link href="{{ url_for('static', filename='bootstrap/dist/css/bootstrap.min.css') }}" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link href="{{ url_for('static', filename='font-awesome/css/font-awesome.min.css') }}" rel="stylesheet">  
+    <link href="{{ url_for('static', filename='intl-tel-input-10.0.0/build/css/intlTelInput.css') }}" rel="stylesheet">      
+
     <style>
     html {
         background: {%if landingpage.bgfile%}url( {{  landingpage.bgfile}}) no-repeat center center fixed !important{%else%}{% if landingpage.pagebgcolor%} {{landingpage.pagebgcolor}} !important{%endif%} {%endif%}; 
@@ -118,13 +124,10 @@
     .login-text{
         text-align: center;
     }
+    .iti-flag {background-image: url("{{ url_for('static', filename='intl-tel-input-10.0.0/build/img/flags.png') }}");}
     </style>
 
-
-    <!-- Bootstrap -->
-    <link href="{{ url_for('static', filename='bootstrap/dist/css/bootstrap.min.css') }}" rel="stylesheet">
-    <!-- Font Awesome -->
-    <link href="{{ url_for('static', filename='font-awesome/css/font-awesome.min.css') }}" rel="stylesheet">  
+   
     {% block customCSS %}
 
     {%endblock%}    
@@ -169,7 +172,9 @@
     <!-- Bootstrap -->
 
     <script src="{{ url_for('static', filename='bootstrap/dist/js/bootstrap.min.js') }}"></script>
-        
+     
+    <script src="{{ url_for('static', filename='intl-tel-input-10.0.0/build/js/intlTelInput.min.js') }}"></script>    
+  
 
 {% block customJS %}
 

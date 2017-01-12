@@ -118,215 +118,85 @@
 
 
 {% macro modal_form(form,name,title) -%}
-<div class="row">
-    <div class="col-md-12">
-        <div class="modal fade" id="{{name}}" tabindex="-1" role="basic" aria-hidden="true">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
-                        <h4 class="modal-title">{{title}}</h4>
-                    </div>
-                    <div class="modal-body">
-                        <form class="form-horizontal" role="form" id="{{name}}-form">
-                            {{render(form)}}
-                        </form>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn default" data-dismiss="modal" id="{{name}}-close-button">Close</button>
-                        <button type="button" class="btn blue" id="{{name}}-save-button">Save changes</button>
-                    </div>
-                </div>
-                <!-- /.modal-content -->
-            </div>
-            <!-- /.modal-dialog -->
-        </div>
-        <!-- /.modal -->
-    </div>
-    <!-- /.col-md12 -->
-</div>
-<!-- /.row -->
-{% endmacro %}
-
-{% macro general_modalform() -%}
-<div class="row">
-    <div class="col-md-12">
-        <div class="modal fade in" id="general_modal" tabindex="-1" role="basic" aria-hidden="true">
-            <div class="modal-dialog ">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
-                    </div>
-                    <div class="modal-body" id="general_modal-form-body">                        
-                            <div id="general_modal-form-body">
-
-                            </div>
-                        </form >
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn default" data-dismiss="modal" id="general_modal-close-button">Close</button>
-                        <button type="button" class="btn blue" id="general_modal-save-button">Save changes</button>
-                    </div>
-                </div>
-                <!-- /.modal-content -->
-            </div>
-            <!-- /.modal-dialog -->
-        </div>
-        <!-- /.modal -->
-    </div>
-    <!-- /.col-md12 -->
-</div>
-<!-- /.row -->
-{% endmacro %}
-
-{% macro full_modal_form(form,name,title) -%}
-<div class="row">
-    <div class="modal fade" id="{{name}}" tabindex="-1" role="basic" aria-hidden="true">
-        <div class="modal-dialog modal-full">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
-                    <h4 class="modal-title">{{title}}</h4>
-                </div>
-                <div class="modal-body">
-                    <div class="row">
-                        <div class="col-md-6">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="modal fade" id="{{name}}" tabindex="-1" role="basic" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
+                            <h4 class="modal-title">{{title}}</h4>
+                        </div>
+                        <div class="modal-body">
                             <form class="form-horizontal" role="form" id="{{name}}-form">
                                 {{render(form)}}
                             </form>
                         </div>
-                        <!-- /.col-md6 -->
+                        <div class="modal-footer">
+                            <button type="button" class="btn default" data-dismiss="modal" id="{{name}}-close-button">Close</button>
+                            <button type="button" class="btn blue" id="{{name}}-save-button">Save changes</button>
+                        </div>
                     </div>
+                    <!-- /.modal-content -->
                 </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn default" data-dismiss="modal" id="{{name}}-close-button">Close</button>
-                    <button type="button" class="btn blue" id="{{name}}-save-button">Save changes</button>
-                </div>
+                <!-- /.modal-dialog -->
             </div>
-            <!-- /.modal-content -->
+            <!-- /.modal -->
         </div>
-        <!-- /.modal-dialog -->
+        <!-- /.col-md12 -->
     </div>
-    <!-- /.modal -->
-</div>
-<!-- /.row -->
-<!-- /.modal -->
-
+    <!-- /.row -->
 {% endmacro %}
 
-{% macro modal_landing_form(form,name,title) -%}
-<div class="row">
-    <div class="col-md-12">
+{% macro general_modalform() -%}
+    <div class="row">
+        <div class="col-md-12">
+            <div class="modal fade in" id="general_modal" tabindex="-1" role="basic" aria-hidden="true">
+                <div class="modal-dialog ">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
+                        </div>
+                        <div class="modal-body" id="general_modal-form-body">                        
+                                <div id="general_modal-form-body">
+
+                                </div>
+                            </form >
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn default" data-dismiss="modal" id="general_modal-close-button">Close</button>
+                            <button type="button" class="btn blue" id="general_modal-save-button">Save changes</button>
+                        </div>
+                    </div>
+                    <!-- /.modal-content -->
+                </div>
+                <!-- /.modal-dialog -->
+            </div>
+            <!-- /.modal -->
+        </div>
+        <!-- /.col-md12 -->
+    </div>
+    <!-- /.row -->
+{% endmacro %}
+
+{% macro full_modal_form(form,name,title) -%}
+    <div class="row">
         <div class="modal fade" id="{{name}}" tabindex="-1" role="basic" aria-hidden="true">
-            <div class="modal-dialog">
+            <div class="modal-dialog modal-full">
                 <div class="modal-content">
                     <div class="modal-header">
                         <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
                         <h4 class="modal-title">{{title}}</h4>
                     </div>
                     <div class="modal-body">
-                        <form class="form-horizontal" role="form" id="{{name}}-form">
-                            {{render(form)}}
-                        </form>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn default" data-dismiss="modal" id="{{name}}-close-button">Close</button>
-                        <button type="button" class="btn blue" id="{{name}}-save-button">Save </button>
-                        <button type="button" class="btn blue" id="{{name}}-preview-button">Save & Preview</button>
-                    </div>
-                </div>
-                <!-- /.modal-content -->
-            </div>
-            <!-- /.modal-dialog -->
-        </div>
-        <!-- /.modal -->
-    </div>
-    <!-- /.col-md12 -->
-</div>
-<!-- /.row -->
-{% endmacro %}
-
-{% macro full_modal_iframe(name,title) -%}
-<div class="row">
-    <div class="modal fade" id="{{name}}" tabindex="-1" role="basic" aria-hidden="true">
-        <div class="modal-dialog modal-lg">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
-                    <h4 class="modal-title">{{title}}</h4>
-                </div>
-                <div class="modal-body" id="{{name}}-body">
-                     <iframe src="" style="zoom:0.60" width="99.6%" height="250" frameborder="0"></iframe>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn default" data-dismiss="modal" id="{{name}}-close-button">Close</button>
-                </div>
-            </div>
-            <!-- /.modal-content -->
-        </div>
-        <!-- /.modal-dialog -->
-    </div>
-    <!-- /.modal -->
-</div>
-<!-- /.row -->
-<!-- /.modal -->
-
-{% endmacro %}
-
-{% macro fields_errors() %}
-{% for field in varargs %}
-{% if field.errors %}
-  {% for error in field.errors %}
-    
-      <div class="alert alert-danger">{{error}}</div>
-   
-  {% endfor %}
-{% endif %}
-{% endfor %}
-{% endmacro %}
-
-{% macro modal_form_voucher(form,name,title) -%}
-<div class="row">
-    <div class="col-md-12">
-        <div class="modal fade" id="{{name}}" tabindex="-1" role="basic" aria-hidden="true">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
-                        <h4 class="modal-title">{{title}}</h4>
-                    </div>
-                    <div class="modal-body">
-                        <form class="form-horizontal" role="form" id="{{name}}-form">
-                            {{form.hidden_tag() }}
-                            <div class="form-group" id="number-form-group">
-                                <label class="col-md-4  control-label" >{{ form.number.label(for=form.number.id) }}</label>
-                                <div class="col-md-2">{{ form.number(class_="form-control ")}}</div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <form class="form-horizontal" role="form" id="{{name}}-form">
+                                    {{render(form)}}
+                                </form>
                             </div>
-                            <div class="form-group" id="duration-form-group">
-                                <label class="col-md-4  control-label" >{{ form.duration.label(for=form.duration.id) }}</label>
-                                <div class="col-md-2">{{ form.duration(class_="form-control ")}}</div>
-                                <div class="col-md-4">{{ form.duration_t(class_="form-control ")}}</div>
-                            </div>    
-
-                            <div class="form-group" id="bytes_t-form-group">
-                                <label class="col-md-4  control-label" >{{ form.bytes_t.label(for=form.bytes_t.id) }}</label>
-                                <div class="col-md-2">{{ form.bytes_t(class_="form-control ")}}</div>
-                               
-                            
-                                <label class="col-md-3  control-label" >{{ form.num_devices.label(for=form.num_devices.id) }}</label>
-                                <div class="col-md-3">{{ form.num_devices(class_="form-control ")}}</div>
-                            </div>
-                            <div class="form-group" id="num_devices-form-group">
-                                <label class="col-md-4  control-label" >Speed in Kbps</label>
-                                <div class="col-md-4">{{ form.speed_dl(class_="form-control ",placeholder="Download")}}</div>  
-                                <div class="col-md-4">{{ form.speed_ul(class_="form-control ",placeholder="Upload")}}</div> 
-
-                            </div>   
-                            <div class="form-group" id="notes-form-group">
-                                <label class="col-md-4  control-label" >{{ form.notes.label(for=form.notes.id) }}</label>
-                                <div class="col-md-8">{{ form.notes(class_="form-control ")}}</div>
-                            </div>                                                                                                           
-                        </form>
+                            <!-- /.col-md6 -->
+                        </div>
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn default" data-dismiss="modal" id="{{name}}-close-button">Close</button>
@@ -339,25 +209,155 @@
         </div>
         <!-- /.modal -->
     </div>
-    <!-- /.col-md12 -->
-</div>
-<!-- /.row -->
+    <!-- /.row -->
+    <!-- /.modal -->
+
+{% endmacro %}
+
+{% macro modal_landing_form(form,name,title) -%}
+    <div class="row">
+        <div class="col-md-12">
+            <div class="modal fade" id="{{name}}" tabindex="-1" role="basic" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
+                            <h4 class="modal-title">{{title}}</h4>
+                        </div>
+                        <div class="modal-body">
+                            <form class="form-horizontal" role="form" id="{{name}}-form">
+                                {{render(form)}}
+                            </form>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn default" data-dismiss="modal" id="{{name}}-close-button">Close</button>
+                            <button type="button" class="btn blue" id="{{name}}-save-button">Save </button>
+                            <button type="button" class="btn blue" id="{{name}}-preview-button">Save & Preview</button>
+                        </div>
+                    </div>
+                    <!-- /.modal-content -->
+                </div>
+                <!-- /.modal-dialog -->
+            </div>
+            <!-- /.modal -->
+        </div>
+        <!-- /.col-md12 -->
+    </div>
+    <!-- /.row -->
+{% endmacro %}
+
+{% macro full_modal_iframe(name,title) -%}
+    <div class="row">
+        <div class="modal fade" id="{{name}}" tabindex="-1" role="basic" aria-hidden="true">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
+                        <h4 class="modal-title">{{title}}</h4>
+                    </div>
+                    <div class="modal-body" id="{{name}}-body">
+                         <iframe src="" style="zoom:0.60" width="99.6%" height="250" frameborder="0"></iframe>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn default" data-dismiss="modal" id="{{name}}-close-button">Close</button>
+                    </div>
+                </div>
+                <!-- /.modal-content -->
+            </div>
+            <!-- /.modal-dialog -->
+        </div>
+        <!-- /.modal -->
+    </div>
+    <!-- /.row -->
+    <!-- /.modal -->
+
+{% endmacro %}
+
+{% macro fields_errors() %}
+    {% for field in varargs %}
+    {% if field.errors %}
+      {% for error in field.errors %}
+        
+          <div class="alert alert-danger">{{error}}</div>
+       
+      {% endfor %}
+    {% endif %}
+    {% endfor %}
+{% endmacro %}
+
+{% macro modal_form_voucher(form,name,title) -%}
+    <div class="row">
+        <div class="col-md-12">
+            <div class="modal fade" id="{{name}}" tabindex="-1" role="basic" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
+                            <h4 class="modal-title">{{title}}</h4>
+                        </div>
+                        <div class="modal-body">
+                            <form class="form-horizontal" role="form" id="{{name}}-form">
+                                {{form.hidden_tag() }}
+                                <div class="form-group" id="number-form-group">
+                                    <label class="col-md-4  control-label" >{{ form.number.label(for=form.number.id) }}</label>
+                                    <div class="col-md-2">{{ form.number(class_="form-control ")}}</div>
+                                </div>
+                                <div class="form-group" id="duration-form-group">
+                                    <label class="col-md-4  control-label" >{{ form.duration.label(for=form.duration.id) }}</label>
+                                    <div class="col-md-2">{{ form.duration(class_="form-control ")}}</div>
+                                    <div class="col-md-4">{{ form.duration_t(class_="form-control ")}}</div>
+                                </div>    
+
+                                <div class="form-group" id="bytes_t-form-group">
+                                    <label class="col-md-4  control-label" >{{ form.bytes_t.label(for=form.bytes_t.id) }}</label>
+                                    <div class="col-md-2">{{ form.bytes_t(class_="form-control ")}}</div>
+                                   
+                                
+                                    <label class="col-md-3  control-label" >{{ form.num_devices.label(for=form.num_devices.id) }}</label>
+                                    <div class="col-md-3">{{ form.num_devices(class_="form-control ")}}</div>
+                                </div>
+                                <div class="form-group" id="num_devices-form-group">
+                                    <label class="col-md-4  control-label" >Speed in Kbps</label>
+                                    <div class="col-md-4">{{ form.speed_dl(class_="form-control ",placeholder="Download")}}</div>  
+                                    <div class="col-md-4">{{ form.speed_ul(class_="form-control ",placeholder="Upload")}}</div> 
+
+                                </div>   
+                                <div class="form-group" id="notes-form-group">
+                                    <label class="col-md-4  control-label" >{{ form.notes.label(for=form.notes.id) }}</label>
+                                    <div class="col-md-8">{{ form.notes(class_="form-control ")}}</div>
+                                </div>                                                                                                           
+                            </form>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn default" data-dismiss="modal" id="{{name}}-close-button">Close</button>
+                            <button type="button" class="btn blue" id="{{name}}-save-button">Save changes</button>
+                        </div>
+                    </div>
+                    <!-- /.modal-content -->
+                </div>
+                <!-- /.modal-dialog -->
+            </div>
+            <!-- /.modal -->
+        </div>
+        <!-- /.col-md12 -->
+    </div>
+    <!-- /.row -->
 {% endmacro %}
 
 {% macro flash_message() -%}
-{%- with messages = get_flashed_messages(with_categories=true) -%}
-        {%- if messages -%}
+    {%- with messages = get_flashed_messages(with_categories=true) -%}
+            {%- if messages -%}
 
-            {%- for category, message in messages -%}
-                <div class="alert alert-{{category}} alert-dismissable">
-                    <button aria-hidden="true" data-dismiss="alert" class="close" type="button">×</button>
+                {%- for category, message in messages -%}
+                    <div class="alert alert-{{category}} alert-dismissable">
+                        <button aria-hidden="true" data-dismiss="alert" class="close" type="button">×</button>
 
-                    {{ message | safe}}
+                        {{ message | safe}}
 
-                </div>
-            {%- endfor -%}
-{%- endif -%}
-{%- endwith %}
+                    </div>
+                {%- endfor -%}
+    {%- endif -%}
+    {%- endwith %}
 {% endmacro %}
 
 {% macro render_field_with_erros(field,required='0') -%}
@@ -378,13 +378,7 @@
         {% endfor %}
         </div>
     {% elif field.type == 'BooleanField' %}
-        <div class="col-md-6 col-sm-6 col-xs-12">
-            <div class="checkbox-list">
-            <label>
-                    <input type="checkbox" name="{{ field.id }}" id="{{ field.id }}" value="1"> 
-             </label>
-            </div>       
-        </div>
+        {{field()}}
     {%else%}    
         <div class="col-md-6 col-sm-6 col-xs-12">
             {% if required == '1' %}
@@ -454,219 +448,219 @@
 {%endmacro%}
 
 {% macro render_method_field(formfield,confurl) -%}
-<div class="form-group">
-    <label class="col-md-3 col-sm-3 col-xs-12 control-label">
-        {{formfield.label}}
-    </label>
-    <div class="checkbox col-xs-5">
-        <label>
-            <input type="checkbox" name="{{ formfield.id }}" id="{{ formfield.id }}" value="1">
+    <div class="form-group">
+        <label class="col-md-3 col-sm-3 col-xs-12 control-label">
+            {{formfield.label}}
         </label>
-        <button type="button" id="{{formfield.id}}-btn" class="btn btn-info btn-xs auth_btn ">Config</button>
+        <div class="checkbox col-xs-5">
+            <label>
+                <input type="checkbox" name="{{ formfield.id }}" id="{{ formfield.id }}" value="1">
+            </label>
+            <button type="button" id="{{formfield.id}}-btn" class="btn btn-info btn-xs auth_btn ">Config</button>
+
+        </div>
+
 
     </div>
-
-
-</div>
 
 {% endmacro %}
 
 {% macro render_unifi_settings() -%}
 
-<div class="form-group">
-    <label class="col-sm-4 control-label" >{{_('Unifi Controller')}}</label>
-    <div class="col-xs-8"> <label id="unifi_server" > </label></div>
-
-</div>
-
-<div class="form-group">
-    <label class="col-sm-4 control-label" >{{_('Unifi Controller IP')}} </label>
-    <div class="col-xs-8"> <label id="unifi_server_ip" > </label></div>
-
-</div>
-
-<div class="form-group">
-    <label class="col-sm-4 control-label" >{{_('Unifi Controller Port')}}</label>
-    <div class="col-xs-8"> <label id="unifi_server_port" > </label></div>
-
-</div>
-
-<div class="form-group">
-    <label class="col-sm-4 control-label" >{{_('Unifi Admin')}} </label>
-    <div class="col-xs-8"> <label id="unifi_user" > </label></div>
-
-</div>
-
-<div class="form-group">
-    <label class="col-sm-4 control-label" >{{_('Unifi Password')}} </label>
-    <div class="col-xs-8"> 
-        <label id="unifi_pass" ></label>
-        <a class="btn btn-primary" id="unifipass-show">Show</a>
-        <a class="btn btn-info" id="settingseditmodal-edit">Edit </a>
-
+    <div class="form-group">
+        <label class="col-sm-4 control-label" >{{_('Unifi Controller')}}</label>
+        <div class="col-xs-8"> <label id="unifi_server" > </label></div>
 
     </div>
 
-</div>
+    <div class="form-group">
+        <label class="col-sm-4 control-label" >{{_('Unifi Controller IP')}} </label>
+        <div class="col-xs-8"> <label id="unifi_server_ip" > </label></div>
+
+    </div>
+
+    <div class="form-group">
+        <label class="col-sm-4 control-label" >{{_('Unifi Controller Port')}}</label>
+        <div class="col-xs-8"> <label id="unifi_server_port" > </label></div>
+
+    </div>
+
+    <div class="form-group">
+        <label class="col-sm-4 control-label" >{{_('Unifi Admin')}} </label>
+        <div class="col-xs-8"> <label id="unifi_user" > </label></div>
+
+    </div>
+
+    <div class="form-group">
+        <label class="col-sm-4 control-label" >{{_('Unifi Password')}} </label>
+        <div class="col-xs-8"> 
+            <label id="unifi_pass" ></label>
+            <a class="btn btn-primary" id="unifipass-show">Show</a>
+            <a class="btn btn-info" id="settingseditmodal-edit">Edit </a>
+
+
+        </div>
+
+    </div>
 
 {% endmacro %}
 
 
 {% macro modal_form_package(form,name,title) -%}
-<div class="row">
-    <div class="col-md-12">
-        <div class="modal fade" id="{{name}}" tabindex="-1" role="basic" aria-hidden="true">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
-                        <h4 class="modal-title">{{title}}</h4>
-                    </div>
-                    <div class="modal-body">
-                        <form class="form-horizontal" role="form" id="{{name}}-form">
-                            {{form.hidden_tag() }}
-                            <div class="form-group" id="name-form-group">
-                                <label class="col-md-4  control-label" >{{ form.name.label(for=form.name.id) }}</label>
-                                <div class="col-md-5">{{ form.name(class_="form-control ")}}</div>
-                            </div>
-                            <div class="form-group" id="free-form-group">
-                                <label class="col-md-4  control-label" >{{ form.free.label(for=form.free.id) }}</label>
-                                <div class="col-md-2">
-                                    <div class="checkbox-list">
-                                        <label>
-                                                <input type="checkbox" name="{{ form.free.id }}" id="{{ form.free.id }}" value="1"> 
-                                         </label>
-                                    </div>   
+    <div class="row">
+        <div class="col-md-12">
+            <div class="modal fade" id="{{name}}" tabindex="-1" role="basic" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
+                            <h4 class="modal-title">{{title}}</h4>
+                        </div>
+                        <div class="modal-body">
+                            <form class="form-horizontal" role="form" id="{{name}}-form">
+                                {{form.hidden_tag() }}
+                                <div class="form-group" id="name-form-group">
+                                    <label class="col-md-4  control-label" >{{ form.name.label(for=form.name.id) }}</label>
+                                    <div class="col-md-5">{{ form.name(class_="form-control ")}}</div>
                                 </div>
+                                <div class="form-group" id="free-form-group">
+                                    <label class="col-md-4  control-label" >{{ form.free.label(for=form.free.id) }}</label>
+                                    <div class="col-md-2">
+                                        <div class="checkbox-list">
+                                            <label>
+                                                    <input type="checkbox" name="{{ form.free.id }}" id="{{ form.free.id }}" value="1"> 
+                                             </label>
+                                        </div>   
+                                    </div>
 
-                            </div> 
-                            <div class="form-group" id="allowed_in-form-group">
-                                <label class="col-md-4  control-label" >{{ form.allowed_in.label(for=form.allowed_in.id) }}</label>
-                                <div class="col-md-4">{{ form.allowed_in(class_="form-control ")}}</div>
+                                </div> 
+                                <div class="form-group" id="allowed_in-form-group">
+                                    <label class="col-md-4  control-label" >{{ form.allowed_in.label(for=form.allowed_in.id) }}</label>
+                                    <div class="col-md-4">{{ form.allowed_in(class_="form-control ")}}</div>
 
 
-                            </div>                                                              
-                            <div class="form-group" id="price-form-group">
-                                <label class="col-md-4  control-label" >{{ form.price.label(for=form.price.id) }}</label>
-                                <div class="col-md-4">{{ form.price(class_="form-control ")}}</div>
-                                <div class="col-md-3">{{ form.currency(class_="form-control ")}}</div>
+                                </div>                                                              
+                                <div class="form-group" id="price-form-group">
+                                    <label class="col-md-4  control-label" >{{ form.price.label(for=form.price.id) }}</label>
+                                    <div class="col-md-4">{{ form.price(class_="form-control ")}}</div>
+                                    <div class="col-md-3">{{ form.currency(class_="form-control ")}}</div>
 
-                            </div>        
-                            <div class="form-group" id="num_devices-form-group">
-                                <label class="col-md-4  control-label" >{{ form.num_devices.label(for=form.num_devices.id) }}</label>
-                                <div class="col-md-5">{{ form.num_devices(class_="form-control ")}}</div>
-                            </div>                                                         
-                            <div class="form-group" id="duration-form-group">
-                                <label class="col-md-4  control-label" >{{ form.duration.label(for=form.duration.id) }}</label>
-                                <div class="col-md-3">{{ form.duration(class_="form-control ")}}</div>
-                                <div class="col-md-4">{{ form.duration_t(class_="form-control ")}}</div>
+                                </div>        
+                                <div class="form-group" id="num_devices-form-group">
+                                    <label class="col-md-4  control-label" >{{ form.num_devices.label(for=form.num_devices.id) }}</label>
+                                    <div class="col-md-5">{{ form.num_devices(class_="form-control ")}}</div>
+                                </div>                                                         
+                                <div class="form-group" id="duration-form-group">
+                                    <label class="col-md-4  control-label" >{{ form.duration.label(for=form.duration.id) }}</label>
+                                    <div class="col-md-3">{{ form.duration(class_="form-control ")}}</div>
+                                    <div class="col-md-4">{{ form.duration_t(class_="form-control ")}}</div>
 
-                            </div>    
+                                </div>    
 
-                            <div class="form-group" id="bytes_t-form-group">
-                                <label class="col-md-4  control-label" >{{ form.bytes_t.label(for=form.bytes_t.id) }}</label>
-                                <div class="col-md-2">{{ form.bytes_t(class_="form-control ")}}</div>
-                               
-                            
-                            </div>
-                            <div class="form-group" id="num_devices-form-group">
-                                <label class="col-md-4  control-label" >Speed in Kbps</label>
-                                <div class="col-md-4">{{ form.speed_dl(class_="form-control ",placeholder="Download")}}</div>  
-                                <div class="col-md-4">{{ form.speed_ul(class_="form-control ",placeholder="Upload")}}</div> 
+                                <div class="form-group" id="bytes_t-form-group">
+                                    <label class="col-md-4  control-label" >{{ form.bytes_t.label(for=form.bytes_t.id) }}</label>
+                                    <div class="col-md-2">{{ form.bytes_t(class_="form-control ")}}</div>
+                                   
+                                
+                                </div>
+                                <div class="form-group" id="num_devices-form-group">
+                                    <label class="col-md-4  control-label" >Speed in Kbps</label>
+                                    <div class="col-md-4">{{ form.speed_dl(class_="form-control ",placeholder="Download")}}</div>  
+                                    <div class="col-md-4">{{ form.speed_ul(class_="form-control ",placeholder="Upload")}}</div> 
 
-                            </div>   
-                                                                                                     
-                        </form>
+                                </div>   
+                                                                                                         
+                            </form>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn default" data-dismiss="modal" id="{{name}}-close-button">Close</button>
+                            <button type="button" class="btn blue" id="{{name}}-save-button">Save changes</button>
+                        </div>
                     </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn default" data-dismiss="modal" id="{{name}}-close-button">Close</button>
-                        <button type="button" class="btn blue" id="{{name}}-save-button">Save changes</button>
-                    </div>
+                    <!-- /.modal-content -->
                 </div>
-                <!-- /.modal-content -->
+                <!-- /.modal-dialog -->
             </div>
-            <!-- /.modal-dialog -->
+            <!-- /.modal -->
         </div>
-        <!-- /.modal -->
+        <!-- /.col-md12 -->
     </div>
-    <!-- /.col-md12 -->
-</div>
-<!-- /.row -->
+    <!-- /.row -->
 {% endmacro %}
 
 
 {% macro modal_form_guestaccount(form,name,title) -%}
-<div class="row">
-    <div class="col-md-12">
-        <div class="modal fade" id="{{name}}" tabindex="-1" role="basic" aria-hidden="true">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
-                        <h4 class="modal-title">{{title}}</h4>
-                    </div>
-                    <div class="modal-body">
-                        <form class="form-horizontal" role="form" id="{{name}}-form">
-                            {{form.hidden_tag() }}
-                            <div class="form-group" id="email-form-group">
-                                <label class="col-md-4  control-label" >{{ form.email.label(for=form.email.id) }}</label>
-                                <div class="col-md-5">{{ form.email(class_="form-control ")}}</div>
-                            </div>
-                            <div class="form-group" id="passcode-form-group">
-                                <label class="col-md-4  control-label" >{{ form.passcode.label(for=form.passcode.id) }}</label>
-                                <div class="col-md-5">{{ form.passcode(class_="form-control ")}}</div>
-                            </div> 
-                            <div class="form-group" id="num_devices-form-group">
-                                <label class="col-md-4  control-label" >{{ form.num_devices.label(for=form.num_devices.id) }}</label>
-                                <div class="col-md-5">{{ form.num_devices(class_="form-control ")}}</div>
-                            </div>                                                         
-                            <div class="form-group" id="active-form-group">
-                                <label class="col-md-4  control-label" >{{ form.active.label(for=form.active.id) }}</label>
-                                <div class="col-md-2">
-                                    <div class="checkbox-list">
-                                        <label>
-                                                <input type="checkbox" name="{{ form.active.id }}" id="{{ form.active.id }}" value="1"> 
-                                         </label>
-                                    </div>   
+    <div class="row">
+        <div class="col-md-12">
+            <div class="modal fade" id="{{name}}" tabindex="-1" role="basic" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
+                            <h4 class="modal-title">{{title}}</h4>
+                        </div>
+                        <div class="modal-body">
+                            <form class="form-horizontal" role="form" id="{{name}}-form">
+                                {{form.hidden_tag() }}
+                                <div class="form-group" id="email-form-group">
+                                    <label class="col-md-4  control-label" >{{ form.email.label(for=form.email.id) }}</label>
+                                    <div class="col-md-5">{{ form.email(class_="form-control ")}}</div>
                                 </div>
+                                <div class="form-group" id="passcode-form-group">
+                                    <label class="col-md-4  control-label" >{{ form.passcode.label(for=form.passcode.id) }}</label>
+                                    <div class="col-md-5">{{ form.passcode(class_="form-control ")}}</div>
+                                </div> 
+                                <div class="form-group" id="num_devices-form-group">
+                                    <label class="col-md-4  control-label" >{{ form.num_devices.label(for=form.num_devices.id) }}</label>
+                                    <div class="col-md-5">{{ form.num_devices(class_="form-control ")}}</div>
+                                </div>                                                         
+                                <div class="form-group" id="active-form-group">
+                                    <label class="col-md-4  control-label" >{{ form.active.label(for=form.active.id) }}</label>
+                                    <div class="col-md-2">
+                                        <div class="checkbox-list">
+                                            <label>
+                                                    <input type="checkbox" name="{{ form.active.id }}" id="{{ form.active.id }}" value="1"> 
+                                             </label>
+                                        </div>   
+                                    </div>
 
-                            </div>                              
-                            <div class="form-group" id="duration-form-group">
-                                <label class="col-md-4  control-label" >{{ form.duration.label(for=form.duration.id) }}</label>
-                                <div class="col-md-3">{{ form.duration(class_="form-control ")}}</div>
-                                <div class="col-md-4">{{ form.duration_t(class_="form-control ")}}</div>
+                                </div>                              
+                                <div class="form-group" id="duration-form-group">
+                                    <label class="col-md-4  control-label" >{{ form.duration.label(for=form.duration.id) }}</label>
+                                    <div class="col-md-3">{{ form.duration(class_="form-control ")}}</div>
+                                    <div class="col-md-4">{{ form.duration_t(class_="form-control ")}}</div>
 
-                            </div>    
+                                </div>    
 
-                            <div class="form-group" id="bytes_t-form-group">
-                                <label class="col-md-4  control-label" >{{ form.bytes_t.label(for=form.bytes_t.id) }}</label>
-                                <div class="col-md-2">{{ form.bytes_t(class_="form-control ")}}</div>
-                               
-                            
-                            </div>
-                            <div class="form-group" id="num_devices-form-group">
-                                <label class="col-md-4  control-label" >Speed in Kbps</label>
-                                <div class="col-md-4">{{ form.speed_dl(class_="form-control ",placeholder="Download")}}</div>  
-                                <div class="col-md-4">{{ form.speed_ul(class_="form-control ",placeholder="Upload")}}</div> 
+                                <div class="form-group" id="bytes_t-form-group">
+                                    <label class="col-md-4  control-label" >{{ form.bytes_t.label(for=form.bytes_t.id) }}</label>
+                                    <div class="col-md-2">{{ form.bytes_t(class_="form-control ")}}</div>
+                                   
+                                
+                                </div>
+                                <div class="form-group" id="num_devices-form-group">
+                                    <label class="col-md-4  control-label" >Speed in Kbps</label>
+                                    <div class="col-md-4">{{ form.speed_dl(class_="form-control ",placeholder="Download")}}</div>  
+                                    <div class="col-md-4">{{ form.speed_ul(class_="form-control ",placeholder="Upload")}}</div> 
 
-                            </div>   
-                                                                                                     
-                        </form>
+                                </div>   
+                                                                                                         
+                            </form>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn default" data-dismiss="modal" id="{{name}}-close-button">Close</button>
+                            <button type="button" class="btn blue" id="{{name}}-save-button">Save changes</button>
+                        </div>
                     </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn default" data-dismiss="modal" id="{{name}}-close-button">Close</button>
-                        <button type="button" class="btn blue" id="{{name}}-save-button">Save changes</button>
-                    </div>
+                    <!-- /.modal-content -->
                 </div>
-                <!-- /.modal-content -->
+                <!-- /.modal-dialog -->
             </div>
-            <!-- /.modal-dialog -->
+            <!-- /.modal -->
         </div>
-        <!-- /.modal -->
+        <!-- /.col-md12 -->
     </div>
-    <!-- /.col-md12 -->
-</div>
-<!-- /.row -->
+    <!-- /.row -->
 {% endmacro %}
 
 {% macro render_field_selection(field,select=None,mandate=None) -%}

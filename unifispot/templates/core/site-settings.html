@@ -166,7 +166,7 @@
                 {% for field in siteform %}
                     <!--render login types -->
                     {% if field.id is is_export_method%}
-                    {{render_method_field(field)}}
+                      {{render_method_field(field)}}
                     {%endif%}
 
                 {% endfor %}
@@ -213,6 +213,7 @@
     <script src="{{ url_for('static', filename='jQuery-Smart-Wizard/js/jquery.smartWizard.js') }}"></script> 
     <script src="{{ url_for('static', filename='custom/js/ajaxform.js') }}"></script> 
     <script src="{{ url_for('static', filename='custom/js/moduleform.js') }}"></script> 
+    <script src="{{ url_for('static', filename='custom/js/smsgateways.js') }}"></script> 
     <!-- jQuery Smart Wizard -->
     <script>
       $(document).ready(function() {
@@ -297,29 +298,7 @@
 
 
         });  
-        //------------Payment gateway-----------------
-          $(document).on('change', '#payment_gateway', function(){
-              if($('#payment_gateway').val()== 'stripe'){
-                $('#payment_auth_field1-form-group').show();
-                $('#payment_auth_field2-form-group').hide();
-                $('#payment_auth_field3-form-group').hide();
-                $('#label_payment_auth_field1').text('Stripe Secret Key');
-              }
-              else if ($('#payment_gateway').val() == 'paypalpro'){
-                $('#payment_auth_field1-form-group').show();
-                $('#payment_auth_field2-form-group').show();
-                $('#payment_auth_field3-form-group').show();
-                $('#label_payment_auth_field1').text('Client ID');
-                $('#label_payment_auth_field2').text('Client Secret');                    
-                $('#label_payment_auth_field3').text('Mode(live/sandbox)');                    
-              }else{
-                $('#payment_auth_field1-form-group').hide();
-                $('#payment_auth_field2-form-group').hide();
-                $('#payment_auth_field3-form-group').hide();
-
-              }
-
-        });   
+  
 
       });
     </script>

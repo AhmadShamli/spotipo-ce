@@ -294,6 +294,12 @@ class Wifisite(CRUDMixin,SerializerMixin,db.Model):
         else:
             return None
 
+    def check_prelogin_en(self,ltype):
+        if self.preauth_methods:
+            return self.preauth_methods.get(ltype)
+        else:
+            return None
+
     def site_from_baseform(self,form):
         #create 
         self.name           = form.name.data
@@ -498,7 +504,13 @@ class Loginauth(CRUDMixin,SerializerMixin,db.Model):
         else:
             return False
 
-class Preloginauth(SerializerMixin,db.Model):
+    def get_query(self,siteid,startdate,enddate):
+
+        return Loginauth.query.filter(and_(Loginauth.siteid==siteid,
+                                Loginauth.starttime>=startdate.naive,
+                                Loginauth.starttime<=enddate.naive))            
+
+class Preloginauth(CRUDMixin,SerializerMixin,db.Model):
     '''Base class to store preoginauth credentials, could be SMS or something
 
         All logins should be inherited from this class
@@ -508,6 +520,7 @@ class Preloginauth(SerializerMixin,db.Model):
     client_id           = db.Column(db.Integer, db.ForeignKey('client.id'))
     account_id          = db.Column(db.Integer, db.ForeignKey('account.id'))
     siteid              = db.Column(db.Integer, db.ForeignKey('wifisite.id'))
+    deviceid            = db.Column(db.Integer, db.ForeignKey('device.id'))    
     tracks              = db.relationship('Guesttrack', backref='preloginauth',\
                             lazy='dynamic')    
     site                = db.relationship(Wifisite, backref=db.backref("preloginauths", \
@@ -605,7 +618,6 @@ class Guest(ExportMixin,CRUDMixin,SerializerMixin,db.Model):
             self.agerange = '%s-%s'%(age_range.get('min',''),age_range.get('max',''))
 
     def get_query(self,siteid,startdate,enddate):
-        print 'start :%s end :%s'%(startdate,enddate)
 
         return Guest.query.filter(and_(Guest.siteid==siteid,Guest.demo==0,Guest.created_at>=startdate.naive,
                                 Guest.created_at<=enddate.naive))
@@ -708,7 +720,7 @@ class Guesttrack(CRUDMixin,SerializerMixin,db.Model):
                             index=True)
     state           = db.Column(db.Integer,index=True,
                             default=GUESTTRACK_PRELOGIN)
-    origurl         = db.Column(db.String(200))
+    origurl         = db.Column(db.Text)
     demo            = db.Column(db.Integer,default=0,index=True)
     site            = db.relationship(Wifisite, 
                                 backref=db.backref("guesttracks",
@@ -746,8 +758,16 @@ class Guesttrack(CRUDMixin,SerializerMixin,db.Model):
         '''method to update extrainfo value for this track
 
         '''
-        oldinfo = dict(self.extrainfo)
+        oldinfo = dict(self.extrainfo) if self.extrainfo else {}
         oldinfo[key] = val
         self.extrainfo = oldinfo
         self.save()
 
+    def getextrainfo(self,key):
+        '''method to get extrainfo value for this track
+
+        '''
+        if self.extrainfo:
+            return self.extrainfo.get(key)
+        else:
+            return None

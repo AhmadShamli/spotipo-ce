@@ -65,7 +65,7 @@ class VoucherDesignAPI(SiteModuleAPI):
     def index(self,siteid):
         item = self.get_modal_obj().query.filter_by(siteid=siteid).first()
         if not item:
-            item = self.get_modal_obj()
+            item = self.get_modal_obj()()
             item.siteid = siteid
             item.save()          
         return jsonify({'status':1,'data':item.to_dict()}) 
