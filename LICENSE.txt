@@ -616,31 +616,35 @@ an absolute waiver of all civil liability in connection with the
 Program, unless a warranty or assumption of liability accompanies a
 copy of the Program in return for a fee.
 
-18. Additional Terms added under the provisions of Section 7.
-
-a) All legal notices including the AGPL V3 License, copyright and author
-attributions must be preserved both in the code and clearly displayed on each
-interface wherever they are currently displayed.
-
-The copyright footer must contain the following elements.
-
-Spotipo is software licensed under the AGPL 3
-Copyright (C) 2016-2017 - Spotipo http://www.spotipo.com
-
-If, for any reason, there is a requirement to remove the display of legal
-notices on the graphical user interface, then a “Permission” can be obtained for
-this purpose Spotipo There is more information at
-http://spotipo.com
-
-b) The origin of this software must not be misrepresented. You must not claim
-that you wrote the original software, for instance, by replacing Spotipo's
-copyright with your own. Altered source versions must be marked in reasonable
-ways as being different from the original, and must not be misrepresented as
-being the original software.
-
-c) The names and trademarks of copyright holders may not be used to endorse or
-promote products and services pertaining to Spotipo and its software
-without specific, written prior permission.
-
-
                      END OF TERMS AND CONDITIONS
+
+    <one line to give the program's name and a brief idea of what it does.>
+    Copyright (C) <year>  <name of author>
+
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU Affero General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU Affero General Public License for more details.
+
+    You should have received a copy of the GNU Affero General Public License
+    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+
+    18. Additional Terms added under the provisions of Section 7.
+
+      a) All legal notices including the AGPL V3 License, copyright and author attributions must be preserved both in the code and clearly displayed on each interface wherever they are currently displayed.
+
+      The copyright footer must contain the following elements.
+      Spotipo is software licensed under the AGPL 3
+      Copyright (C) 2016-2017 - Nibblecomm IVS http://spotipo.com
+
+      If, for any reason, there is a requirement to remove the display of legal  notices on the graphical user interface, then a “Permission” can be obtained for this purpose. There is more information at
+      http://spotipo.com
+
+      b) The origin of this software must not be misrepresented. You must not claim that you wrote the original software, for instance, by replacing Spotipo's copyright with your own. Altered source versions must be marked in reasonable ways as being different from the original, and must not be misrepresented as being the original software.
+      c) The names and trademarks of copyright holders may not be used to endorse or promote products and services pertaining to Spotipo and its software without specific, written prior permission.
