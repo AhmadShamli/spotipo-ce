@@ -202,7 +202,7 @@ class WifisiteAPI(RESTView):
     ''' View used for Wifisite api, returns rendered form when calling form
 
     '''
-    decorators = [login_required,get_account_validator('Wifisite')]
+    decorators = [login_required,admin_required,get_account_validator('Wifisite')]
     displaycolumns = []
 
     def get_modal_obj(self):
@@ -303,10 +303,10 @@ class WifisiteAPI(RESTView):
 
 
 class WifisiteManage(FlaskView):
-    decorators = [login_required,validate_site_ownership]
+    decorators = [login_required,admin_required,validate_site_ownership]
 
     @classy_menu_item('.settings', _l('Settings'),icon='fa-cogs',
-                            visible_when=site_menu,order=1)
+                            visible_when=admin_site_menu,order=1)
     def index(self,siteid):
         wifisite = Wifisite.query.get(siteid)
         siteform = get_wifisite_form()
