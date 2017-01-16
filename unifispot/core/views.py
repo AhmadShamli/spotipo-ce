@@ -202,7 +202,7 @@ class WifisiteAPI(RESTView):
     ''' View used for Wifisite api, returns rendered form when calling form
 
     '''
-    decorators = [login_required,admin_required,get_account_validator('Wifisite')]
+    decorators = [login_required,get_account_validator('Wifisite')]
     displaycolumns = []
 
     def get_modal_obj(self):
@@ -216,6 +216,17 @@ class WifisiteAPI(RESTView):
 
     def get_extrafields_modal(self):
         return {'account_id':current_user.account_id}
+
+    @admin_required
+    def get(self,id):        
+        item = self.get_modal_obj()().query.get(id)    
+        if item:
+            return jsonify({'status':1,'data':item.to_dict()})   
+        else:
+            logger.debug('UserID:%s trying to access unknown ID:%s of :%s'\
+                    %(current_user.id,id,self.get_name()))
+            return jsonify({'status':0,'data':{}, 'msg':_l('Unknown :%(name)s ID specified'\
+                    ,name=self.get_name())})
 
     def index(self):
         '''Returns a list of { 'id':siteid ,'name':sitename,'url':dashbordurl} dicts,
@@ -239,6 +250,7 @@ class WifisiteAPI(RESTView):
         else:
             return jsonify({'status':1,'data':data,'msg':'','sites_available':1})
     
+    @admin_required
     def post(self):
         ''' Need custom post here to handle wifisite creation with limited parameters
 
@@ -270,6 +282,7 @@ class WifisiteAPI(RESTView):
                          %(current_user.id,get_form_errors(itemform)))            
             return jsonify({'status':0,'data':{}, 'msg':get_form_errors(itemform)})
 
+    @admin_required
     def put(self,id):
         ''' Need custom post here to handle to configure sitekey etc
 
@@ -300,7 +313,25 @@ class WifisiteAPI(RESTView):
                     %(current_user.id,id,self.get_name()))
             return jsonify({'status':0,'data':{}, 'msg':_l('Unknown :%(name)s ID \
                     specified',name=self.get_name())})
+    @admin_required
+    def delete(self,id):
+        item = self.get_modal_obj()().query.get(id)    
+        if item:
+            try:
+                item.delete()
+            except SQLAlchemyError as exception:
+                logger.exception('UserID:%s submited deletion call exception'\
+                        %(current_user.id))
+                return jsonify({'status':0,'data':{}, 'msg':_('Error while deleting %(name)s'\
+                    ,name=self.get_name())})            
+            return jsonify({'status':1,'data':{}, 'msg':_('Successfully deleted %(name)s'\
+                        ,name=self.get_name())}) 
 
+        else:
+            logger.debug('UserID:%s trying to delete unknown ID:%s of :%s'\
+                    %(current_user.id,id,self.get_name()))
+            return jsonify({'status':0,'data':{}, 'msg':_l('Unknown :%(name)s ID \
+                    specified',name=self.get_name())})
 
 class WifisiteManage(FlaskView):
     decorators = [login_required,admin_required,validate_site_ownership]
