@@ -1,0 +1,10 @@
+{
+    "identifier": "analytics",
+    "name": "Basic Analytics",
+    "author": "rakeshmukundan",
+    "website": "http://spotipo.com",
+    "license": "AGPL",
+    "description": "Analytics plugin for Spotipo",
+    "version": "0.1",
+    "type": "general"
+}

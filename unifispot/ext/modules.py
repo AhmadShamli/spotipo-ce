@@ -2,8 +2,7 @@
 import os
 import importlib
 import logging
-
-logger = logging.getLogger()
+from flask import current_app
 
 
 def load_from_folder(app):
@@ -46,22 +45,22 @@ def load_from_folder(app):
 
             mods[fname] = importlib.import_module(module_name)
             blueprint = getattr(mods[fname], object_name)
-            #logger.info("registering blueprint: %s" % blueprint.name)
+            #current_app.logger.info("registering blueprint: %s" % blueprint.name)
             url_prefix = app.config.get(fname.upper() + '_URL_PREFIX','')
             app.register_blueprint(blueprint,url_prefix=url_prefix)
 
             #find and register modules
             if blueprint.mtype == 'login':
-                logger.info("registering login module: %s" % fname)
+                #current_app.logger.info("registering login module: %s" % fname)
                 app.config['GUESTLOGIN_MODULES'].append(fname)
             elif blueprint.mtype == 'prelogin':
-                logger.info("registering prelogin module: %s" % fname)
+                #current_app.logger.info("registering prelogin module: %s" % fname)
                 app.config['GUESTPRELOGIN_MODULES'].append(fname)
             elif blueprint.mtype == 'postlogin':
-                logger.info("registering postlogin module: %s" % fname)
+                #current_app.logger.info("registering postlogin module: %s" % fname)
                 app.config['GUESTPOSTLOGIN_MODULES'].append(fname)
             elif blueprint.mtype == 'export':
-                logger.info("registering export module: %s" % fname)
+                #current_app.logger.info("registering export module: %s" % fname)
                 app.config['GUESTEXPORT_MODULES'].append(fname)
 
 
@@ -69,7 +68,7 @@ def load_from_folder(app):
             #load all celery tasks
 
 
-    logger.info("%s modules loaded", mods.keys())
-    logger.info("%s login modules loaded", app.config['GUESTLOGIN_MODULES'])
+    #current_app.logger.info("%s modules loaded", mods.keys())
+    #current_app.logger.info("%s login modules loaded", app.config['GUESTLOGIN_MODULES'])
 
 

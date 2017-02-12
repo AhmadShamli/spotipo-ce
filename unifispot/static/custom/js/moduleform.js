@@ -38,15 +38,12 @@ var ModuleForm = function(api_url,modal,configbutton) {
 
 var ModuleGeneralForm = function(modal) {
 
-
     // handle saving
     $('#'+modal+'-save-button').click(function(e) {
         //setup timeout for Post and enable error display
         e.preventDefault();        
         url = $(this).val();
         method = "POST";
-
-
 
         $.ajaxSetup({
             

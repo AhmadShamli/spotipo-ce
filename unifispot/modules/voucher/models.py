@@ -1,5 +1,6 @@
 import logging
 import arrow
+from flask import current_app
 from wtforms import BooleanField,TextField,IntegerField
 from sqlalchemy import and_,or_
 import math
@@ -11,7 +12,7 @@ from unifispot.utils.modelhelpers import SerializerMixin,CRUDMixin,ExportMixin
 from unifispot.utils.translation import format_datetime
 from unifispot.utils.translation import _l,_n,_
 
-logger= logging.getLogger('voucher.model')
+
 
 class Voucherconfig(CRUDMixin,SerializerMixin,db.Model): 
     id                  = db.Column(db.Integer, primary_key=True)
@@ -124,7 +125,7 @@ class Voucher(CRUDMixin,SerializerMixin,db.Model):
         #check if max number of devices are already connected
         if loginauth.deviceid not in devices and \
             len(devices) >= self.num_devices:
-            logger.warning('Max device limit reached for:%s, not able to login\
+            current_app.logger.warning('Max device limit reached for:%s, not able to login\
                     device:%s'%(self.id,loginauth.deviceid))
             return (None,_l('Looks like max allowed devices are already connected'))
 
@@ -144,7 +145,7 @@ class Voucher(CRUDMixin,SerializerMixin,db.Model):
 
 
         if not duration > 60:
-            logger.warning('Time limit reached for:%s, not able to login\
+            current_app.logger.warning('Time limit reached for:%s, not able to login\
                     device:%s'%(self.id,loginauth.deviceid)) 
             return (None,_l('Looks like you have reached max time limit'))
 
@@ -156,7 +157,7 @@ class Voucher(CRUDMixin,SerializerMixin,db.Model):
             (time_used,data_used) = loginauth.get_usage(startedat)
 
             if not data_used < self.bytes_t:
-                logger.warning('Max data limit reached for:%s, not able to login\
+                current_app.logger.warning('Max data limit reached for:%s, not able to login\
                     device:%s'%(self.id,loginauth.deviceid))
                 return (None,_l('Looks like you have reached max data limit'))
             else:

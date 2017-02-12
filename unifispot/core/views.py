@@ -29,8 +29,6 @@ from unifispot.core.utils import allow_only_self,admin_required,\
                 prevent_self_delete,get_form_errors,validate_site_ownership
 
 
-logger = logging.getLogger()
-
 
 class AdminDashboard(FlaskView):
     decorators = [login_required]
@@ -223,7 +221,7 @@ class WifisiteAPI(RESTView):
         if item:
             return jsonify({'status':1,'data':item.to_dict()})   
         else:
-            logger.debug('UserID:%s trying to access unknown ID:%s of :%s'\
+            current_app.logger.debug('UserID:%s trying to access unknown ID:%s of :%s'\
                     %(current_user.id,id,self.get_name()))
             return jsonify({'status':0,'data':{}, 'msg':_l('Unknown :%(name)s ID specified'\
                     ,name=self.get_name())})
@@ -245,7 +243,7 @@ class WifisiteAPI(RESTView):
                 data.append({'id':site.id,'name':site.name,
                                 'url':url_for('SiteDashboard:index',siteid=site.id)})
         except:
-            logger.exception("Exception while trying to get site list")
+            current_app.logger.exception("Exception while trying to get site list")
             return jsonify({'status':0,'data':'','msg':_l('Error in getting site list')})
         else:
             return jsonify({'status':1,'data':data,'msg':'','sites_available':1})
@@ -270,7 +268,7 @@ class WifisiteAPI(RESTView):
 
             except SQLAlchemyError as exception:
                 db.session.rollback()
-                logger.exception('UserID:%s submited form caused exception'\
+                current_app.logger.exception('UserID:%s submited form caused exception'\
                         %(current_user.id))
                 return jsonify({'status':0,'data':{}, 'msg':_('Error while creating %(name)s'\
                         ,name=self.get_name())}) 
@@ -278,7 +276,7 @@ class WifisiteAPI(RESTView):
                         ,name=self.get_name())}) 
 
         else:
-            logger.debug('UserID:%s submited form with errors:%s'\
+            current_app.logger.debug('UserID:%s submited form with errors:%s'\
                          %(current_user.id,get_form_errors(itemform)))            
             return jsonify({'status':0,'data':{}, 'msg':get_form_errors(itemform)})
 
@@ -297,7 +295,7 @@ class WifisiteAPI(RESTView):
                     item.save()
                     item.populate_from_dict(self.get_extrafields_modal())
                 except SQLAlchemyError as exception:
-                    logger.exception('UserID:%s submited form caused exception'\
+                    current_app.logger.exception('UserID:%s submited form caused exception'\
                             %(current_user.id))
                     return jsonify({'status':0,'data':{}, 'msg':_('Error while updating %(name)s'\
                             ,name=self.get_name())}) 
@@ -305,11 +303,11 @@ class WifisiteAPI(RESTView):
                             ,name=self.get_name())}) 
 
             else:
-                logger.debug('UserID:%s submited form with errors:%s'\
+                current_app.logger.debug('UserID:%s submited form with errors:%s'\
                              %(current_user.id,get_form_errors(itemform)))            
                 return jsonify({'status':0,'data':{}, 'msg':get_form_errors(itemform)}) 
         else:
-            logger.debug('UserID:%s trying to update unknown ID:%s of :%s'\
+            current_app.logger.debug('UserID:%s trying to update unknown ID:%s of :%s'\
                     %(current_user.id,id,self.get_name()))
             return jsonify({'status':0,'data':{}, 'msg':_l('Unknown :%(name)s ID \
                     specified',name=self.get_name())})
@@ -320,7 +318,7 @@ class WifisiteAPI(RESTView):
             try:
                 item.delete()
             except SQLAlchemyError as exception:
-                logger.exception('UserID:%s submited deletion call exception'\
+                current_app.logger.exception('UserID:%s submited deletion call exception'\
                         %(current_user.id))
                 return jsonify({'status':0,'data':{}, 'msg':_('Error while deleting %(name)s'\
                     ,name=self.get_name())})            
@@ -328,7 +326,7 @@ class WifisiteAPI(RESTView):
                         ,name=self.get_name())}) 
 
         else:
-            logger.debug('UserID:%s trying to delete unknown ID:%s of :%s'\
+            current_app.logger.debug('UserID:%s trying to delete unknown ID:%s of :%s'\
                     %(current_user.id,id,self.get_name()))
             return jsonify({'status':0,'data':{}, 'msg':_l('Unknown :%(name)s ID \
                     specified',name=self.get_name())})
@@ -381,7 +379,7 @@ class LandingpageAPI(FlaskView):
         if item:
              return jsonify({'status':1,'data':item.to_dict()})   
         else:
-            logger.debug('UserID:%s trying to access emptry :%s of site :%s'\
+            current_app.logger.debug('UserID:%s trying to access emptry :%s of site :%s'\
                     %(current_user.id,self.get_name(),siteid))
             return jsonify({'status':1,'data':{}, 'msg':''})   
 
@@ -399,7 +397,7 @@ class LandingpageAPI(FlaskView):
                 item.populate_from_dict(self.get_extrafields_modal())
             except SQLAlchemyError as exception:
                 db.session.rollback()
-                logger.exception('UserID:%s submited form caused exception'\
+                current_app.logger.exception('UserID:%s submited form caused exception'\
                         %(current_user.id))
                 return jsonify({'status':0,'data':{}, 'msg':_('Error while updating %(name)s'\
                         ,name=self.get_name())}) 
@@ -407,7 +405,7 @@ class LandingpageAPI(FlaskView):
                         ,name=self.get_name())}) 
 
         else:
-            logger.debug('UserID:%s submited form with errors:%s'\
+            current_app.logger.debug('UserID:%s submited form with errors:%s'\
                          %(current_user.id,get_form_errors(itemform)))            
             return jsonify({'status':0,'data':{}, 'msg':get_form_errors(itemform)})      
 
@@ -488,7 +486,7 @@ class FileAPI(SiteModuleAPI):
                     return jsonify({'status': 1,'singleitem':newfile.to_dict(),
                         'msg':_('Uploaded new file')})
         except:
-            logger.exception("Fileupload exception")
+            current_app.logger.exception("Fileupload exception")
             return jsonify({'status': '0','msg':_('Error Occured While trying \
                 to upload file')})            
 

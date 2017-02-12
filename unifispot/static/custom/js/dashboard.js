@@ -192,6 +192,7 @@ var AnalyticsDashboard = function(api_url) {
                 var auth_payment = data.auth_payment ? data.auth_payment : 0;
                 var auth_phone = data.auth_phone ? data.auth_phone : 0;                
                 var auth_account = data.auth_account ? data.auth_account : 0;                
+                var auth_passwordlogin = data.auth_passwordlogin ? data.auth_passwordlogin : 0;                
                 var doughnutData = [
                     {
                         value: auth_email,
@@ -228,7 +229,13 @@ var AnalyticsDashboard = function(api_url) {
                         color: "#2f4050",
                         highlight: "#676a6c",
                         label: "Payment"
-                    }                                                            
+                    },
+                    {
+                        value: auth_passwordlogin,
+                        color: "#2f4050",
+                        highlight: "#676a6c",
+                        label: "Password Login"
+                    }                                                                              
                 ];
 
                 var doughnutOptions = {

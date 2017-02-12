@@ -13,7 +13,6 @@ from unifispot.core.guestutils import validate_track,init_track,redirect_guest,\
                                     guestlog_warn,guestlog_info,guestlog_exception,\
                                     guestlog_exception,show_message
 
-logger =logging.getLogger('unifi')
 
 module = UnifispotModule('unifi','general', __name__, template_folder='templates')
 
@@ -29,7 +28,7 @@ def get_sitekeys(wifisite):
         return sitekeys
     account = Account.query.get(wifisite.account_id)
     if not account:
-        logger.warn('Site:%s is not associated with an account'%wifisite.id)      
+        current_app.logger.warn('Site:%s is not associated with an account'%wifisite.id)      
 
     c = Controller(account=account,sitekey='default')
     for site in c.get_sites():
@@ -42,7 +41,7 @@ def disconnect_client(wifisite,mac):
         return None
     account = Account.query.get(wifisite.account_id)
     if not account:
-        logger.warn('Site:%s is not associated with an account'%wifisite.id)  
+        current_app.logger.warn('Site:%s is not associated with an account'%wifisite.id)  
         return None   
 
     c = Controller(account=account,sitekey=wifisite.sitekey)
@@ -95,18 +94,18 @@ def guest_portal(sitekey):
     utcnow      = arrow.utcnow().naive
   
     if not devicemac or not apmac:
-        logger.error("Guest portal called with empty ap_mac/user_mac URL:%s"\
+        current_app.logger.error("Guest portal called with empty ap_mac/user_mac URL:%s"\
                 %request.url)
         abort(404)
 
     if not validators.mac_address(devicemac) or not validators.mac_address(apmac):
-        logger.error("Guest portal called with invalid ap_mac/user_mac URL:%s"%\
+        current_app.logger.error("Guest portal called with invalid ap_mac/user_mac URL:%s"%\
                 request.url)
         abort(404)
 
     wifisite    = Wifisite.query.filter_by(sitekey=sitekey).first()
     if not wifisite:
-        logger.error("Guest portal called with unknown UnifiID URL:%s"%request.url)
+        current_app.logger.error("Guest portal called with unknown UnifiID URL:%s"%request.url)
         abort(404)  
     if demo and current_user.is_authenticated:
         demo = 1
@@ -139,8 +138,16 @@ def guest_auth(trackid,guesttrack,wifisite,guestdevice,account):
     
     try:
         c = Controller(account=account,sitekey=wifisite.sitekey)  
-        c.authorize_guest(guesttrack.devicemac,duration,ap_mac=guesttrack.apmac,
-            up_bandwidth=loginauth.speed_ul,down_bandwidth=loginauth.speed_dl)    
+        if current_app.config['UNIFI_NO_AP_MAC']:
+            #made sending AP MAC to be configurable
+            c.authorize_guest(guesttrack.devicemac,duration,
+                              up_bandwidth=loginauth.speed_ul,
+                              down_bandwidth=loginauth.speed_dl)
+        else:
+            c.authorize_guest(guesttrack.devicemac,duration,
+                              ap_mac=guesttrack.apmac,
+                              up_bandwidth=loginauth.speed_ul,
+                              down_bandwidth=loginauth.speed_dl)    
     except:
         guestlog_exception('exception while trying to authorize guest',wifisite,guesttrack)
         abort(500)   

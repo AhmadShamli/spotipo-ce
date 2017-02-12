@@ -17,7 +17,7 @@ from unifispot.core.const import *
 from unifispot.utils.translation import _l,_n,_
 from unifispot.core.signals import newguest_signup,guest_loggedin
 
-logger = logging.getLogger()
+
 
 def init_track(wifisite,guestmac,apmac=None,origurl=None,demo=0):
     '''Method to create a track, if an already existing guestrack is found, use that
@@ -68,13 +68,13 @@ def validate_track(f):
         #get and validated guesttrack
         guesttrack = Guesttrack.query.filter_by(trackid=trackid).first()
         if not guesttrack:
-            logger.error("Called %s with wrong track ID:%s URL:%s"%(fname,trackid,request.url))
+            current_app.logger.error("Called %s with wrong track ID:%s URL:%s"%(fname,trackid,request.url))
             abort(404)
         kwargs['guesttrack'] = guesttrack
         #get and validate wifisite
         wifisite = Wifisite.query.filter_by(id=guesttrack.siteid).first()
         if not wifisite:
-            logger.error("Called %s with trackid:%s not connected to any site URL:%s"%\
+            current_app.logger.error("Called %s with trackid:%s not connected to any site URL:%s"%\
                             (fname,trackid,request.url))
             abort(404)  
         kwargs['wifisite'] = wifisite
@@ -82,7 +82,7 @@ def validate_track(f):
         guestdevice = Device.query.filter(and_(Device.siteid==wifisite.id,\
                     Device.devicemac==guesttrack.devicemac)).first()
         if not guestdevice:
-            logger.error("Called %s with trackid:%s not connected to any device URL:%s"%\
+            current_app.logger.error("Called %s with trackid:%s not connected to any device URL:%s"%\
                             (fname,trackid,request.url))
             abort(404)     
         kwargs['guestdevice'] = guestdevice     
@@ -95,33 +95,33 @@ def validate_track(f):
 
 def guestlog_warn(msg,wifisite,guesttrack=None):
     if guesttrack:
-        logger.warn('Siteid:%s guestrtrack:%s -%s'%(wifisite.id,guesttrack.id,msg))
+        current_app.logger.warn('Siteid:%s guestrtrack:%s -%s'%(wifisite.id,guesttrack.id,msg))
     else:
-        logger.warn('Siteid:%s -%s'%(wifisite.id,msg))
+        current_app.logger.warn('Siteid:%s -%s'%(wifisite.id,msg))
 
 def guestlog_info(msg,wifisite,guesttrack=None):
     if guesttrack:
-        logger.info('Siteid:%s guestrtrack:%s -%s'%(wifisite.id,guesttrack.id,msg))
+        current_app.logger.info('Siteid:%s guestrtrack:%s -%s'%(wifisite.id,guesttrack.id,msg))
     else:
-        logger.info('Siteid:%s -%s'%(wifisite.id,msg))
+        current_app.logger.info('Siteid:%s -%s'%(wifisite.id,msg))
 
 def guestlog_debug(msg,wifisite,guesttrack=None):
     if guesttrack:
-        logger.debug('Siteid:%s guestrtrack:%s -%s'%(wifisite.id,guesttrack.id,msg))
+        current_app.logger.debug('Siteid:%s guestrtrack:%s -%s'%(wifisite.id,guesttrack.id,msg))
     else:
-        logger.debug('Siteid:%s -%s'%(wifisite.id,msg))        
+        current_app.logger.debug('Siteid:%s -%s'%(wifisite.id,msg))        
 
 def guestlog_error(msg,wifisite,guesttrack=None):
     if guesttrack:
-        logger.error('Siteid:%s guestrtrack:%s -%s'%(wifisite.id,guesttrack.id,msg))
+        current_app.logger.error('Siteid:%s guestrtrack:%s -%s'%(wifisite.id,guesttrack.id,msg))
     else:
-        logger.error('Siteid:%s -%s'%(wifisite.id,msg))   
+        current_app.logger.error('Siteid:%s -%s'%(wifisite.id,msg))   
 
 def guestlog_exception(msg,wifisite,guesttrack=None):
     if guesttrack:
-        logger.exception('Siteid:%s guestrtrack:%s -%s'%(wifisite.id,guesttrack.id,msg))
+        current_app.logger.exception('Siteid:%s guestrtrack:%s -%s'%(wifisite.id,guesttrack.id,msg))
     else:
-        logger.exception('Siteid:%s -%s'%(wifisite.id,msg))                  
+        current_app.logger.exception('Siteid:%s -%s'%(wifisite.id,msg))                  
 
 def redirect_guest(wifisite,guesttrack):
     #function used for redirecting a guest to right end point
@@ -276,14 +276,15 @@ def validate_loginauth_usage(wifisite,guesttrack,loginconfig,loginauth,starttime
     return True
 
 def guest_auto_relogin_allowed(loginauth,loginconfig):
-    if not loginauth or loginconfig :
+    if not loginauth or not loginconfig :
         return False
-    if not loginauth.login_completed():
-        return False
+
     if loginconfig.relogin_policy =='onetime':
         return True
+
     elif loginconfig.relogin_policy =='always':
         return False
+        
     elif loginconfig.relogin_policy =='monthly':
         #check last login time 
         lastlogin_timelimit = arrow.utcnow().replace(days=30).timestamp
@@ -334,6 +335,7 @@ def get_loginauth_validator(AuthModel,lconfigstr,modname,logintypestr):
                         wifisite=wifisite,landingpage=landingpage,trackid=guesttrack.trackid)                 
             elif loginauth.login_completed(loginconfig) and \
                         guest_auto_relogin_allowed(loginauth,loginconfig):
+                print '+++++HHUHIHIHJI'
                 if loginconfig.is_limited():
                     #email auth from a previous session,
                     #check if its valid still

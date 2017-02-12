@@ -5,7 +5,7 @@ import urllib
 from flask_security import current_user
 from functools import wraps
 from facebook import get_user_from_cookie, GraphAPI,GraphAPIError
-from flask import request,abort,render_template,url_for,redirect,flash
+from flask import request,abort,render_template,url_for,redirect,flash,current_app
 
 from unifispot.utils.translation import _l,_n,_
 from unifispot.core.const import *
@@ -19,7 +19,6 @@ from unifispot.core.baseviews import SiteModuleAPI
 from .models import Fbconfig,Fbauth
 from .forms import FbConfigForm,CheckinForm,FbOverrideForm
 
-logger =logging.getLogger('facebook')
 
 module = UnifispotModule('facebook','login', __name__, template_folder='templates')
 

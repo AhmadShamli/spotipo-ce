@@ -1,4 +1,5 @@
 from flask import request,abort,render_template,redirect,url_for,jsonify,flash
+from flask import current_app
 import arrow
 import logging
 import uuid
@@ -29,7 +30,7 @@ from .models import Voucherconfig,Voucherdesign,Voucher,Voucherauth
 from .forms import VoucherConfigForm,VoucherDesignForm,VoucherForm,\
             VoucherFilesForm,generate_voucherform
 
-logger =logging.getLogger('voucher')
+
 
 module = UnifispotModule('voucher','login', __name__, template_folder='templates')
 
@@ -178,7 +179,7 @@ class VoucherAPI(SiteModuleElementAPI):
                     else:
                         cnt = cnt + 1
             except SQLAlchemyError as exception:
-                logger.exception('UserID:%s submited form caused exception'\
+                current_app.logger.exception('UserID:%s submited form caused exception'\
                         %(current_user.id))
                 return jsonify({'status':0,'data':{}, 'msg':_('Error while creating %(name)s'\
                         ,name=self.get_name())}) 
@@ -186,7 +187,7 @@ class VoucherAPI(SiteModuleElementAPI):
                         ,name=self.get_name())}) 
 
         else:
-            logger.debug('UserID:%s submited form with errors:%s'\
+            current_app.logger.debug('UserID:%s submited form with errors:%s'\
                          %(current_user.id,get_form_errors(itemform)))            
             return jsonify({'status':0,'data':{}, 'msg':get_form_errors(itemform)})        
 
@@ -223,7 +224,7 @@ def voucher_print(siteid=None,voucherid=None):
     #Validate SiteID
     wifisite        = Wifisite.query.filter_by(id=siteid).first()
     if not wifisite:
-        logger.warn("Site Manage URL called with invalid paramters site_id:%s userid:%s"%(siteid,current_user.id))
+        current_app.logger.warn("Site Manage URL called with invalid paramters site_id:%s userid:%s"%(siteid,current_user.id))
         abort(404)
     if voucherid:
          vouchers = Voucher.query.filter(and_(Voucher.siteid==siteid,

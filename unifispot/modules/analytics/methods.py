@@ -11,8 +11,6 @@ from unifispot.core.models import Wifisite,Guestsession,Guesttrack,Loginauth,\
                                     Guest,Device
 from .models import Sitestat
 
-logger =logging.getLogger('analytics.methods')
-
 
 
 def update_daily_stat(wifisite,daydate):

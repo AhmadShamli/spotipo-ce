@@ -4,7 +4,7 @@ from functools import wraps
 from flask_classful import FlaskView
 from flask_security import current_user,login_required
 from datatables import ColumnDT, DataTables
-from flask import Flask, render_template, request, jsonify,make_response
+from flask import Flask, render_template, request, jsonify,make_response,current_app
 from sqlalchemy.exc import SQLAlchemyError,IntegrityError
 from dateutil import tz
 
@@ -15,7 +15,7 @@ from unifispot.core.db import db
 from unifispot.core.models import Wifisite
 
 
-logger = logging.getLogger()
+
 
 class RESTView(FlaskView):
     '''Base view used for implementing CRUD api for each resourse
@@ -70,7 +70,7 @@ class RESTView(FlaskView):
         if item:
             return jsonify({'status':1,'data':item.to_dict()})   
         else:
-            logger.debug('UserID:%s trying to access unknown ID:%s of :%s'\
+            current_app.logger.debug('UserID:%s trying to access unknown ID:%s of :%s'\
                     %(current_user.id,id,self.get_name()))
             return jsonify({'status':0,'data':{}, 'msg':_l('Unknown :%(name)s ID specified'\
                     ,name=self.get_name())})
@@ -85,12 +85,12 @@ class RESTView(FlaskView):
                 item.save()
                 item.populate_from_dict(self.get_extrafields_modal())
             except IntegrityError as exception:
-                logger.exception('UserID:%s submited form caused exception'\
+                current_app.logger.exception('UserID:%s submited form caused exception'\
                         %(current_user.id))
                 return jsonify({'status':0,'data':{}, 'msg':_('Duplicate exists for the given values of %(name)s'\
                         ,name=self.get_name())})                 
             except SQLAlchemyError as exception:
-                logger.exception('UserID:%s submited form caused exception'\
+                current_app.logger.exception('UserID:%s submited form caused exception'\
                         %(current_user.id))
                 return jsonify({'status':0,'data':{}, 'msg':_('Error while creating %(name)s'\
                         ,name=self.get_name())}) 
@@ -98,7 +98,7 @@ class RESTView(FlaskView):
                         ,name=self.get_name())}) 
 
         else:
-            logger.debug('UserID:%s submited form with errors:%s'\
+            current_app.logger.debug('UserID:%s submited form with errors:%s'\
                          %(current_user.id,get_form_errors(itemform)))            
             return jsonify({'status':0,'data':{}, 'msg':get_form_errors(itemform)})
 
@@ -113,12 +113,12 @@ class RESTView(FlaskView):
                     item.save()
                     item.populate_from_dict(self.get_extrafields_modal())
                 except IntegrityError as exception:
-                    logger.exception('UserID:%s submited form caused exception'\
+                    current_app.logger.exception('UserID:%s submited form caused exception'\
                             %(current_user.id))
                     return jsonify({'status':0,'data':{}, 'msg':_('Duplicate exists for the given values of %(name)s'\
                             ,name=self.get_name())})                       
                 except SQLAlchemyError as exception:
-                    logger.exception('UserID:%s submited form caused exception'\
+                    current_app.logger.exception('UserID:%s submited form caused exception'\
                             %(current_user.id))
                     return jsonify({'status':0,'data':{}, 'msg':_('Error while updating %(name)s'\
                             ,name=self.get_name())}) 
@@ -126,11 +126,11 @@ class RESTView(FlaskView):
                             ,name=self.get_name())}) 
 
             else:
-                logger.debug('UserID:%s submited form with errors:%s'\
+                current_app.logger.debug('UserID:%s submited form with errors:%s'\
                              %(current_user.id,get_form_errors(itemform)))            
                 return jsonify({'status':0,'data':{}, 'msg':get_form_errors(itemform)}) 
         else:
-            logger.debug('UserID:%s trying to update unknown ID:%s of :%s'\
+            current_app.logger.debug('UserID:%s trying to update unknown ID:%s of :%s'\
                     %(current_user.id,id,self.get_name()))
             return jsonify({'status':0,'data':{}, 'msg':_l('Unknown :%(name)s ID \
                     specified',name=self.get_name())})
@@ -141,7 +141,7 @@ class RESTView(FlaskView):
             try:
                 item.delete()
             except SQLAlchemyError as exception:
-                logger.exception('UserID:%s submited deletion call exception'\
+                current_app.logger.exception('UserID:%s submited deletion call exception'\
                         %(current_user.id))
                 return jsonify({'status':0,'data':{}, 'msg':_('Error while deleting %(name)s'\
                     ,name=self.get_name())})            
@@ -149,7 +149,7 @@ class RESTView(FlaskView):
                         ,name=self.get_name())}) 
 
         else:
-            logger.debug('UserID:%s trying to delete unknown ID:%s of :%s'\
+            current_app.logger.debug('UserID:%s trying to delete unknown ID:%s of :%s'\
                     %(current_user.id,id,self.get_name()))
             return jsonify({'status':0,'data':{}, 'msg':_l('Unknown :%(name)s ID \
                     specified',name=self.get_name())})
@@ -214,13 +214,13 @@ class SiteModuleAPI(FlaskView):
                 item.save()
                 item.populate_from_dict(self.get_extrafields_modal())
             except IntegrityError as exception:
-                logger.exception('UserID:%s submited form caused exception'\
+                current_app.logger.exception('UserID:%s submited form caused exception'\
                         %(current_user.id))
                 return jsonify({'status':0,'data':{}, 'msg':_('Duplicate exists for the given values of %(name)s'\
                         ,name=self.get_name())})                   
             except SQLAlchemyError as exception:
                 db.session.rollback()
-                logger.exception('UserID:%s submited form caused exception'\
+                current_app.logger.exception('UserID:%s submited form caused exception'\
                         %(current_user.id))
                 return jsonify({'status':0,'data':{}, 'msg':_('Error while updating %(name)s'\
                         ,name=self.get_name())}) 
@@ -228,7 +228,7 @@ class SiteModuleAPI(FlaskView):
                         ,name=self.get_name())}) 
 
         else:
-            logger.debug('UserID:%s submited form with errors:%s'\
+            current_app.logger.debug('UserID:%s submited form with errors:%s'\
                          %(current_user.id,get_form_errors(itemform)))            
             return jsonify({'status':0,'data':{}, 'msg':get_form_errors(itemform)})                   
 
@@ -404,7 +404,7 @@ class SiteModuleElementAPI(FlaskView):
         if item:
             return jsonify({'status':1,'data':item.to_dict()})   
         else:
-            logger.debug('UserID:%s trying to access unknown ID:%s of :%s'\
+            current_app.logger.debug('UserID:%s trying to access unknown ID:%s of :%s'\
                     %(current_user.id,id,self.get_name()))
             return jsonify({'status':0,'data':{}, 'msg':_l('Unknown :%(name)s ID specified'\
                     ,name=self.get_name())})
@@ -421,12 +421,12 @@ class SiteModuleElementAPI(FlaskView):
                 item.siteid = siteid
                 item.populate_from_dict(self.get_extrafields_modal())
             except IntegrityError as exception:
-                logger.exception('UserID:%s submited form caused exception'\
+                current_app.logger.exception('UserID:%s submited form caused exception'\
                         %(current_user.id))
                 return jsonify({'status':0,'data':{}, 'msg':_('Duplicate exists for the given values of %(name)s'\
                             ,name=self.get_name())})                   
             except SQLAlchemyError as exception:
-                logger.exception('UserID:%s submited form caused exception'\
+                current_app.logger.exception('UserID:%s submited form caused exception'\
                         %(current_user.id))
                 return jsonify({'status':0,'data':{}, 'msg':_('Error while creating %(name)s'\
                         ,name=self.get_name())}) 
@@ -434,7 +434,7 @@ class SiteModuleElementAPI(FlaskView):
                         ,name=self.get_name())}) 
 
         else:
-            logger.debug('UserID:%s submited form with errors:%s'\
+            current_app.logger.debug('UserID:%s submited form with errors:%s'\
                          %(current_user.id,get_form_errors(itemform)))            
             return jsonify({'status':0,'data':{}, 'msg':get_form_errors(itemform)})
 
@@ -449,12 +449,12 @@ class SiteModuleElementAPI(FlaskView):
                     item.save()
                     item.populate_from_dict(self.get_extrafields_modal())
                 except IntegrityError as exception:
-                    logger.exception('UserID:%s submited form caused exception'\
+                    current_app.logger.exception('UserID:%s submited form caused exception'\
                             %(current_user.id))
                     return jsonify({'status':0,'data':{}, 'msg':_('Duplicate exists for the given values of %(name)s'\
                             ,name=self.get_name())})                       
                 except SQLAlchemyError as exception:
-                    logger.exception('UserID:%s submited form caused exception'\
+                    current_app.logger.exception('UserID:%s submited form caused exception'\
                             %(current_user.id))
                     return jsonify({'status':0,'data':{}, 'msg':_('Error while updating %(name)s'\
                             ,name=self.get_name())}) 
@@ -462,11 +462,11 @@ class SiteModuleElementAPI(FlaskView):
                             ,name=self.get_name())}) 
 
             else:
-                logger.debug('UserID:%s submited form with errors:%s'\
+                current_app.logger.debug('UserID:%s submited form with errors:%s'\
                              %(current_user.id,get_form_errors(itemform)))            
                 return jsonify({'status':0,'data':{}, 'msg':get_form_errors(itemform)}) 
         else:
-            logger.debug('UserID:%s trying to update unknown ID:%s of :%s'\
+            current_app.logger.debug('UserID:%s trying to update unknown ID:%s of :%s'\
                     %(current_user.id,id,self.get_name()))
             return jsonify({'status':0,'data':{}, 'msg':_l('Unknown :%(name)s ID \
                     specified',name=self.get_name())})
@@ -477,7 +477,7 @@ class SiteModuleElementAPI(FlaskView):
             try:
                 item.delete()
             except SQLAlchemyError as exception:
-                logger.exception('UserID:%s submited deletion call exception'\
+                current_app.logger.exception('UserID:%s submited deletion call exception'\
                         %(current_user.id))
                 return jsonify({'status':0,'data':{}, 'msg':_('Error while deleting %(name)s'\
                     ,name=self.get_name())})            
@@ -485,7 +485,7 @@ class SiteModuleElementAPI(FlaskView):
                         ,name=self.get_name())}) 
 
         else:
-            logger.debug('UserID:%s trying to delete unknown ID:%s of :%s'\
+            current_app.logger.debug('UserID:%s trying to delete unknown ID:%s of :%s'\
                     %(current_user.id,id,self.get_name()))
             return jsonify({'status':0,'data':{}, 'msg':_l('Unknown :%(name)s ID \
                     specified',name=self.get_name())})        

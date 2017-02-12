@@ -1,5 +1,4 @@
 import os
-import logging
 from timezones import zones
 from flask import current_app,request,flash
 from flask_wtf import FlaskForm as Form
@@ -7,13 +6,15 @@ from wtforms import TextField, HiddenField,SelectField,FileField,BooleanField,Pa
 from wtforms.validators import Required
 from flask_security import current_user
 import importlib
+from spotipo_plugins import get_plugin
+
 
 from unifispot.utils.translation import _l,_n,_
 from unifispot.core.const import font_list
 from unifispot.core.models import Wifisite
+from unifispot.ext.plugins import plugin_manager
 
 
-logger = logging.getLogger('core.forms')
 
 class UserForm(Form):
     email       = TextField(_l('Email'),validators = [Required()])
@@ -78,15 +79,10 @@ def get_wifisite_form(baseform=False):
                     except:
                         flash(_l('Error while getting sitelist. \
                                         Please check Controller settings'), 'danger')
-                        logger.exception("Exception while trying to get sitekeys for :%s"\
+                        current_app.logger.exception("Exception while trying to get sitekeys for :%s"\
                                         %wifisite.id)
                     else:
                         self.sitekey.choices = sitekeys
-
-
-
-
-
 
 
     if not baseform:
@@ -100,25 +96,27 @@ def get_wifisite_form(baseform=False):
 
         setattr(F,'sitekey',SelectField(_l('Site ID'),choices=[]))
         setattr(F,'unifi_id',TextField(_l('UniFi Site')))
-        for lmethod in current_app.config['GUESTLOGIN_MODULES']:
-            fieldname = 'auth_%s'%lmethod
-            fieldlabel = _l('%s Login'%lmethod.title())
-            setattr(F,fieldname,TextField(fieldlabel))        
 
-        for method in current_app.config['GUESTPRELOGIN_MODULES']:
-            fieldname = 'preauth_%s'%method
-            fieldlabel = _l('%s '%method.title())
-            setattr(F,fieldname,TextField(fieldlabel)) 
- 
-        for method in current_app.config['GUESTPOSTLOGIN_MODULES']:
-            fieldname = 'postauth_%s'%method
-            fieldlabel = _l('Postlogin %s '%method.title())
-            setattr(F,fieldname,TextField(fieldlabel)) 
+        for p_name in plugin_manager.plugins:
+            plugin = get_plugin(p_name)
+            if plugin.type in ['login']:
+                fieldname = 'auth_%s'%p_name
+                fieldlabel = _l('%s Login'%p_name.title())
+                setattr(F,fieldname,TextField(fieldlabel))        
 
-        for method in current_app.config['GUESTEXPORT_MODULES']:
-            fieldname = 'export_%s'%method
-            fieldlabel = _l('Export to %s '%method.title())
-            setattr(F,fieldname,TextField(fieldlabel))                    
+            elif plugin.type in ['prelogin']:
+                fieldname = 'preauth_%s'%p_name
+                fieldlabel = _l('%s '%p_name.title())
+                setattr(F,fieldname,TextField(fieldlabel)) 
+
+            elif plugin.type in ['postlogin']:
+                fieldname = 'postauth_%s'%p_name
+                fieldlabel = _l('Postlogin %s '%p_name.title())
+                setattr(F,fieldname,TextField(fieldlabel)) 
+            elif plugin.type in ['export']:
+                fieldname = 'export_%s'%p_name
+                fieldlabel = _l('Export to %s '%p_name.title())
+                setattr(F,fieldname,TextField(fieldlabel))                    
 
     return F() 
 

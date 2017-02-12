@@ -1,4 +1,5 @@
 from flask import request,abort,render_template,redirect,url_for,jsonify
+from flask import current_app,Blueprint
 import arrow
 import logging
 from flask_security import current_user,login_required
@@ -10,9 +11,9 @@ from unifispot.core.app import UnifispotModule
 from unifispot.core.utils import  get_form_errors,validate_site_ownership
 from unifispot.core.models import Wifisite
 from .models import Sitestat
-logger =logging.getLogger('analytics')
 
-module = UnifispotModule('analytics','general', __name__, template_folder='templates')
+
+module = Blueprint('analytics', __name__, template_folder='templates')
 
 
 @module.route('/s/analytics/api/',methods = ['GET', 'POST'])
@@ -26,7 +27,7 @@ def get_analytics(id=None):
         end_date    = arrow.get(end,'DD-MM-YYYY')
         start_date  = arrow.get(start,'DD-MM-YYYY')
     except:
-        logger.exception('Exception while converting start/end dates in :%s'\
+        current_app.logger.exception('Exception while converting start/end dates in :%s'\
                         %request.url)
         end_date    = arrow.now() 
         start_date  = end_date.replace(days=-29)   
@@ -35,7 +36,7 @@ def get_analytics(id=None):
         if not wifisite or ( current_user.type == 'admin' and \
                 wifisite.account_id != current_user.account_id) or\
                 (current_user.type =='client' and wifisite.client_id != current_user.id):
-            logger.error('User:%s trying to access invalid/unauth site:%s'%\
+            current_app.logger.error('User:%s trying to access invalid/unauth site:%s'%\
                             (current_user.id,id))
         basequery = Sitestat.query.filter(Sitestat.siteid==id)
     else:

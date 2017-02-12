@@ -1,4 +1,4 @@
-from flask import request,abort,render_template,redirect,url_for,flash
+from flask import request,abort,render_template,redirect,url_for,flash,current_app
 import arrow
 import logging
 from flask_security import current_user
@@ -21,7 +21,7 @@ from unifispot.core.baseviews import SiteModuleAPI
 from .models import Phoneconfig,Phoneauth
 from .forms import PhoneConfigForm,generate_phoneform,PhoneOverrideForm
 
-logger =logging.getLogger('phone')
+
 
 module = UnifispotModule('phone','login', __name__, template_folder='templates')
 

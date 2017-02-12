@@ -1,0 +1,10 @@
+{
+    "identifier": "email",
+    "name": "Email Login",
+    "author": "rakeshmukundan",
+    "website": "http://spotipo.com",
+    "license": "AGPL",
+    "description": "Email login plugin for Spotipo",
+    "version": "0.1",
+    "type": "login"
+}

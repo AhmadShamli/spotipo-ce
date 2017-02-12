@@ -15,7 +15,7 @@ from unifispot.ext.celeryext import celery
 from unifispot.core.utils import send_email,compare_versions
 from unifispot.version import version
 
-logger =logging.getLogger('core.tasks')
+
 
 
 @periodic_task(run_every=(crontab(minute=0,hour="*/1")))
@@ -23,7 +23,7 @@ def celery_get_notification(*args, **kwargs):
     '''Connect to https://notify.unifispot.com/notify.json and get notifications
 
     '''
-    logger.info('-----------Running celery_get_notification-----------------------')
+    current_app.logger.info('-----------Running celery_get_notification-----------------------')
     accounts = Account.query.all()
     for account in accounts:
         token= account.token
@@ -51,13 +51,13 @@ def celery_run_exports(guestid,siteid):
     site = Wifisite.query.get(siteid)   
     guest = Guest.query.get(guestid)
     if not site or not guest:
-        logger.error('-------Invalid  guest:%s or site:%s'%(guestid,siteid))
+        current_app.logger.error('-------Invalid  guest:%s or site:%s'%(guestid,siteid))
         return 0
-    logger.debug('-------Running exports for guest:%s site:%s'%(guestid,siteid))
+    current_app.logger.debug('-------Running exports for guest:%s site:%s'%(guestid,siteid))
     #get all the export methods configured for this site
     export_methods = site.get_methods('export_methods')
     if not export_methods:
-        logger.debug('No export modules configured for site:%s guest:%s'%(siteid,guestid))
+        current_app.logger.debug('No export modules configured for site:%s guest:%s'%(siteid,guestid))
         return 0
 
     for m in export_methods:
@@ -66,7 +66,7 @@ def celery_run_exports(guestid,siteid):
             expmodule = importlib.import_module('unifispot.modules.%s.main'%mod_name)
             expmodule.export_guest(guest,site)
         except:
-            logger.exception('-------Invalid export module:%s for  guest:%s or site:%s'%
+            current_app.logger.exception('-------Invalid export module:%s for  guest:%s or site:%s'%
                         (mod_name,guestid,siteid))
         
 

@@ -1,0 +1,10 @@
+{
+    "identifier": "voucher",
+    "name": "Voucher Login",
+    "author": "rakeshmukundan",
+    "website": "http://spotipo.com",
+    "license": "AGPL",
+    "description": "Voucher Login plugin for Spotipo",
+    "version": "0.1",
+    "type": "login"
+}

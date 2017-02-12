@@ -49,20 +49,21 @@ CORE_EXTENSIONS = [
     'unifispot.ext.mail.configure',
     'unifispot.ext.security.configure',
     'unifispot.ext.babel.configure',
-    'unifispot.ext.views.configure',
+    'unifispot.ext.routes.configure',
     'unifispot.ext.flaskmenu.configure',
-    'unifispot.ext.modules.load_from_folder',
+    #'unifispot.ext.modules.load_from_folder',
     'unifispot.ext.middleware.configure',
     'unifispot.ext.celeryext.configure',
     'unifispot.ext.redis.configure',
     'unifispot.ext.qrcode.configure',
+    'unifispot.ext.plugins.configure',
 
 ]
 
 
 DEFAULT_THEME = 'default'
 
-GUESTTRACK_LIFETIME = 300 #life time of guesttrack in seconds
+GUESTTRACK_LIFETIME = 1 #life time of guesttrack in seconds
 
 GUESTLOGIN_MODULES = []
 GUESTPRELOGIN_MODULES = []
@@ -74,6 +75,7 @@ DEFAULT_POST_AUTH_URL = 'http://spotipo.com'
 TEMPLATES_AUTO_RELOAD = True
 
 NO_UNIFI=False
+UNIFI_NO_AP_MAC=False
 
 
 NOTIFICATION_URL = 'http://spotipo.com/notifications/'

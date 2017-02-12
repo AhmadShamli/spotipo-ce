@@ -1,4 +1,4 @@
-from flask import request,abort,render_template,redirect,url_for,flash
+from flask import request,abort,render_template,redirect,url_for,flash,current_app
 import arrow
 import logging
 from flask_security import current_user
@@ -21,7 +21,6 @@ from unifispot.core.baseviews import SiteModuleAPI
 from .models import Emailconfig,Emailauth
 from .forms import EmailConfigForm,generate_emailform,EmailOverrideForm
 
-logger =logging.getLogger('email')
 
 module = UnifispotModule('email','login', __name__, template_folder='templates')
 

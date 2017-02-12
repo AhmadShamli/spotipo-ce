@@ -1,0 +1,10 @@
+{
+    "identifier": "phone",
+    "name": "Phone Login",
+    "author": "rakeshmukundan",
+    "website": "http://spotipo.com",
+    "license": "AGPL",
+    "description": "Phone Login plugin for Spotipo",
+    "version": "0.1",
+    "type": "login"
+}

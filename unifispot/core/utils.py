@@ -11,17 +11,17 @@ from unifispot.ext.redis import redis
 from unifispot.utils.translation import _l,_n,_
 from .models import Role,User,Account,Notification,Admin,Client,Wifisite
 
-logger = logging.getLogger()
+
 
 def client_required(f):
     @wraps(f)
     def decorated_function(*args, **kwargs):   
         if not current_user.is_authenticated:
-            logger.debug('User:%s trying to access unathorized URL:%s'%(current_user.id,
+            current_app.logger.debug('User:%s trying to access unathorized URL:%s'%(current_user.id,
                 request.url))
             return redirect(url_for('security.login', next=request.url))
         if not current_user.type =='client':
-            logger.debug('User:%s trying to access unathorized URL:%s'%(current_user.id,
+            current_app.logger.debug('User:%s trying to access unathorized URL:%s'%(current_user.id,
                 request.url))
             return abort(401)           
         return f(*args, **kwargs)
@@ -31,11 +31,11 @@ def admin_required(f):
     @wraps(f)
     def decorated_function(*args, **kwargs):
         if not current_user.is_authenticated:
-            logger.debug('User:%s trying to access unathorized URL:%s'%(current_user.id,
+            current_app.logger.debug('User:%s trying to access unathorized URL:%s'%(current_user.id,
                 request.url))
             return redirect(url_for('security.login', next=request.url))
         if not current_user.type =='admin':
-            logger.debug('User:%s trying to access unathorized URL:%s'%(current_user.id,
+            current_app.logger.debug('User:%s trying to access unathorized URL:%s'%(current_user.id,
                 request.url))
             return abort(401)
         return f(*args, **kwargs)
@@ -49,7 +49,7 @@ def allow_only_self(f):
     def decorated_function(*args, **kwargs):   
         id = kwargs.get('id')         
         if id and str(id) != str(current_user.id):
-            logger.debug('User:%s trying to access unathorized URL:%s'%(current_user.id,
+            current_app.logger.debug('User:%s trying to access unathorized URL:%s'%(current_user.id,
                 request.url))
             abort(405)
         return f(*args, **kwargs)
@@ -62,7 +62,7 @@ def prevent_self_delete(f):
     def decorated_function(*args, **kwargs):   
         id = kwargs.get('id')         
         if request.method == "DELETE" and  str(id) == str(current_user.id):
-            logger.debug('User:%s trying to delete himself:%s'%(current_user.id,
+            current_app.logger.debug('User:%s trying to delete himself:%s'%(current_user.id,
                 request.url))
             abort(405)
         return f(*args, **kwargs)
@@ -80,7 +80,7 @@ def get_account_validator(modeltype):
             if id :
                 item = eval(modeltype).query.get(id)
                 if not item or item.account_id != current_user.account_id:
-                    logger.debug('User:%s trying to access unathorized URL:%s'%\
+                    current_app.logger.debug('User:%s trying to access unathorized URL:%s'%\
                         (current_user.id,request.url))
                     abort(401)
             return f(*args, **kwargs)
@@ -95,22 +95,22 @@ def validate_site_ownership(f):
     def decorated_function(*args, **kwargs): 
         siteid = kwargs.get('siteid')
         if not siteid:
-            logger.debug('UserID:%s trying to :%s with no siteid'\
+            current_app.logger.debug('UserID:%s trying to :%s with no siteid'\
                 %(current_user.id,request.url))
             abort(401)
         wifisite = Wifisite.query.get(siteid)
         if not wifisite:
-            logger.debug('UserID:%s trying to :%s with invalid siteid:%s'\
+            current_app.logger.debug('UserID:%s trying to :%s with invalid siteid:%s'\
                 %(current_user.id,request.url,siteid))
             abort(401)     
         #client can access only his own sites
         if current_user.type == 'client' and wifisite.client_id != current_user.id:
-            logger.debug('UserID:%s trying to :%s with siteid:%s  which is now owned by him'\
+            current_app.logger.debug('UserID:%s trying to :%s with siteid:%s  which is now owned by him'\
                 %(current_user.id,request.url,siteid))
             abort(401)        
         #admin can access only sites in his account      
         if current_user.type == 'admin' and wifisite.account_id != current_user.account_id:
-            logger.debug('UserID:%s trying to :%s with siteid:%s  which is now owned by him'\
+            current_app.logger.debug('UserID:%s trying to :%s with siteid:%s  which is now owned by him'\
                 %(current_user.id,request.url,siteid))
             abort(401)           
         return f(*args, **kwargs)
@@ -217,7 +217,7 @@ def send_email(subject, body=None, html=None, recipients=None, throttle=None):
         lock = redis.lock(EMAIL_THROTTLE.format(md5=md5), timeout=int(seconds))
         have_lock = lock.acquire(blocking=False)
         if not have_lock:
-            logger.debug('Suppressing email: {}'.format(subject))
+            current_app.logger.debug('Suppressing email: {}'.format(subject))
             return
     msg = Message(subject=subject, recipients=recipients, body=body, html=html)
     mail.send(msg)

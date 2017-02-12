@@ -1,0 +1,10 @@
+{
+    "identifier": "unifi",
+    "name": "Unifi Support",
+    "author": "rakeshmukundan",
+    "website": "http://spotipo.com",
+    "license": "AGPL",
+    "description": "Unifi Support for Spotipo",
+    "version": "0.1",
+    "type": "general"
+}
