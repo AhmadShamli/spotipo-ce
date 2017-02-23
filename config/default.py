@@ -48,7 +48,6 @@ CORE_EXTENSIONS = [
     'unifispot.core.db.db.init_app',
     'unifispot.ext.mail.configure',
     'unifispot.ext.security.configure',
-    'unifispot.ext.babel.configure',
     'unifispot.ext.routes.configure',
     'unifispot.ext.flaskmenu.configure',
     #'unifispot.ext.modules.load_from_folder',
@@ -57,7 +56,7 @@ CORE_EXTENSIONS = [
     'unifispot.ext.redis.configure',
     'unifispot.ext.qrcode.configure',
     'unifispot.ext.plugins.configure',
-
+    'unifispot.ext.babel.configure',
 ]
 
 
