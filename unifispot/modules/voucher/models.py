@@ -119,7 +119,8 @@ class Voucher(CRUDMixin,SerializerMixin,db.Model):
                     self.id,Voucherauth.endtime > utcnow)).all()   
         devices = []    
         for auth in auths:
-            devices.append(auth.deviceid)
+            if auth.is_currently_active():
+                devices.append(auth.deviceid)
 
         
         #check if max number of devices are already connected
@@ -155,7 +156,6 @@ class Voucher(CRUDMixin,SerializerMixin,db.Model):
 
         if self.bytes_t: # if data limit is specified
             (time_used,data_used) = loginauth.get_usage(startedat)
-
             if not data_used < self.bytes_t:
                 current_app.logger.warning('Max data limit reached for:%s, not able to login\
                     device:%s'%(self.id,loginauth.deviceid))
@@ -163,7 +163,7 @@ class Voucher(CRUDMixin,SerializerMixin,db.Model):
             else:
                 data_available = self.bytes_t - data_used
         else:
-             data_available = 1000
+             data_available = 0
 
         #all good, update login auth and return it
         loginauth.starttime = utcnow

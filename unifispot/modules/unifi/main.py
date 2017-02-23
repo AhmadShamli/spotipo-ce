@@ -37,6 +37,8 @@ def get_sitekeys(wifisite):
 
 def disconnect_client(wifisite,mac):
     #disconnect the given MAC
+    if current_app.config['NO_UNIFI']:
+        return 1    
     if not wifisite:
         return None
     account = Account.query.get(wifisite.account_id)
@@ -50,7 +52,8 @@ def disconnect_client(wifisite,mac):
 def update_device_session(wifisite,mac):
     #update session details for a given MAC
     pass
-
+    if current_app.config['NO_UNIFI']:
+        return 1   
 
 ##
 
@@ -89,7 +92,7 @@ def guest_portal(sitekey):
 
     devicemac   = request.args.get('id')
     apmac       = request.args.get('ap')   
-    origurl     = request.args.get('url')   
+    visitedurl  = request.args.get('url')   
     demo        = request.args.get('demo')
     utcnow      = arrow.utcnow().naive
   
@@ -111,7 +114,7 @@ def guest_portal(sitekey):
         demo = 1
     else:
         demo = 0
-    guesttrack = init_track(wifisite,devicemac,apmac,origurl,demo)   
+    guesttrack = init_track(wifisite,devicemac,apmac,visitedurl,demo)   
 
     return redirect_guest(wifisite,guesttrack)
 
@@ -134,23 +137,25 @@ def guest_auth(trackid,guesttrack,wifisite,guestdevice,account):
                         wifisite,guesttrack)
         abort(404)
 
-    duration = loginauth.time_limit if (loginauth.time_limit < 480) else 480
+    time_limit = loginauth.time_available()
+    duration = time_limit if (time_limit < 480) else 480
     
-    try:
-        c = Controller(account=account,sitekey=wifisite.sitekey)  
-        if current_app.config['UNIFI_NO_AP_MAC']:
-            #made sending AP MAC to be configurable
-            c.authorize_guest(guesttrack.devicemac,duration,
-                              up_bandwidth=loginauth.speed_ul,
-                              down_bandwidth=loginauth.speed_dl)
-        else:
-            c.authorize_guest(guesttrack.devicemac,duration,
-                              ap_mac=guesttrack.apmac,
-                              up_bandwidth=loginauth.speed_ul,
-                              down_bandwidth=loginauth.speed_dl)    
-    except:
-        guestlog_exception('exception while trying to authorize guest',wifisite,guesttrack)
-        abort(500)   
+    if not current_app.config['NO_UNIFI']:
+        try:                
+            c = Controller(account=account,sitekey=wifisite.sitekey)  
+            if current_app.config['UNIFI_NO_AP_MAC']:
+                #made sending AP MAC to be configurable
+                c.authorize_guest(guesttrack.devicemac,duration,
+                                  up_bandwidth=loginauth.speed_ul,
+                                  down_bandwidth=loginauth.speed_dl)
+            else:
+                c.authorize_guest(guesttrack.devicemac,duration,
+                                  ap_mac=guesttrack.apmac,
+                                  up_bandwidth=loginauth.speed_ul,
+                                  down_bandwidth=loginauth.speed_dl)    
+        except:
+            guestlog_exception('exception while trying to authorize guest',wifisite,guesttrack)
+            abort(500)   
 
 
 

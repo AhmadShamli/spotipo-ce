@@ -7,9 +7,9 @@
 
 {%endblock%}
 
-{% block title %}Manage Clients {% endblock %}
+{% block title %} {{_('Manage Clients')}}{% endblock %}
 {% block mainContent %}
-{{modal_form(userform,'clientmodal',"Client Details")}}
+{{modal_form(userform,'clientmodal',_("Client Details"))}}
 
 <div class="page-title">
   <div class="title_left">

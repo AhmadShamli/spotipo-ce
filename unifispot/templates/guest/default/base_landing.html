@@ -154,15 +154,23 @@
 
             </div>
 
-            <!--Keeping below lines are needed to be in align with AGPL.
+            <!--Keeping below lines are needed to be in align with 4-clause BSD license.
 
 
             Contact Us if you would like to purchase a branding permission
 
             -->   
-            <!--AGPL attribution starts-->
-            <p class='login-text'><small>{{_('Powered By')}} <a href="http://spotipo.com"title="Captive portal with Socil Login and Data collection" target="_blank">{{_('Spotipo')}}</a></small></p>
-            <!--AGPL attribution end-->
+            <!--BSD attribution starts-->
+
+            <p class='login-text'><small>
+                {% if emit_event('branding-permission-available')  %}
+                    {{emit_event('branding-permission-poweredby') | safe}}
+                {%else%}
+                    {{_('Powered By')}} <a href="http://spotipo.com"title="Captive portal with Socil Login and Data collection" target="_blank">{{_('Spotipo')}}</a>
+                {%endif%}
+            </small></p>
+            
+            <!--BSD attribution end-->
             <p class="login-text"> <small>{{_('By Logging In You agree to our')}} <a href="{{landingpage.tosfile}}"> {{_('Terms and Conditions')}}</a> {{_('And')}} <a href="{{landingpage.tosfile}}">{{_('Privacy Policy')}}</a></small> </p>            
         </div>
     </div>

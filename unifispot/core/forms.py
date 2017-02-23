@@ -2,8 +2,10 @@ import os
 from timezones import zones
 from flask import current_app,request,flash
 from flask_wtf import FlaskForm as Form
-from wtforms import TextField, HiddenField,SelectField,FileField,BooleanField,PasswordField,TextAreaField,RadioField,SelectMultipleField,widgets,validators
-from wtforms.validators import Required
+from wtforms import TextField, HiddenField,SelectField,FileField,\
+            BooleanField,PasswordField,TextAreaField,RadioField,\
+            SelectMultipleField,widgets,validators
+from wtforms.validators import Required,Email
 from flask_security import current_user
 import importlib
 from spotipo_plugins import get_plugin
@@ -36,13 +38,36 @@ class UserForm(Form):
 
 class AccountForm(Form):
     unifi_server    = TextField(_l('Controller IP'),validators = [Required()])
-    unifi_user      = TextField(_l('Controller Username'),validators = [Required()])
-    unifi_pass      = PasswordField(_l('Controller Password'),validators = [Required()])
-    unifi_port      = TextField(_l('Controller Port'),validators = [Required()])
-    unifi_version   = SelectField(_('Controller API version'),choices=[('v4','V4/V5')])
+    unifi_user      = TextField(_l('Controller Username'),
+                                validators = [Required()])
+    unifi_pass      = PasswordField(_l('Controller Password'),
+                                validators = [Required()])
+    unifi_port      = TextField(_l('Controller Port'),
+                                validators = [Required()])
+    unifi_version   = SelectField(_('Controller API version'),
+                                choices=[('v4','V4/V5')])
 
     def populate(self):
         pass
+
+class MailsettingsForm(Form):
+    mail_server     = TextField(_l('Mail Server'))
+    #mail_username   = TextField(_l('Mail Username'))
+    #mail_password   = PasswordField(_l('Mail Password'))
+    mail_port       = TextField(_l('Mail Port'))
+    #mail_use_tls    = SelectField(_l('Mail Enable TLS'),coerce=int,
+    #                            choices=[(0,'No'),(1,'Yes')])
+    #mail_use_ssl    = SelectField(_l('Mail Enable SSL'),coerce=int,
+    #                            choices=[(0,'No'),(1,'Yes')])
+    mail_default_sender= TextField(_l('Mail Default Sender'))    
+
+    def populate(self):
+        pass
+
+class TestEmailForm(Form):
+    sendto     = TextField(_l('Recipient Email'),
+                        validators = [Required(),Email()])    
+
 
 
 def get_wifisite_form(baseform=False):

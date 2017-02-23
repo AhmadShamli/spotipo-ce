@@ -4,11 +4,10 @@ import time
 import arrow
 import random,os
 from functools import wraps
-from  flask import render_template 
 from flask import url_for,flash,redirect
 from flask_classful import FlaskView,route
 from flask_security import current_user,login_required
-from flask import Flask, request, jsonify,abort,current_app
+from flask import Flask, request, jsonify,abort,current_app,render_template
 from flask_menu.classy import classy_menu_item
 from flask_menu import current_menu
 from sqlalchemy.exc import SQLAlchemyError
@@ -20,13 +19,16 @@ from unifispot.utils.translation import _l,_n,_
 from unifispot.core.templates import render_dt_buttons
 from unifispot.core.db import db
 from unifispot.core.models import User,Admin,Client,Wifisite,\
-                                    Landingpage,Sitefile,Guest,Account,Notification
+                                    Landingpage,Sitefile,Guest,\
+                                    Account,Notification,Options
 from unifispot.core.forms import UserForm,get_wifisite_form,LandingPageForm,\
-                                LandingFilesForm,SimpleLandingPageForm,AccountForm
-from unifispot.core.baseviews import RESTView,SiteModuleAPI,SiteDataViewAPI
+                                LandingFilesForm,SimpleLandingPageForm,\
+                                AccountForm,MailsettingsForm,TestEmailForm
+from unifispot.core.baseviews import RESTView,SiteModuleAPI,SiteDataViewAPI,OptionsAPI
 from unifispot.core.utils import allow_only_self,admin_required,\
                 get_account_validator,admin_menu,admin_site_menu,site_menu,\
-                prevent_self_delete,get_form_errors,validate_site_ownership
+                prevent_self_delete,get_form_errors,validate_site_ownership,\
+                send_email
 
 
 
@@ -177,7 +179,7 @@ class AccountAPI(RESTView):
         return AccountForm()
 
     def get_name(self):
-        return 'Settings'
+        return 'Unifi Settings'
 
     def index(self): 
         abort(405)   
@@ -186,15 +188,60 @@ class AccountAPI(RESTView):
         abort(405)             
  
     def delete(self,id): 
-        abort(405)     
+        abort(405)   
+
+
 
 class AccountManage(FlaskView):
     decorators = [login_required,admin_required]
 
-    @classy_menu_item('.manage.settings', _l('Settings'),visible_when=admin_menu)
+    @classy_menu_item('.manage.settings', _l('UniFi Settings'),visible_when=admin_menu)
     def index(self):
         settingsform = AccountForm()
-        return render_template('core/settings.html',settingsform=settingsform)        
+        return render_template('core/unifi-settings.html',settingsform=settingsform)        
+
+
+class MailOptionsAPI(OptionsAPI):
+
+    def get_form_obj(self):
+        return MailsettingsForm()
+
+    def get_name(self):
+        return 'Mail Settings'    
+
+
+class MailOptionsManage(FlaskView):
+    decorators = [login_required,admin_required]
+
+    @classy_menu_item('.manage.options', _l('Mail Settings'),
+                                visible_when=admin_menu)
+    def index(self):
+        mailsettingsform = MailsettingsForm()
+        testemailform = TestEmailForm()
+        return render_template('core/mailsettings.html',
+                        mailsettingsform=mailsettingsform,testemailform=testemailform)        
+
+class TestEmail(FlaskView):
+    decorators = [login_required,admin_required]
+
+    def post(self):
+        testemailform = TestEmailForm()
+        if testemailform.validate_on_submit(): 
+            try:   
+                send_email("TEST EMAIL", body='Spotipo Test', html=None, 
+                            recipients=[testemailform.sendto.data])
+            except:
+                current_app.logger.exception("Exception while sending test email")
+                return jsonify({'status':0,'data':{}, 
+                            'msg':_('Error while trying to send test email')}) 
+            else:
+                return jsonify({'status':1,'data':{}, 
+                            'msg':_('Test mail send successfully')})
+
+        else:        
+            return jsonify({'status':0,'data':{}, 
+                            'msg':get_form_errors(testemailform)})
+
 
 class WifisiteAPI(RESTView):
     ''' View used for Wifisite api, returns rendered form when calling form

@@ -12,7 +12,6 @@ from unifispot.utils.translation import _l,_n,_
 from .models import Role,User,Account,Notification,Admin,Client,Wifisite
 
 
-
 def client_required(f):
     @wraps(f)
     def decorated_function(*args, **kwargs):   

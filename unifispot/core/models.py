@@ -86,7 +86,6 @@ class Account(CRUDMixin,SerializerMixin,db.Model):
     mysql_server    = db.Column(db.String(255),index=True,default="localhost")       
     mysql_user      = db.Column(db.String(255),index=True,default="ubnt")    
     mysql_pass      = db.Column(db.String(255),index=True,default="ubnt")   
-    mysql_port      = db.Column(db.Integer,index=True,default=8443)      
     firstrun        = db.Column(db.Integer, default=1,index=True) 
     token           = db.Column(db.String(50),index=True) 
     db_version      = db.Column(db.String(5),index=True) 
@@ -108,6 +107,15 @@ class Account(CRUDMixin,SerializerMixin,db.Model):
                                 'active','mysql_server','mysql_user','mysql_pass',
                                 'mysql_port','name','unifi_server_ip','createdat']
 
+class Options(CRUDMixin,SerializerMixin,db.Model):
+    ''' Class to represent general Options.
+
+
+    '''
+    id              = db.Column(db.Integer, primary_key=True)
+    option_name     = db.Column(db.String(255),index=True)    
+    option_value    = db.Column(db.Text)      
+    account_id      = db.Column(db.Integer, db.ForeignKey('account.id'))
 
 class Notification(CRUDMixin,SerializerMixin,db.Model):
     ''' Class to represent notifications.
@@ -372,163 +380,6 @@ class Sitefile(db.Model):
         file_path = Sitefile.query.filter_by(id=fileid).first()
         return file_path
 
-
-class Loginauth(CRUDMixin,SerializerMixin,db.Model):
-    '''Class to store Loginauth credentials, 
-            could be FBLogin,VoucherLogin,EMail,SMS etc
-
-        All logins should be inherited from this class
-
-    '''
-    id                  = db.Column(db.Integer, primary_key=True)
-    account_id          = db.Column(db.Integer, db.ForeignKey('account.id'))
-    siteid              = db.Column(db.Integer, db.ForeignKey('wifisite.id'))
-    deviceid            = db.Column(db.Integer, db.ForeignKey('device.id'))
-    sessions            = db.relationship('Guestsession', backref='loginauth',\
-                            lazy='dynamic')
-    starttime           = db.Column(db.DateTime,default=datetime.datetime.utcnow,\
-                            index=True)
-    endtime             = db.Column(db.DateTime,default=datetime.datetime.utcnow,\
-                            index=True)
-    last_login_at       = db.Column(db.DateTime,default=datetime.datetime.utcnow,\
-                            index=True)    #to track last login
-    data_limit          = db.Column(db.BigInteger) #in MB
-    time_limit          = db.Column(db.Integer,default=60)    #in mins
-    speed_ul            = db.Column(db.Integer,default=0)    
-    speed_dl            = db.Column(db.Integer,default=0)  
-    state               = db.Column(db.Integer,default=LOGINAUTH_INIT)  
-    relogin             = db.Column(db.Integer,default=0)  
-    blocked             = db.Column(db.Integer,default=0)  
-    site                = db.relationship(Wifisite, backref=db.backref("loginauths", 
-                                cascade="all,delete"))
-    type                = db.Column(db.String(50),index=True)
-
-    __mapper_args__ = {'polymorphic_identity': 'loginauth',
-            'polymorphic_on':type}
-
-    def time_available(self):
-        '''Check validity  and return remaining minutes'''
-        if not self.time_limit: #if no limit set return a large value
-            return 480        
-        utcnow = arrow.utcnow()
-        validity = arrow.get(self.starttime).replace(minutes=self.time_limit)
-        availabletime = validity.timestamp - utcnow.timestamp
-        if availabletime > 60: # convert from seconds to mins
-            return int(availabletime/60)
-        else:
-            return 0
-
-
-    def data_available(self,*args,**kwargs):
-        '''Check validity '''
-        if not self.data_limit: #if no limit set return a large value
-            return 10000
-        data_used = 0
-        sessions = Guestsession.query.filter(and_(Guestsession.siteid == self.siteid,
-                    Guestsession.loginauthid == self.id,
-                    Guestsession.override == 0,
-                    Guestsession.starttime >= self.starttime)).all()
-        for sess in sessions:
-            if sess.data_used:
-                data_used = int(sess.data_used) + data_used
-        data = int(self.data_limit) - data_used
-        if data >0:
-            return data
-        else:
-            return 0
-
-    def get_usage(self,fromtime):
-        '''Check validity '''
-        data_used = 0
-        time_used = 0
-        sessions = Guestsession.query.filter(and_(Guestsession.siteid == self.siteid,
-                    Guestsession.loginauthid == self.id,
-                    Guestsession.override == 0,
-                    Guestsession.starttime >= fromtime)).all()
-        for sess in sessions:
-            if sess.data_used:
-                data_used = int(sess.data_used) + data_used
-            if sess.duration:
-                time_used = int(sess.duration) + time_used
-        return (time_used,data_used)
-
-    def reset_usage(self,fromtime):       
-        '''Reset all sessions from given time to now '''
-        sessions = Guestsession.query.filter(and_(Guestsession.siteid == self.siteid,
-                    Guestsession.loginauthid == self.id,
-                    Guestsession.override == 0,
-                    Guestsession.starttime >= fromtime)).all()
-        for sess in sessions:
-            sess.override = 1
-            sess.save()
-
-    def populate_auth_details(self,modconfig):
-        '''Method to populate session details from modconfig
-
-        '''
-        self.data_limit     = modconfig.data_limit
-        self.time_limit     = modconfig.time_limit
-        self.speed_ul       = modconfig.speed_ul
-        self.speed_dl       = modconfig.speed_dl 
-        self.save()  
- 
-    def reset(self):
-        self.starttime = arrow.utcnow().naive
-        self.save()
-
-    def reset_lastlogin(self):
-        self.last_login_at = arrow.utcnow().naive
-        self.save()
-
-    def login_completed(self,loginconfig):
-        if self.state == LOGINAUTH_INIT:
-            return False
-        else:
-            return True
-
-    def is_blocked(self):
-        if self.blocked:
-            return True
-        else:
-            return False
-
-
-    def is_currently_active(self):
-        '''check if any of the session is currently on going
-
-        '''
-        utcnow = arrow.utcnow().naive
-        if Guestsession.query.filter(and_(Guestsession.loginauthid==self.id,
-              Guestsession.stoptime > utcnow)).count():
-            return True
-        else:
-            return False
-
-    def get_query(self,siteid,startdate,enddate):
-
-        return Loginauth.query.filter(and_(Loginauth.siteid==siteid,
-                                Loginauth.starttime>=startdate.naive,
-                                Loginauth.starttime<=enddate.naive))            
-
-class Preloginauth(CRUDMixin,SerializerMixin,db.Model):
-    '''Base class to store preoginauth credentials, could be SMS or something
-
-        All logins should be inherited from this class
-
-    '''
-    id                  = db.Column(db.Integer, primary_key=True)
-    client_id           = db.Column(db.Integer, db.ForeignKey('client.id'))
-    account_id          = db.Column(db.Integer, db.ForeignKey('account.id'))
-    siteid              = db.Column(db.Integer, db.ForeignKey('wifisite.id'))
-    deviceid            = db.Column(db.Integer, db.ForeignKey('device.id'))    
-    tracks              = db.relationship('Guesttrack', backref='preloginauth',\
-                            lazy='dynamic')    
-    site                = db.relationship(Wifisite, backref=db.backref("preloginauths", \
-                                cascade="all,delete"))
-    type            = db.Column(db.String(50))
-    __mapper_args__ = {'polymorphic_identity': 'preloginauth',
-            'polymorphic_on':type}
-
 class Guest(ExportMixin,CRUDMixin,SerializerMixin,db.Model):
     ''' Class to represent guest profile, it will be filled fully/partially 
             depending upon site configuration
@@ -640,8 +491,6 @@ class Device(CRUDMixin,SerializerMixin,db.Model):
     sms_confirm     = db.Column(db.Integer,default=0,index=True) #used to verify if the device's phone number is confirmed
     guest           = db.relationship(Guest, backref=db.backref("devices", \
                                 cascade="all,delete"))
-    loginauths      = db.relationship('Loginauth', backref='device',\
-                            lazy='dynamic')
 
     def get_monthly_usage(self):
         '''Returns the total monthly free data usage for this device
@@ -677,32 +526,171 @@ class Device(CRUDMixin,SerializerMixin,db.Model):
 
         return None
 
-class Guestsession(CRUDMixin,SerializerMixin,db.Model):
-    ''' Class to represent guest session. Each session is associated to a Guest and will have a state associated with it.
+
+class Loginauth(CRUDMixin,SerializerMixin,db.Model):
+    '''Class to store Loginauth credentials, 
+            could be FBLogin,VoucherLogin,EMail,SMS etc
+
+        All logins should be inherited from this class
 
     '''
-    id          = db.Column(db.Integer, primary_key=True)
-    siteid      = db.Column(db.Integer, db.ForeignKey('wifisite.id'))
-    deviceid    = db.Column(db.Integer, db.ForeignKey('device.id'))
-    loginauthid = db.Column(db.Integer, db.ForeignKey('loginauth.id'))
-    trackid     = db.Column(db.Integer, db.ForeignKey('guesttrack.id'))
-    starttime   = db.Column(db.DateTime,default=datetime.datetime.utcnow,index=True)
-    lastseen    = db.Column(db.DateTime,index=True,default=datetime.datetime.utcnow)
-    stoptime    = db.Column(db.DateTime,index=True)   #Time at which session is stopped, to be filled by session updator
-    expiry      = db.Column(db.DateTime,index=True,default=datetime.datetime.utcnow)   #predicted expiry time,default to 60 minutes
-    temp_login  = db.Column(db.Integer,default=0)
-    duration    = db.Column(db.Integer,default=0)
-    override    = db.Column(db.Integer,default=0) # to disable considering the session from considering while usage calculation
-    ban_ends    = db.Column(db.DateTime,index=True)
-    data_used   = db.Column(db.String(20),default=0)            #Data used up in this session
-    state       = db.Column(db.Integer)
-    mac         = db.Column(db.String(30),index=True)
-    d_updated   = db.Column(db.String(20))            #data updated last
-    demo        = db.Column(db.Integer,default=0,index=True)
-    obj_id      = db.Column(db.String(30),index=True)  #_id of document in guest collection of unifi
-    site        = db.relationship(Wifisite, 
-                      backref=db.backref("guestsessions",cascade="all,delete"))
+    id                  = db.Column(db.Integer, primary_key=True)
+    account_id          = db.Column(db.Integer, db.ForeignKey('account.id'))
+    siteid              = db.Column(db.Integer, db.ForeignKey('wifisite.id'))
+    deviceid            = db.Column(db.Integer, db.ForeignKey('device.id'))
+    starttime           = db.Column(db.DateTime,default=datetime.datetime.utcnow,\
+                            index=True)
+    endtime             = db.Column(db.DateTime,default=datetime.datetime.utcnow,\
+                            index=True)
+    last_login_at       = db.Column(db.DateTime,default=datetime.datetime.utcnow,\
+                            index=True)    #to track last login
+    data_limit          = db.Column(db.BigInteger) #in MB
+    time_limit          = db.Column(db.Integer,default=60)    #in mins
+    speed_ul            = db.Column(db.Integer,default=0)    
+    speed_dl            = db.Column(db.Integer,default=0)  
+    state               = db.Column(db.Integer,default=LOGINAUTH_INIT)  
+    relogin             = db.Column(db.Integer,default=0)  
+    blocked             = db.Column(db.Integer,default=0)  
+    site                = db.relationship(Wifisite, 
+                                backref=db.backref("loginauths"))
+    device              = db.relationship(Device, backref=db.backref("loginauths", \
+                                cascade="all,delete"))    
+    type                = db.Column(db.String(50),index=True)
 
+    __mapper_args__ = {'polymorphic_identity': 'loginauth',
+            'polymorphic_on':type}
+
+    def time_available(self):
+        '''Check validity  and return remaining minutes'''
+        if not self.time_limit: #if no limit set return a large value
+            return 480        
+        utcnow = arrow.utcnow()
+        validity = arrow.get(self.starttime).replace(minutes=self.time_limit)
+        availabletime = validity.timestamp - utcnow.timestamp
+        if availabletime > 60: # convert from seconds to mins
+            return int(availabletime/60)
+        else:
+            return 0
+
+    def data_is_limited(self,*args,**kwargs):
+        '''Check if data limit needs to be checked, return True if yes else false '''
+        if  self.data_limit: #if no limit set return False
+            return True
+        else:
+            return False
+
+
+    def data_available(self,*args,**kwargs):
+        '''Check validity '''
+        if not self.data_limit: #if no limit set return a large value
+            return 10000
+        data_used = 0
+        sessions = Guestsession.query.filter(and_(Guestsession.siteid == self.siteid,
+                    Guestsession.loginauthid == self.id,
+                    Guestsession.override == 0,
+                    Guestsession.starttime >= self.starttime)).all()
+        for sess in sessions:
+            if sess.data_used:
+                data_used = int(sess.data_used) + data_used
+        data = int(self.data_limit) - data_used
+        if data >0:
+            return data
+        else:
+            return 0
+
+    def get_usage(self,fromtime):
+        '''Check validity '''
+        data_used = 0
+        time_used = 0
+        sessions = Guestsession.query.filter(and_(Guestsession.siteid == self.siteid,
+                    Guestsession.loginauthid == self.id,
+                    Guestsession.override == 0,
+                    Guestsession.starttime >= fromtime)).all()
+        for sess in sessions:
+            if sess.data_used:
+                data_used = int(sess.data_used) + data_used
+            if sess.duration:
+                time_used = int(sess.duration) + time_used
+        return (time_used,data_used)
+
+    def reset_usage(self,fromtime):       
+        '''Reset all sessions from given time to now '''
+        sessions = Guestsession.query.filter(and_(Guestsession.siteid == self.siteid,
+                    Guestsession.loginauthid == self.id,
+                    Guestsession.override == 0,
+                    Guestsession.starttime >= fromtime)).all()
+        for sess in sessions:
+            sess.override = 1
+            sess.save()
+
+    def populate_auth_details(self,modconfig):
+        '''Method to populate session details from modconfig
+
+        '''
+        self.data_limit     = modconfig.data_limit
+        self.time_limit     = modconfig.time_limit
+        self.speed_ul       = modconfig.speed_ul
+        self.speed_dl       = modconfig.speed_dl 
+        self.save()  
+ 
+    def reset(self):
+        self.starttime = arrow.utcnow().naive
+        self.save()
+
+    def reset_lastlogin(self):
+        self.last_login_at = arrow.utcnow().naive
+        self.save()
+
+    def login_completed(self,loginconfig):
+        if self.state == LOGINAUTH_INIT:
+            return False
+        else:
+            return True
+
+    def is_blocked(self):
+        if self.blocked:
+            return True
+        else:
+            return False
+
+
+    def is_currently_active(self):
+        '''check if any of the session is currently on going
+
+        '''
+        utcnow = arrow.utcnow().naive
+        if Guestsession.query.filter(and_(Guestsession.loginauthid==self.id,
+              Guestsession.stoptime > utcnow)).count():
+            return True
+        else:
+            return False
+
+    def get_query(self,siteid,startdate,enddate):
+
+        return Loginauth.query.filter(and_(Loginauth.siteid==siteid,
+                                Loginauth.starttime>=startdate.naive,
+                                Loginauth.starttime<=enddate.naive))            
+
+class Preloginauth(CRUDMixin,SerializerMixin,db.Model):
+    '''Base class to store preoginauth credentials, could be SMS or something
+
+        All logins should be inherited from this class
+
+    '''
+    id                  = db.Column(db.Integer, primary_key=True)
+    client_id           = db.Column(db.Integer, db.ForeignKey('client.id'))
+    account_id          = db.Column(db.Integer, db.ForeignKey('account.id'))
+    siteid              = db.Column(db.Integer, db.ForeignKey('wifisite.id'))
+    deviceid            = db.Column(db.Integer, db.ForeignKey('device.id'))    
+  
+    site                = db.relationship(Wifisite, 
+                            backref=db.backref("preloginauths"))
+    device              = db.relationship(Device, 
+                                backref=db.backref("preloginauths", \
+                                cascade="all,delete"))      
+    type            = db.Column(db.String(50))
+    __mapper_args__ = {'polymorphic_identity': 'preloginauth',
+            'polymorphic_on':type}
 
 class Guesttrack(CRUDMixin,SerializerMixin,db.Model):
     ''' Class to track connection attempts, this is also used to track login process
@@ -720,7 +708,7 @@ class Guesttrack(CRUDMixin,SerializerMixin,db.Model):
                             index=True)
     state           = db.Column(db.Integer,index=True,
                             default=GUESTTRACK_PRELOGIN)
-    origurl         = db.Column(db.Text)
+    visitedurl      = db.Column(db.Text)
     demo            = db.Column(db.Integer,default=0,index=True)
     site            = db.relationship(Wifisite, 
                                 backref=db.backref("guesttracks",
@@ -728,7 +716,16 @@ class Guesttrack(CRUDMixin,SerializerMixin,db.Model):
     loginstat       = db.Column(JSONEncodedDict(255)) #store relevant stats
                                                        # will have value like {'auth_facebook':1,
                                                        #   'fb_liked':1,'newlogin':1}
-    extrainfo       =  db.Column(JSONEncodedDict(500))   #to store extra info                                                        
+    extrainfo       = db.Column(JSONEncodedDict(500))   #to store extra info                                                        
+    loginauth       = db.relationship(Loginauth, 
+                                backref=db.backref("tracks", \
+                                cascade="all,delete")) 
+    preloginauth    = db.relationship(Preloginauth, 
+                                backref=db.backref("tracks", \
+                                cascade="all,delete")) 
+    device          = db.relationship(Device, 
+                                backref=db.backref("tracks", \
+                                cascade="all,delete")) 
 
     def updatestat(self,key,val):
         '''method to update statistics value for this track
@@ -771,3 +768,35 @@ class Guesttrack(CRUDMixin,SerializerMixin,db.Model):
             return self.extrainfo.get(key)
         else:
             return None
+
+class Guestsession(CRUDMixin,SerializerMixin,db.Model):
+    ''' Class to represent guest session. Each session is associated to a Guest and will have a state associated with it.
+
+    '''
+    id          = db.Column(db.Integer, primary_key=True)
+    siteid      = db.Column(db.Integer, db.ForeignKey('wifisite.id'))
+    deviceid    = db.Column(db.Integer, db.ForeignKey('device.id'))
+    loginauthid = db.Column(db.Integer, db.ForeignKey('loginauth.id'))
+    trackid     = db.Column(db.Integer, db.ForeignKey('guesttrack.id'))
+    starttime   = db.Column(db.DateTime,default=datetime.datetime.utcnow,index=True)
+    lastseen    = db.Column(db.DateTime,index=True,default=datetime.datetime.utcnow)
+    stoptime    = db.Column(db.DateTime,index=True)   #Time at which session is stopped, to be filled by session updator
+    expiry      = db.Column(db.DateTime,index=True,default=datetime.datetime.utcnow)   #predicted expiry time,default to 60 minutes
+    temp_login  = db.Column(db.Integer,default=0)
+    duration    = db.Column(db.Integer,default=0)
+    override    = db.Column(db.Integer,default=0) # to disable considering the session from considering while usage calculation
+    ban_ends    = db.Column(db.DateTime,index=True)
+    data_used   = db.Column(db.String(20),default=0)            #Data used up in this session
+    state       = db.Column(db.Integer)
+    mac         = db.Column(db.String(30),index=True)
+    d_updated   = db.Column(db.String(20))            #data updated last
+    demo        = db.Column(db.Integer,default=0,index=True)
+    obj_id      = db.Column(db.String(30),index=True)  #_id of document in guest collection of unifi
+    site        = db.relationship(Wifisite, 
+                      backref=db.backref("guestsessions"))
+    loginauth   = db.relationship(Loginauth, 
+                                backref=db.backref("sessions", \
+                                cascade="all,delete"))     
+    guesttrack  = db.relationship(Guesttrack, 
+                                backref=db.backref("sessions", \
+                                cascade="all,delete"))   

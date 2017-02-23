@@ -6,7 +6,8 @@ var ModalForm = function(api_url,modal,pagereload) {
     var _this = this;
     _this.api_url = api_url;
     //handling addition of new element
-    $(document).on('click', '#'+modal+'-add-new', function(e){ 
+    $(document).on('click', '#'+modal+'-add-new', function(e){
+        e.preventDefault();  
         $('#'+modal+'-save-button').val('');
         resetformfields();
         $('#'+modal).modal();   

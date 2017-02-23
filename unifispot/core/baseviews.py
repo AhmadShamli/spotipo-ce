@@ -12,8 +12,8 @@ from unifispot.utils.translation import _l,_n,_
 from unifispot.core.utils import  get_form_errors,validate_site_ownership,\
                                 admin_required
 from unifispot.core.db import db
-from unifispot.core.models import Wifisite
-
+from unifispot.core.models import Wifisite,Options
+from unifispot.utils.options import get_option_value,save_options_from_form
 
 
 
@@ -491,4 +491,59 @@ class SiteModuleElementAPI(FlaskView):
                     specified',name=self.get_name())})        
 
 
+class OptionsAPI(FlaskView):
+    ''' View used for Options api 
 
+    '''
+    decorators = [login_required,admin_required]
+    def get_modal_obj(self):
+        return Options
+
+    def get_form_obj(self):
+        return NotImplementedError
+
+    def get_name(self):
+        return 'Options'
+
+    def get(self,id): 
+        abort(405)   
+
+    def put(self,id): 
+        abort(405)             
+ 
+    def delete(self,id): 
+        abort(405)  
+
+    def index(self):
+        #create a dummy options form and iterate over 
+        #all its fields to get response dictionary
+        itemform = self.get_form_obj()
+        itemform.populate()
+        response = {}
+        for fieldname, value in itemform.data.items():            
+            response[fieldname] = get_option_value(fieldname.upper(),'')        
+        return jsonify({'status':1,'data':response}) 
+  
+    def post(self):
+        itemform = self.get_form_obj()
+        itemform.populate()
+        if itemform.validate_on_submit(): 
+            try:
+                save_options_from_form(itemform)
+            except IntegrityError as exception:
+                current_app.logger.exception('UserID:%s submited form caused exception'\
+                        %(current_user.id))
+                return jsonify({'status':0,'data':{}, 'msg':_('Duplicate exists for the given values of %(name)s'\
+                        ,name=self.get_name())})                 
+            except SQLAlchemyError as exception:
+                current_app.logger.exception('UserID:%s submited form caused exception'\
+                        %(current_user.id))
+                return jsonify({'status':0,'data':{}, 'msg':_('Error while creating %(name)s'\
+                        ,name=self.get_name())}) 
+            return jsonify({'status':1,'data':{}, 'msg':_('Successfully added %(name)s'\
+                        ,name=self.get_name())}) 
+
+        else:
+            current_app.logger.debug('UserID:%s submited form with errors:%s'\
+                         %(current_user.id,get_form_errors(itemform)))            
+            return jsonify({'status':0,'data':{}, 'msg':get_form_errors(itemform)})

@@ -14,6 +14,8 @@ from unifispot.core.models import Wifisite,Guestsession,Notification,Account,Gue
 from unifispot.ext.celeryext import celery
 from unifispot.core.utils import send_email,compare_versions
 from unifispot.version import version
+from unifispot.ext.mail import mail
+from unifispot.core.utils import send_email
 
 
 
@@ -71,7 +73,18 @@ def celery_run_exports(guestid,siteid):
         
 
 
+# Setup the task
+@celery.task
+def send_security_email(msg):
+    # Use the Flask-Mail extension instance to send the incoming ``msg`` parameter
+    # which is an instance of `flask_mail.Message`
+    mail.send(msg)
 
 
+
+# Setup the task
+@celery.task
+def send_async_email(subject, body=None, html=None, recipients=None, throttle=None):
+    send_email(subject, body=None, html=None, recipients=None, throttle=None)
 
 

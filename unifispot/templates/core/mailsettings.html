@@ -1,0 +1,77 @@
+{% extends 'master.html'%}
+{%from 'macros.html' import render,modal_form %}
+
+{% block customCSS %}
+     <!-- Datatables -->
+     <link href="{{ url_for('static', filename='datatables.net-bs/css/dataTables.bootstrap.min.css') }}" rel="stylesheet">
+     <link href="{{ url_for('static', filename='datatables.net-responsive-bs/css/responsive.bootstrap.min.css') }}" rel="stylesheet">
+
+{%endblock%}
+
+
+
+{% block title %}{{_('General Settings')}} {% endblock %}
+
+{% block mainContent %}
+{{modal_form(testemailform,'testemailmodal',_("Send Test Email"))}}
+<div class="page-title">
+  <div class="title_left">
+    <h3>{{_('General Settings')}}</h3>
+  </div>
+
+  <div class="title_right">
+  </div>
+</div>
+
+<div class="clearfix"></div>
+
+<div class="row">
+  <div class="col-md-12 col-sm-12 col-xs-12">
+    <div class="x_panel">
+        <div class="x_content">
+            <div class="x_title" style="color:red;">
+                <strong>{{_('Application must be restarted for these settings to take effect')}} </strong>
+                <ul class="nav navbar-right panel_toolbox">
+                </ul>
+                <div class="clearfix"></div>
+            </div>
+            <form  id='optionsform' class="form-horizontal">
+              {{render(mailsettingsform)}}
+
+              <div class="ln_solid"></div>
+              <div class="form-group">
+                  <div class="col-md-6 col-sm-6 col-xs-12 col-md-offset-3">
+                    <button id='optionsform-save-button' class="btn btn-success" value=''>{{_('Save')}}</button>
+                    <button id='testemailmodal-add-new' class="btn btn-success" value=''>{{_('Test')}}</button>                    
+                  </div>
+              </div>              
+
+            </form>
+
+        </div>
+
+    </div>
+  </div>
+</div>
+
+{% endblock%}
+
+
+{% block js_block %}
+    <script src="{{ url_for('static', filename='custom/js/ajaxform.js') }}"></script> 
+
+    <!--Custom -->
+    <script src="{{ url_for('static', filename='custom/js/datatable.js') }}"></script>
+
+    <script>
+        $(document).ready(function() {
+          // $('.dataTables-example').DataTable();
+           
+          create_site_menu("{{url_for('WifisiteAPI:index')}}",0);
+          var siteform = new AjaxForm("{{url_for('MailOptionsAPI:index')}}",'optionsform');
+
+          var testemailform = ModalForm("{{url_for('TestEmail:post')}}",'testemailmodal');
+    });
+    </script>    
+
+{%endblock%}

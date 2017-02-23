@@ -14,7 +14,8 @@ from unifispot.core.views import (
     WifisiteManage,SiteDashboard,LandingpageAPI,
     LandingpageManage,FileAPI,LandingpagePreview,
     GuestViewAPI,GuestDataManage,
-    AccountAPI,AccountManage,NotificationAPI
+    AccountAPI,AccountManage,NotificationAPI,
+    MailOptionsAPI,MailOptionsManage,TestEmail
 
 )
 from unifispot.core.forms import UserForm,get_wifisite_form
@@ -85,6 +86,15 @@ def configure(app):
     #account manage view
     AccountManage.register(app, route_base='/a/manage/settings/')
     register_flaskview(app, AccountManage)
+
+    #optionsAPI
+    MailOptionsAPI.register(app, route_base='/mailoptions/api')
+    MailOptionsManage.register(app, route_base='/a/manage/mailoptions/')
+    register_flaskview(app, MailOptionsManage)
+
+    #testemail API
+    TestEmail.register(app, route_base='/testemail/api')
+
     #notifications API
     NotificationAPI.register(app, route_base='/notifications/')
 

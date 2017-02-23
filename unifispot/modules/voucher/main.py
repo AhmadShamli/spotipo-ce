@@ -275,6 +275,30 @@ def validate_voucherconfig(f):
         return f(*args, **kwargs)
     return decorated_function
 
+
+def validate_voucerauth(f):
+    '''Decorator for validating validate_paymentauth detials. 
+        It validate payment auth if its already valid, no need to login again
+
+    '''
+    @wraps(f)
+    def decorated_function(*args, **kwargs):
+        voucherauth = kwargs.get('voucherauth')
+        guesttrack  =  kwargs.get('guesttrack')
+        wifisite    =  kwargs.get('wifisite')
+        if voucherauth.time_available() and voucherauth.data_available():
+            #update guesttrack   
+            guesttrack.state        = GUESTTRACK_POSTLOGIN
+            guesttrack.loginauthid  = voucherauth.id
+            guesttrack.updatestat('auth_voucher',1)
+            guesttrack.updatestat('relogin',1)
+            guesttrack.save()                
+            guestlog_debug('voucher_login relogin track ',
+                            wifisite,guesttrack)
+            return redirect_guest(wifisite,guesttrack)            
+
+        return f(*args, **kwargs)
+    return decorated_function
 @module.route('/voucher/login/<trackid>',methods = ['GET', 'POST'])
 @module.route('/voucher/login/<trackid>/<voucherid>',methods = ['GET', 'POST'])
 @validate_track

@@ -19,7 +19,7 @@ from unifispot.core.signals import newguest_signup,guest_loggedin
 
 
 
-def init_track(wifisite,guestmac,apmac=None,origurl=None,demo=0):
+def init_track(wifisite,guestmac,apmac=None,visitedurl=None,demo=0):
     '''Method to create a track, if an already existing guestrack is found, use that
 
     '''
@@ -35,7 +35,7 @@ def init_track(wifisite,guestmac,apmac=None,origurl=None,demo=0):
                        
         guesttrack.trackid   = str(uuid.uuid4())
         guesttrack.demo      = demo
-        guesttrack.origurl   = origurl
+        guesttrack.visitedurl   = visitedurl
         guesttrack.save()
 
     #update visit counter
@@ -145,7 +145,7 @@ def redirect_guest(wifisite,guesttrack):
         methodslist = wifisite.get_methods('auth_methods')
         ##check if QR scan is done
         if wifisite.check_login_en('auth_voucher'):
-            url = guesttrack.origurl
+            url = guesttrack.visitedurl
             if url:
                 voucher = validate_scan2login(url) 
                 if voucher:
@@ -335,7 +335,6 @@ def get_loginauth_validator(AuthModel,lconfigstr,modname,logintypestr):
                         wifisite=wifisite,landingpage=landingpage,trackid=guesttrack.trackid)                 
             elif loginauth.login_completed(loginconfig) and \
                         guest_auto_relogin_allowed(loginauth,loginconfig):
-                print '+++++HHUHIHIHJI'
                 if loginconfig.is_limited():
                     #email auth from a previous session,
                     #check if its valid still
@@ -432,9 +431,10 @@ def validate_scan2login(url):
     '''
     if not validators.url(url):
         return False
-
-    parsed = urlparse(url)
-
+    try:
+        parsed = urlparse(url)
+    except:
+        current_app.logger.exception("Exception while trying to parse URL")
 
     if not parsed.netloc == 'scan2log.in':
         return False

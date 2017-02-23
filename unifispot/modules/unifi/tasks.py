@@ -43,13 +43,22 @@ def celery_session_monitor(*args, **kwargs):
                     current_app.logger.debug(' celery_session_monitor - MAC:%s in site:%s seems to \
                             have used data:%s Mb'%(mac,site.name,data_mb))                         
                     loginauth = Loginauth.query.get(guestsession.loginauthid)
-                    if data_mb > loginauth.data_available():
-                        current_app.logger.debug('celery_session_monitor.mac_kick MAC:%s site:%s'%\
-                                            (mac,site.name))
-                        c.unauthorize_guest(mac)                     
+                    if loginauth.data_is_limited():
+                        #check for data limit only if its enabled
+                        data_available = loginauth.data_available()
+                        current_app.logger.debug('celery_session_monitor - Data used:%s data available :%s in logintauth ID:%s'\
+                            %(data_used,data_available,loginauth.id))                            
+                        if data_mb > data_available:
+                            current_app.logger.debug('celery_session_monitor.mac_kick MAC:%s site:%s'%\
+                                                (mac,site.name))
+                            c.unauthorize_guest(mac)                     
+                    else:
+                        current_app.logger.debug(' celery_session_monitor - Skipping data_used check for logintauth ID:%s'%loginauth.id)
+                          
+
 
         except:
-            current_app.logger.exception('Exception while monitoring site:%s'%site.name)                
+            current_app.logger.exception('celery_session_monitor - Exception while monitoring site:%s'%site.name)                
 
 
 
@@ -75,7 +84,7 @@ def celery_session_history(*args, **kwargs):
     #get all sessions
     utcwindow = arrow.utcnow().replace(minutes=-10).timestamp
 
-    current_app.logger.debug('Checking guest sessions')
+    current_app.logger.debug('celery_session_history - Checking guest sessions')
 
     for guest in guests.find({'end':{'$gt':utcwindow},"authorized_by" : "api"}):
         start = arrow.get(guest.get('start')).humanize()
@@ -84,7 +93,7 @@ def celery_session_history(*args, **kwargs):
         rx_bytes = guest.get('rx_bytes',0)
         obj_id = str(guest['_id'])
         mac = guest['mac']
-        current_app.logger.debug('MAC:%s Start:%s End:%s  Site:%s TX:%s RX:%s'%(mac,start,
+        current_app.logger.debug('celery_session_history -MAC:%s Start:%s End:%s  Site:%s TX:%s RX:%s'%(mac,start,
                             end,site_dict.get(guest['site_id']),tx_bytes,rx_bytes))
         #check if the guest belongs to a known wifisite
         siteid = site_dict.get(guest['site_id'])
@@ -99,7 +108,7 @@ def celery_session_history(*args, **kwargs):
                 guestsession.stoptime = arrow.get(guest.get('end')).naive
                 guestsession.data_used = data_mb
                 guestsession.save()
-                current_app.logger.debug('Updated Guestsession:%s for MAC:%s in SiteID:%s \
+                current_app.logger.debug('celery_session_history - Updated Guestsession:%s for MAC:%s in SiteID:%s \
                                 Starttime:%s to:%s'%(guestsession.id,mac,siteid,start,
                                 obj_id))
             else:
@@ -108,26 +117,33 @@ def celery_session_history(*args, **kwargs):
                 guestsession = Guestsession.query.filter(and_(Guestsession.siteid==siteid,
                         Guestsession.mac==mac,Guestsession.starttime >=session_start)).first()
                 if not guestsession:
-                    current_app.logger.error('No session found for MAC:%s in SiteID:%s \
+                    current_app.logger.error('celery_session_history - No session found for MAC:%s in SiteID:%s \
                                 Starttime:%s'%(mac,siteid,start))
                     continue
                 guestsession.stoptime = arrow.get(guest.get('end')).naive
                 guestsession.data_used = data_mb
                 guestsession.obj_id = obj_id
                 guestsession.save()
-                current_app.logger.debug('Connected Guestsession:%s for MAC:%s in SiteID:%s\
+                current_app.logger.debug('celery_session_history - Connected Guestsession:%s for MAC:%s in SiteID:%s\
                          Starttime:%s to :%s'%(guestsession.id,mac,siteid,start,obj_id))
             #validate if this session has exceeded limit
             
             loginauth = Loginauth.query.get(guestsession.loginauthid)
-            if data_mb > loginauth.data_available():
-                site = Wifisite.query.get(siteid)
-                account = Account.query.get(site.account_id)
-                current_app.logger.debug('celery_session_history.mac_kick MAC:%s site:%s'\
-                            %(mac,site.name))
-                c = Controller(account=account,sitekey=site.sitekey) 
-                c.unauthorize_guest(mac) 
+            if loginauth.data_is_limited():
+                data_available = loginauth.data_available()
+                current_app.logger.debug('celery_session_history - Data used:%s data available :%s in logintauth ID:%s'\
+                            %(data_used,data_available,loginauth.id))                
+                if data_mb > data_available:
+                    site = Wifisite.query.get(siteid)
+                    account = Account.query.get(site.account_id)
+                    current_app.logger.debug('celery_session_history.mac_kick MAC:%s site:%s'\
+                                %(mac,site.name))
 
+                    c = Controller(account=account,sitekey=site.sitekey) 
+                    c.unauthorize_guest(mac) 
+            else:
+                current_app.logger.debug('celery_session_history - Skipping data_used check for logintauth ID:%s'%loginauth.id)
+                  
 
 
 
