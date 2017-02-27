@@ -78,7 +78,7 @@ def celery_run_exports(guestid,siteid):
 def send_security_email(msg):
     # Use the Flask-Mail extension instance to send the incoming ``msg`` parameter
     # which is an instance of `flask_mail.Message`
-    mail.send(msg)
+    mail.send(Message(**kwargs))
 
 
 

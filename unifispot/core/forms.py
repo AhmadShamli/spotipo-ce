@@ -19,10 +19,10 @@ from unifispot.ext.plugins import plugin_manager
 
 
 class UserForm(Form):
-    email       = TextField(_l('Email'),validators = [Required()])
-    displayname = TextField(_l('Name'),validators = [Required()])
-    password    = PasswordField(_l('Password')) 
-    repassword  = PasswordField(_l('Confirm Password'))
+    email       = TextField(_('Email'),validators = [Required()])
+    displayname = TextField(_('Name'),validators = [Required()])
+    password    = PasswordField(_('Password')) 
+    repassword  = PasswordField(_('Confirm Password'))
     
     def populate(self):
         pass
@@ -32,17 +32,17 @@ class UserForm(Form):
         if not rv:
             return False
         if self.password and (self.password.data != self.repassword.data):
-            self.password.errors.append(_l("Entered passwords didn't match"))
+            self.password.errors.append(_("Entered passwords didn't match"))
             return False
         return True
 
 class AccountForm(Form):
-    unifi_server    = TextField(_l('Controller IP'),validators = [Required()])
-    unifi_user      = TextField(_l('Controller Username'),
+    unifi_server    = TextField(_('Controller IP'),validators = [Required()])
+    unifi_user      = TextField(_('Controller Username'),
                                 validators = [Required()])
-    unifi_pass      = PasswordField(_l('Controller Password'),
+    unifi_pass      = PasswordField(_('Controller Password'),
                                 validators = [Required()])
-    unifi_port      = TextField(_l('Controller Port'),
+    unifi_port      = TextField(_('Controller Port'),
                                 validators = [Required()])
     unifi_version   = SelectField(_('Controller API version'),
                                 choices=[('v4','V4/V5')])
@@ -51,32 +51,32 @@ class AccountForm(Form):
         pass
 
 class MailsettingsForm(Form):
-    mail_server     = TextField(_l('Mail Server'))
-    #mail_username   = TextField(_l('Mail Username'))
-    #mail_password   = PasswordField(_l('Mail Password'))
-    mail_port       = TextField(_l('Mail Port'))
-    #mail_use_tls    = SelectField(_l('Mail Enable TLS'),coerce=int,
+    mail_server     = TextField(_('Mail Server'))
+    #mail_username   = TextField(_('Mail Username'))
+    #mail_password   = PasswordField(_('Mail Password'))
+    mail_port       = TextField(_('Mail Port'))
+    #mail_use_tls    = SelectField(_('Mail Enable TLS'),coerce=int,
     #                            choices=[(0,'No'),(1,'Yes')])
-    #mail_use_ssl    = SelectField(_l('Mail Enable SSL'),coerce=int,
+    #mail_use_ssl    = SelectField(_('Mail Enable SSL'),coerce=int,
     #                            choices=[(0,'No'),(1,'Yes')])
-    mail_default_sender= TextField(_l('Mail Default Sender'))    
+    mail_default_sender= TextField(_('Mail Default Sender'))    
 
     def populate(self):
         pass
 
 class TestEmailForm(Form):
-    sendto     = TextField(_l('Recipient Email'),
+    sendto     = TextField(_('Recipient Email'),
                         validators = [Required(),Email()])    
 
 
 
 def get_wifisite_form(baseform=False):
     class F(Form):
-        name                = TextField(_l('Name'),validators = [Required()])   
-        timezone            = SelectField(_l('Site Timezone'),choices=[])
-        client_id           = SelectField(_l('Select Client'),coerce=int,
+        name                = TextField(_('Name'),validators = [Required()])   
+        timezone            = SelectField(_('Site Timezone'),choices=[])
+        client_id           = SelectField(_('Select Client'),coerce=int,
                                     choices=[],default=0)
-        backend_type        = SelectField(_l('Select Site Type'),
+        backend_type        = SelectField(_('Select Site Type'),
                                     choices=[('unifi',"UniFi")],default='unifi')  
 
 
@@ -102,7 +102,7 @@ def get_wifisite_form(baseform=False):
                         backend = importlib.import_module(backend_module)
                         sitekeys = getattr(backend,'get_sitekeys')(wifisite)
                     except:
-                        flash(_l('Error while getting sitelist. \
+                        flash(_('Error while getting sitelist. \
                                         Please check Controller settings'), 'danger')
                         current_app.logger.exception("Exception while trying to get sitekeys for :%s"\
                                         %wifisite.id)
@@ -111,52 +111,62 @@ def get_wifisite_form(baseform=False):
 
 
     if not baseform:
-        setattr(F,'redirect_url',TextField(_l('Redirect Guest to URL'),
+        setattr(F,'redirect_url',TextField(_('Redirect Guest to URL'),
                         default='http://www.unifispot.com'))
-        setattr(F,'reports_list',TextField(_l('Additional Report Recipients')))
-        setattr(F,'reports_type',SelectField(_l('Select Reports Frequency'),
-                                    choices=[('none','No Reporting'),('weekly','Weekly Reports'),('monthly','Monthly Reports')]))
+        setattr(F,'reports_list',TextField(_('Additional Report Recipients')))
+        setattr(F,'reports_type',SelectField(_('Select Reports Frequency'),
+                                    choices=[('none','No Reporting'),
+                                              ('weekly','Weekly Reports'),
+                                              ('monthly','Monthly Reports')]))
 
 
 
-        setattr(F,'sitekey',SelectField(_l('Site ID'),choices=[]))
-        setattr(F,'unifi_id',TextField(_l('UniFi Site')))
+        setattr(F,'sitekey',SelectField(_('Site ID'),choices=[]))
+        setattr(F,'unifi_id',TextField(_('UniFi Site')))
 
         for p_name in plugin_manager.plugins:
             plugin = get_plugin(p_name)
             if plugin.type in ['login']:
                 fieldname = 'auth_%s'%p_name
-                fieldlabel = _l('%s Login'%p_name.title())
+                fieldlabel = _('%s Login'%p_name.title())
                 setattr(F,fieldname,TextField(fieldlabel))        
 
             elif plugin.type in ['prelogin']:
                 fieldname = 'preauth_%s'%p_name
-                fieldlabel = _l('%s '%p_name.title())
+                fieldlabel = _('%s '%p_name.title())
                 setattr(F,fieldname,TextField(fieldlabel)) 
 
             elif plugin.type in ['postlogin']:
                 fieldname = 'postauth_%s'%p_name
-                fieldlabel = _l('Postlogin %s '%p_name.title())
+                fieldlabel = _('Postlogin %s '%p_name.title())
                 setattr(F,fieldname,TextField(fieldlabel)) 
             elif plugin.type in ['export']:
                 fieldname = 'export_%s'%p_name
-                fieldlabel = _l('Export to %s '%p_name.title())
-                setattr(F,fieldname,TextField(fieldlabel))                    
+                fieldlabel = _('Export to %s '%p_name.title())
+                setattr(F,fieldname,TextField(fieldlabel)) 
+
+            if p_name == 'branding':
+                choices = []
+                for templ in os.listdir(current_app.config['GUEST_TEMPLATES']):
+                    choices.append((templ,templ))                
+                setattr(F,'template',SelectField(_('Select Template'),
+                                    choices=choices))        
+
 
     return F() 
 
 
 class LandingFilesForm(Form):
-    logofile        = FileField('Logo File')
-    bgfile          = FileField('Background Image')
-    tosfile         = FileField('Select T&C pdf')
+    logofile        = FileField(_('Logo File'))
+    bgfile          = FileField(_('Background Image'))
+    tosfile         = FileField(_('Select T&C pdf'))
     def populate(self):
         pass    
 
 class SimpleLandingPageForm(Form):
-    pagebgcolor1     = TextField('Page Background Color')
-    gridbgcolor     = TextField('Grid Background Color')
-    textcolor       = TextField('Text Color')
+    pagebgcolor1     = TextField(_('Page Background Color'))
+    gridbgcolor     = TextField(_('Grid Background Color'))
+    textcolor       = TextField(_('Text Color'))
     textfont        = SelectField('Select Font',coerce=int,default=2)
     def populate(self):
         #Font options
@@ -167,29 +177,29 @@ class LandingPageForm(Form):
     site_id         = HiddenField('Site ID')
     logofile        = HiddenField('Header File')  
     bgfile          = HiddenField('Background Image')
-    pagebgcolor     = TextField('Page Background Color')    
-    bgcolor         = TextField('Header Background Color')
-    headerlink      = TextField('Header Link')
-    basefont        = SelectField('Header Base Font',coerce=int,default=2)
-    topbgcolor      = TextField('Top Background Color')
-    toptextcolor    = TextField('Top Text Color')
-    topfont         = SelectField('Top Font',coerce=int,default=2)
-    toptextcont     = TextAreaField('Top Content')
-    middlebgcolor   = TextField('Middle Background Color')
-    middletextcolor = TextField('Middle Text Color')
-    middlefont      = SelectField('Bottom Base Font',coerce=int,default=2)
-    bottombgcolor   = TextField('Bottom Background Color') 
-    bottomtextcolor = TextField('Bottom Text Color')
-    bottomfont      = SelectField('Base Font',coerce=int,default=2)
-    footerbgcolor   = TextField('Footer Background Color')
-    footertextcolor = TextField('Text Color')
-    footerfont      = SelectField('Base Font',coerce=int,default=2)
-    footertextcont  = TextAreaField('Footer Content')
-    btnbgcolor      = TextField('Button Color')
-    btntxtcolor     = TextField('Button Text Color')
-    btnlinecolor    = TextField('Button Border Color')
-    tosfile         = HiddenField('Select T&C pdf')
-    copytextcont    = TextAreaField('Copyright Text')
+    pagebgcolor     = TextField(_('Page Background Color'))    
+    bgcolor         = TextField(_('Header Background Color'))
+    headerlink      = TextField(_('Header Link'))
+    basefont        = SelectField(_('Header Base Font'),coerce=int,default=2)
+    topbgcolor      = TextField(_('Top Background Color'))
+    toptextcolor    = TextField(_('Top Text Color'))
+    topfont         = SelectField(_('Top Font'),coerce=int,default=2)
+    toptextcont     = TextAreaField(_('Top Content'))
+    middlebgcolor   = TextField(_('Middle Background Color'))
+    middletextcolor = TextField(_('Middle Text Color'))
+    middlefont      = SelectField(_('Bottom Base Font'),coerce=int,default=2)
+    bottombgcolor   = TextField(_('Bottom Background Color'))
+    bottomtextcolor = TextField(_('Bottom Text Color'))
+    bottomfont      = SelectField(_('Base Font'),coerce=int,default=2)
+    footerbgcolor   = TextField(_('Footer Background Color'))
+    footertextcolor = TextField(_('Text Color'))
+    footerfont      = SelectField(_('Base Font'),coerce=int,default=2)
+    footertextcont  = TextAreaField(_('Footer Content'))
+    btnbgcolor      = TextField(_('Button Color'))
+    btntxtcolor     = TextField(_('Button Text Color'))
+    btnlinecolor    = TextField(_('Button Border Color'))
+    tosfile         = HiddenField(_('Select T&C pdf'))
+    copytextcont    = TextAreaField(_('Copyright Text'))
     
 
     def populate(self):

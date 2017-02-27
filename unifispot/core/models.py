@@ -213,7 +213,7 @@ class Client(User):
     id          = db.Column(db.Integer,db.ForeignKey('user.id'), primary_key=True) 
     __mapper_args__ = {'polymorphic_identity': 'client'}
     account_id      = db.Column(db.Integer, db.ForeignKey('account.id')) 
-
+    sites       = db.relationship('Wifisite', backref='client',lazy='dynamic')
 
     def check_admin(self):        
         return False
@@ -266,12 +266,13 @@ class Wifisite(CRUDMixin,SerializerMixin,db.Model):
                            'export_methods':'modeljson_to_dict', }  
 
     __form_fields_avoid__ = ['id','default_landing','admin_id',
-                             'account_id','template']
+                             'account_id']
 
     __form_fields_modifiers__ =  { 'preauth_methods':'form_to_modeljson',
                            'auth_methods':'form_to_modeljson',
                            'postauth_methods':'form_to_modeljson', 
-                           'export_methods':'form_to_modeljson', }
+                           'export_methods':'form_to_modeljson',
+                           'template':'branding_template' }
     
     def get_num_methods(self,methodtype):
         #get number of configured methods for this method type
@@ -294,6 +295,13 @@ class Wifisite(CRUDMixin,SerializerMixin,db.Model):
                 if val:
                     methodslist.append(key)
         return methodslist
+
+    def branding_template(self,form,field_name):
+        template_field = {}
+        if hasattr(form,'template'):
+            return form.template.data
+        else:
+            return 'default'
 
 
     def check_login_en(self,ltype):

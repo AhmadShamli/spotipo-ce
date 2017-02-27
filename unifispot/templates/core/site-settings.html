@@ -110,6 +110,9 @@
                 {{render_field_with_erros(siteform.client_id)}}
                 {{render_field_with_erros(siteform.backend_type)}}
                 {{render_field_with_erros(siteform.sitekey)}}
+                {% if siteform.template %}
+                  {{render_field_with_erros(siteform.template)}}
+                {% endif %}
               </div>
 
           </div>

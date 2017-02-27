@@ -9,6 +9,13 @@ from flask_migrate import Migrate, MigrateCommand
 
 from unifispot import create_app
 from unifispot.core.db import db
+
+from unifispot.utils.translation import (add_translations, compile_translations,
+                                        update_translations,
+                                        add_plugin_translations,
+                                        compile_plugin_translations,
+                                        update_plugin_translations)
+
 import logging
 logging.basicConfig(level=logging.DEBUG)
 logging.getLogger().addHandler(logging.StreamHandler())
@@ -143,5 +150,54 @@ def get_notifications():
         from unifispot.core.tasks import celery_get_notification
         from unifispot.core.models import Wifisite
         celery_get_notification()            
+
+
+
+@manager.option('-l', '--lang', help='Language',dest='lang')
+@manager.option('-p', '--plugin', help='Adds a new language to a plugin.',
+                    dest='plugin')
+def new_translation(lang,plugin=None):
+    """Adds a new language to the translations. "lang" is the language code
+    of the language, like, "de_AT"."""
+    from unifispot.ext.plugins import plugin_manager
+    if plugin:    
+        print 'Adding :%s translation for plugin :%s'%(lang,plugin)
+        add_plugin_translations(plugin, lang)
+    else:
+        add_translations(lang)    
+        for p_name in plugin_manager.plugins:
+            print 'Adding :%s translation for plugin :%s'%(lang,p_name)
+            add_plugin_translations(p_name, lang)             
+
+
+@manager.command
+@manager.option('is_all', '--all')
+@manager.option('-l', '--lang', help='Language')
+def update_translation(is_all=True, plugin=None):
+    """Updates all translations."""
+    if is_all:
+        is_all = True    
+    if plugin is not None:
+        print"[+] Updating language files for plugin {}..."\
+                    .format(plugin)
+        update_plugin_translations(plugin)
+    else:
+        print"[+] Updating language files..."
+        update_translations(include_plugins=is_all)
+
+@manager.command
+@manager.option('is_all', '--all')
+@manager.option('-p', '--plugin', help='Adds a new language to a plugin.')
+def compile_translation(is_all=False, plugin=None):
+    """Compiles the translations."""
+    if is_all:
+        is_all = True
+    if plugin is not None:
+        print"[+] Compiling language files for plugin {}..."\
+                    .format(plugin)
+        compile_plugin_translations(plugin)
+    else:
+        print "[+] Compiling language files..."
+        compile_translations(include_plugins=is_all)
 
 manager.run()

@@ -1,0 +1,480 @@
+# Translations template for PROJECT.
+# Copyright (C) 2017 ORGANIZATION
+# This file is distributed under the same license as the PROJECT project.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2017.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PROJECT VERSION\n"
+"Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
+"POT-Creation-Date: 2017-02-25 21:43+0100\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.3.4\n"
+
+#: unifispot/core/baseviews.py:91 unifispot/core/baseviews.py:119
+#: unifispot/core/baseviews.py:220 unifispot/core/baseviews.py:427
+#: unifispot/core/baseviews.py:455 unifispot/core/baseviews.py:537
+#, python-format
+msgid "Duplicate exists for the given values of %(name)s"
+msgstr ""
+
+#: unifispot/core/baseviews.py:96 unifispot/core/baseviews.py:432
+#: unifispot/core/baseviews.py:542 unifispot/core/views.py:321
+#, python-format
+msgid "Error while creating %(name)s"
+msgstr ""
+
+#: unifispot/core/baseviews.py:98 unifispot/core/baseviews.py:434
+#: unifispot/core/baseviews.py:544 unifispot/core/views.py:323
+#, python-format
+msgid "Successfully added %(name)s"
+msgstr ""
+
+#: unifispot/core/baseviews.py:124 unifispot/core/baseviews.py:226
+#: unifispot/core/baseviews.py:460 unifispot/core/views.py:348
+#: unifispot/core/views.py:450
+#, python-format
+msgid "Error while updating %(name)s"
+msgstr ""
+
+#: unifispot/core/baseviews.py:126 unifispot/core/baseviews.py:228
+#: unifispot/core/baseviews.py:462 unifispot/core/views.py:350
+#: unifispot/core/views.py:452
+#, python-format
+msgid "Successfully updated %(name)s"
+msgstr ""
+
+#: unifispot/core/baseviews.py:147 unifispot/core/baseviews.py:483
+#: unifispot/core/views.py:371
+#, python-format
+msgid "Error while deleting %(name)s"
+msgstr ""
+
+#: unifispot/core/baseviews.py:149 unifispot/core/baseviews.py:485
+#: unifispot/core/views.py:373
+#, python-format
+msgid "Successfully deleted %(name)s"
+msgstr ""
+
+#: unifispot/core/forms.py:47
+msgid "Controller API version"
+msgstr ""
+
+#: unifispot/core/views.py:236
+msgid "Error while trying to send test email"
+msgstr ""
+
+#: unifispot/core/views.py:239
+msgid "Test mail send successfully"
+msgstr ""
+
+#: unifispot/core/views.py:514
+msgid ""
+"Unknown file!! only logofile,                                        "
+"bgfile and tosfile are allowed"
+msgstr ""
+
+#: unifispot/core/views.py:519
+msgid ""
+"Error Occured                                          while trying to "
+"upload file"
+msgstr ""
+
+#: unifispot/core/views.py:530
+msgid ""
+"Value already                                 exists in the database for "
+"this file "
+msgstr ""
+
+#: unifispot/core/views.py:534
+msgid "Uploaded new file"
+msgstr ""
+
+#: unifispot/core/views.py:537
+msgid "Error Occured While trying                 to upload file"
+msgstr ""
+
+#: unifispot/templates/macros.html:136 unifispot/templates/macros.html:167
+#: unifispot/templates/macros.html:202
+msgid "Close"
+msgstr ""
+
+#: unifispot/templates/core/mailsettings.html:44
+#: unifispot/templates/core/site-landing.html:32
+#: unifispot/templates/macros.html:137 unifispot/templates/macros.html:168
+#: unifispot/templates/macros.html:203 unifispot/templates/macros.html:234
+msgid "Save"
+msgstr ""
+
+#: unifispot/templates/macros.html:235
+msgid "Save & Preview"
+msgstr ""
+
+#: unifispot/templates/macros.html:321
+msgid "Speed in Kbps"
+msgstr ""
+
+#: unifispot/templates/macros.html:472
+msgid "Unifi Controller"
+msgstr ""
+
+#: unifispot/templates/macros.html:478
+msgid "Unifi Controller IP"
+msgstr ""
+
+#: unifispot/templates/macros.html:484
+msgid "Unifi Controller Port"
+msgstr ""
+
+#: unifispot/templates/macros.html:490
+msgid "Unifi Admin"
+msgstr ""
+
+#: unifispot/templates/macros.html:496
+msgid "Unifi Password"
+msgstr ""
+
+#: unifispot/templates/core/admins.html:9
+msgid "Manage Admins"
+msgstr ""
+
+#: unifispot/templates/core/admins.html:16
+msgid "Admins"
+msgstr ""
+
+#: unifispot/templates/core/admins.html:31
+msgid "New Admin"
+msgstr ""
+
+#: unifispot/templates/core/admins.html:40
+#: unifispot/templates/core/clients.html:39
+msgid "Displayname"
+msgstr ""
+
+#: unifispot/templates/core/admins.html:41
+#: unifispot/templates/core/clients.html:40
+#: unifispot/templates/core/site-guestdata.html:34
+#: unifispot/templates/security/forgot_password.html:26
+#: unifispot/templates/security/login_user.html:26
+msgid "Email"
+msgstr ""
+
+#: unifispot/templates/core/admins.html:42
+#: unifispot/templates/core/clients.html:41
+msgid "Actions"
+msgstr ""
+
+#: unifispot/templates/core/clients.html:10
+msgid "Manage Clients"
+msgstr ""
+
+#: unifispot/templates/core/clients.html:12
+msgid "Client Details"
+msgstr ""
+
+#: unifispot/templates/core/clients.html:31
+msgid "New Client"
+msgstr ""
+
+#: unifispot/templates/core/dashboard.html:21
+#: unifispot/templates/core/site-dashboard.html:21
+msgid "Dashboard"
+msgstr ""
+
+#: unifispot/templates/core/dashboard.html:31
+#: unifispot/templates/core/site-dashboard.html:31
+msgid "Visits"
+msgstr ""
+
+#: unifispot/templates/core/dashboard.html:39
+#: unifispot/templates/core/site-dashboard.html:39
+msgid "Logins"
+msgstr ""
+
+#: unifispot/templates/core/dashboard.html:47
+#: unifispot/templates/core/site-dashboard.html:47
+msgid "Likes"
+msgstr ""
+
+#: unifispot/templates/core/dashboard.html:54
+#: unifispot/templates/core/site-dashboard.html:54
+msgid "Checkins"
+msgstr ""
+
+#: unifispot/templates/core/dashboard.html:65
+#: unifispot/templates/core/site-dashboard.html:65
+msgid "Guest Activity"
+msgstr ""
+
+#: unifispot/templates/core/dashboard.html:87
+#: unifispot/templates/core/site-dashboard.html:87
+msgid "Login Types"
+msgstr ""
+
+#: unifispot/templates/core/dashboard.html:101
+#: unifispot/templates/core/site-dashboard.html:101
+msgid "Social Activity"
+msgstr ""
+
+#: unifispot/templates/core/mailsettings.html:13
+#: unifispot/templates/core/mailsettings.html:19
+msgid "General Settings"
+msgstr ""
+
+#: unifispot/templates/core/mailsettings.html:16
+msgid "Send Test Email"
+msgstr ""
+
+#: unifispot/templates/core/mailsettings.html:33
+msgid "Application must be restarted for these settings to take effect"
+msgstr ""
+
+#: unifispot/templates/core/mailsettings.html:45
+msgid "Test"
+msgstr ""
+
+#: unifispot/templates/core/site-element.html:28
+#: unifispot/templates/core/site-generic.html:34
+msgid "Add New"
+msgstr ""
+
+#: unifispot/templates/core/site-guestdata.html:10
+#: unifispot/templates/core/site-guestdata.html:19
+msgid "Guests "
+msgstr ""
+
+#: unifispot/templates/core/site-guestdata.html:21
+msgid "Download"
+msgstr ""
+
+#: unifispot/templates/core/site-guestdata.html:35
+msgid "Firstname"
+msgstr ""
+
+#: unifispot/templates/core/site-guestdata.html:36
+msgid "Lastname"
+msgstr ""
+
+#: unifispot/templates/core/site-guestdata.html:37
+msgid "Phone Number"
+msgstr ""
+
+#: unifispot/templates/core/site-guestdata.html:38
+msgid "Age Range"
+msgstr ""
+
+#: unifispot/templates/core/site-guestdata.html:39
+msgid "Details"
+msgstr ""
+
+#: unifispot/templates/core/site-guestdata.html:40
+msgid "Create At"
+msgstr ""
+
+#: unifispot/templates/core/site-landing.html:17
+msgid "Landingpage "
+msgstr ""
+
+#: unifispot/templates/core/site-landing.html:30
+msgid "Landing Page"
+msgstr ""
+
+#: unifispot/templates/core/site-landing.html:34
+msgid "Demo"
+msgstr ""
+
+#: unifispot/templates/core/site-landing.html:45
+msgid "More"
+msgstr ""
+
+#: unifispot/templates/core/site-settings.html:13
+msgid "Site Settings"
+msgstr ""
+
+#: unifispot/templates/core/site-settings.html:20
+msgid "Use the wizard for configuring this site."
+msgstr ""
+
+#: unifispot/templates/core/unifi-settings.html:10
+#: unifispot/templates/core/unifi-settings.html:16
+msgid "UniFi Settings"
+msgstr ""
+
+#: unifispot/templates/core/unifi-settings.html:40
+msgid "Submit"
+msgstr ""
+
+#: unifispot/templates/guest/default/base_landing.html:13
+msgid "Welcome To Our Hotspot"
+msgstr ""
+
+#: unifispot/templates/guest/default/base_landing.html:169
+#: unifispot/templates/security/forgot_password.html:52
+#: unifispot/templates/security/login_user.html:55
+#: unifispot/templates/security/reset_password.html:57
+msgid "Powered By"
+msgstr ""
+
+#: unifispot/templates/guest/default/base_landing.html:169
+#: unifispot/templates/security/forgot_password.html:52
+#: unifispot/templates/security/login_user.html:55
+#: unifispot/templates/security/reset_password.html:57
+msgid "Spotipo"
+msgstr ""
+
+#: unifispot/templates/guest/default/base_landing.html:174
+msgid "By Logging In You agree to our"
+msgstr ""
+
+#: unifispot/templates/guest/default/base_landing.html:174
+msgid "Terms and Conditions"
+msgstr ""
+
+#: unifispot/templates/guest/default/base_landing.html:174
+msgid "And"
+msgstr ""
+
+#: unifispot/templates/guest/default/base_landing.html:174
+msgid "Privacy Policy"
+msgstr ""
+
+#: unifispot/templates/guest/default/email_landing.html:8
+#: unifispot/templates/guest/default/multi_landing.html:8
+#: unifispot/templates/guest/default/phone_landing.html:8
+#: unifispot/templates/guest/default/social_landing.html:8
+#: unifispot/templates/guest/default/voucher_landing.html:8
+msgid "Welcome to our WiFi hotspot"
+msgstr ""
+
+#: unifispot/templates/guest/default/email_landing.html:9
+#: unifispot/templates/guest/default/phone_landing.html:9
+#: unifispot/templates/guest/default/voucher_landing.html:9
+msgid "Please enter the following details to login"
+msgstr ""
+
+#: unifispot/templates/guest/default/email_landing.html:25
+#: unifispot/templates/guest/default/limit_override.html:14
+#: unifispot/templates/guest/default/phone_landing.html:23
+#: unifispot/templates/guest/default/voucher_landing.html:24
+#: unifispot/templates/security/login_user.html:4
+#: unifispot/templates/security/login_user.html:32
+msgid "Login"
+msgstr ""
+
+#: unifispot/templates/guest/default/fb_checkin.html:8
+msgid "Please Checkin for WiFi"
+msgstr ""
+
+#: unifispot/templates/guest/default/fb_checkin.html:14
+msgid "Check Into"
+msgstr ""
+
+#: unifispot/templates/guest/default/fb_checkin.html:17
+#: unifispot/templates/guest/default/fb_like.html:14
+#: unifispot/templates/guest/default/social_landing.html:18
+msgid "Facebook"
+msgstr ""
+
+#: unifispot/templates/guest/default/fb_checkin.html:22
+msgid "Optional Message"
+msgstr ""
+
+#: unifispot/templates/guest/default/fb_checkin.html:26
+msgid "Post To Facebook"
+msgstr ""
+
+#: unifispot/templates/guest/default/fb_checkin.html:27
+msgid "Go Back"
+msgstr ""
+
+#: unifispot/templates/guest/default/fb_like.html:8
+msgid "Please Like Us"
+msgstr ""
+
+#: unifispot/templates/guest/default/fb_like.html:23
+msgid "No Thanks, I will skip this"
+msgstr ""
+
+#: unifispot/templates/guest/default/limit_override.html:9
+msgid "Looks like your quota have expired"
+msgstr ""
+
+#: unifispot/templates/guest/default/limit_override.html:10
+msgid "Please contact management"
+msgstr ""
+
+#: unifispot/templates/guest/default/multi_landing.html:9
+msgid "Please choose a login method"
+msgstr ""
+
+#: unifispot/templates/guest/default/post_auth.html:11
+msgid "If you are not redirected automatically, please"
+msgstr ""
+
+#: unifispot/templates/guest/default/post_auth.html:11
+msgid "click"
+msgstr ""
+
+#: unifispot/templates/guest/default/social_landing.html:9
+msgid "Please login"
+msgstr ""
+
+#: unifispot/templates/security/forgot_password.html:4
+#: unifispot/templates/security/forgot_password.html:20
+msgid "Forgot password"
+msgstr ""
+
+#: unifispot/templates/security/forgot_password.html:22
+msgid "Enter your email address for resetting your password."
+msgstr ""
+
+#: unifispot/templates/security/forgot_password.html:29
+msgid "Recover Password"
+msgstr ""
+
+#: unifispot/templates/security/login_user.html:21
+msgid "Welcome to Spotipo"
+msgstr ""
+
+#: unifispot/templates/security/login_user.html:22
+msgid "Hotspot Management System."
+msgstr ""
+
+#: unifispot/templates/security/login_user.html:29
+msgid "Password"
+msgstr ""
+
+#: unifispot/templates/security/login_user.html:33
+msgid "Forgot password?"
+msgstr ""
+
+#: unifispot/templates/security/reset_password.html:4
+msgid " Reset password"
+msgstr ""
+
+#: unifispot/templates/security/reset_password.html:20
+msgid "Reset password"
+msgstr ""
+
+#: unifispot/templates/security/reset_password.html:22
+msgid "Please enter your new password."
+msgstr ""
+
+#: unifispot/templates/security/reset_password.html:27
+msgid "Enter New Password"
+msgstr ""
+
+#: unifispot/templates/security/reset_password.html:31
+msgid "Re Enter New Password"
+msgstr ""
+
+#: unifispot/templates/security/reset_password.html:34
+msgid "Reset Password"
+msgstr ""
+

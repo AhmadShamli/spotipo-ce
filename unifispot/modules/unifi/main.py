@@ -138,7 +138,7 @@ def guest_auth(trackid,guesttrack,wifisite,guestdevice,account):
         abort(404)
 
     time_limit = loginauth.time_available()
-    duration = time_limit if (time_limit < 480) else 480
+    duration = time_limit if time_limit else 480
     
     if not current_app.config['NO_UNIFI']:
         try:                

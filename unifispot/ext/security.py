@@ -14,5 +14,7 @@ def configure(app,user_datastore):
     ##workaround from http://stackoverflow.com/questions/27345291/sending-async-email-with-flask-security
     ## to avoid circular import 
     @security_ctx.send_mail_task
-    def delay_security_email(msg):
-        send_security_email.delay(msg)    
+    def delay_security_email(msg):  
+        send_security_email.delay(subject=msg.subject, sender=msg.sender,
+                          recipients=msg.recipients, body=msg.body,
+                          html=msg.html)

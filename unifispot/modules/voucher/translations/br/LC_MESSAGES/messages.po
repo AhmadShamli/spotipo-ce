@@ -1,0 +1,69 @@
+# Breton translations for PROJECT.
+# Copyright (C) 2017 ORGANIZATION
+# This file is distributed under the same license as the PROJECT project.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2017.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: PROJECT VERSION\n"
+"Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
+"POT-Creation-Date: 2017-02-25 21:43+0100\n"
+"PO-Revision-Date: 2017-02-25 21:43+0100\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language: br\n"
+"Language-Team: br <LL@li.org>\n"
+"Plural-Forms: nplurals=2; plural=(n != 1)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.3.4\n"
+
+#: /home/user/projects/spotipo/unifispot/modules/voucher/templates/voucher_designer.html:46
+msgid "Voucher Designer"
+msgstr ""
+
+#: /home/user/projects/spotipo/unifispot/modules/voucher/templates/voucher_designer.html:54
+msgid "Voucher Design"
+msgstr ""
+
+#: /home/user/projects/spotipo/unifispot/modules/voucher/templates/voucher_designer.html:56
+msgid "Save"
+msgstr ""
+
+#: /home/user/projects/spotipo/unifispot/modules/voucher/templates/vouchers.html:13
+#: /home/user/projects/spotipo/unifispot/modules/voucher/templates/vouchers.html:25
+msgid "Vouchers"
+msgstr ""
+
+#: /home/user/projects/spotipo/unifispot/modules/voucher/templates/vouchers.html:29
+msgid "Add New"
+msgstr ""
+
+#: /home/user/projects/spotipo/unifispot/modules/voucher/templates/vouchers.html:32
+msgid "Print Unused"
+msgstr ""
+
+#: /home/user/projects/spotipo/unifispot/modules/voucher/templates/vouchers.html:42
+msgid "Voucher"
+msgstr ""
+
+#: /home/user/projects/spotipo/unifispot/modules/voucher/templates/vouchers.html:43
+msgid "# of Devices"
+msgstr ""
+
+#: /home/user/projects/spotipo/unifispot/modules/voucher/templates/vouchers.html:44
+msgid "Duration"
+msgstr ""
+
+#: /home/user/projects/spotipo/unifispot/modules/voucher/templates/vouchers.html:45
+msgid "Details"
+msgstr ""
+
+#: /home/user/projects/spotipo/unifispot/modules/voucher/templates/vouchers.html:46
+msgid "Status"
+msgstr ""
+
+#: /home/user/projects/spotipo/unifispot/modules/voucher/templates/vouchers.html:47
+msgid "Notes"
+msgstr ""
+

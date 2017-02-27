@@ -66,7 +66,7 @@ IF NOT EXIST "C:\spotipo\env\Scripts\activate.bat" (
 )
 call C:\spotipo\env\Scripts\activate.bat
 REM install all binary packages
-pip install C:\spotipo\tools\lxml-3.6.4-cp27-cp27m-win32.whl
+pip install C:\spotipo\tools\lxml-3.7.3-cp27-cp27m-win32.whl
 pip install C:\spotipo\tools\mysql_python-1.2.5-cp27-none-win32.whl
 REM install all required packages
 pip install -r C:\spotipo\requirements\win.txt
@@ -85,8 +85,10 @@ python C:\spotipo\manage.py get_notifications
 REM configure apache
 IF NOT EXIST "C:\Apache24\modules\mod_wsgi.so" ( 
     copy C:\spotipo\tools\mod_wsgi.so C:\Apache24\modules
+    copy C:\spotipo\scripts\httpd.conf C:\Apache24\conf
 )
-copy C:\spotipo\scripts\httpd.conf C:\Apache24\conf
+
+
 
 REM check and install apache service
 SC QUERY Apache24 > NUL

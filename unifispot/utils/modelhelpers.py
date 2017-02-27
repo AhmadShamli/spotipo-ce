@@ -1,7 +1,7 @@
 from flask import Blueprint,current_app
 from flask.json import JSONEncoder as BaseJSONEncoder
 import arrow
-from flask_babelex import format_datetime as _format_datetime
+from flask_babelplus import format_datetime as _format_datetime
 from sqlalchemy.exc import SQLAlchemyError
 from sqlalchemy.orm.properties import ColumnProperty
 from unifispot.core.db import db

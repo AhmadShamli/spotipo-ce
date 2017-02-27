@@ -210,8 +210,6 @@ class Controller:
             ap_mac        -- access point MAC address (UniFi >= 3.x) (optional)
         """
         cmd = 'authorize-guest'
-        if minutes > 480 :
-            minutes = 480
         js = {'mac': guest_mac, 'minutes': minutes}
 
         if up_bandwidth:

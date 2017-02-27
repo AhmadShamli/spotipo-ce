@@ -288,7 +288,7 @@ def validate_voucerauth(f):
         wifisite    =  kwargs.get('wifisite')
         if voucherauth.time_available() and voucherauth.data_available():
             #update guesttrack   
-            guesttrack.state        = GUESTTRACK_POSTLOGIN
+            guesttrack.state        = GUESTTRACK_POSTRELOGIN
             guesttrack.loginauthid  = voucherauth.id
             guesttrack.updatestat('auth_voucher',1)
             guesttrack.updatestat('relogin',1)

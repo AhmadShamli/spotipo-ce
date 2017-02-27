@@ -191,10 +191,12 @@ def redirect_guest(wifisite,guesttrack):
         return redirect(url_for('unifispot.modules.%s.guest_auth'%\
                 wifisite.backend_type,trackid=guesttrack.trackid))
 
-                   
-
-        guestlog_warn('unknown state :%s for guestrack '%guesttrack.state,wifisite,guesttrack)
-        abort(404)        
+    if guesttrack.state == GUESTTRACK_POSTRELOGIN:
+        #redirect guest to configured backend
+        return redirect(url_for('unifispot.modules.%s.guest_auth'%\
+                wifisite.backend_type,trackid=guesttrack.trackid))
+    guestlog_warn('unknown state :%s for guestrack '%guesttrack.state,wifisite,guesttrack)
+    abort(404)        
    
 def show_message(wifisite,guesttrack):
     #function used for redirecting a guest after authorization   
@@ -354,7 +356,7 @@ def get_loginauth_validator(AuthModel,lconfigstr,modname,logintypestr):
                 loginauth.reset()
                 loginauth.save()
                 #update guesttrack   
-                guesttrack.state        = GUESTTRACK_POSTLOGIN
+                guesttrack.state        = GUESTTRACK_POSTRELOGIN
                 guesttrack.loginauthid  = loginauth.id 
                 guesttrack.updatestat(logintypestr,1)
                 guesttrack.updatestat('relogin',1)

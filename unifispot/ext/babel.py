@@ -1,9 +1,14 @@
-from flask_babelex import Babel
 from flask import request,session
 from flask.json import JSONEncoder as BaseEncoder
 from speaklater import _LazyString
+from flask_babelplus import Domain, get_locale,Babel
+from spotipo_plugins import get_enabled_plugins
+import os
+
+from unifispot.utils.translation import SpotipoDomain
 
 babel = Babel()
+
 
 
 
@@ -17,7 +22,7 @@ class JSONEncoder(BaseEncoder):
         return BaseEncoder.default(self, o)
 
 def configure(app):
-    babel.init_app(app)
+    babel.init_app(app,default_domain=SpotipoDomain(app))
 
     app.json_encoder = JSONEncoder
 
@@ -39,3 +44,6 @@ def configure(app):
                         )
 
             return session.get('lang', 'en')    
+
+
+
