@@ -72,7 +72,7 @@ class RESTView(FlaskView):
         else:
             current_app.logger.debug('UserID:%s trying to access unknown ID:%s of :%s'\
                     %(current_user.id,id,self.get_name()))
-            return jsonify({'status':0,'data':{}, 'msg':_l('Unknown :%(name)s ID specified'\
+            return jsonify({'status':0,'data':{}, 'msg':_('Unknown :%(name)s ID specified'\
                     ,name=self.get_name())})
                 
     def post(self):
@@ -132,7 +132,7 @@ class RESTView(FlaskView):
         else:
             current_app.logger.debug('UserID:%s trying to update unknown ID:%s of :%s'\
                     %(current_user.id,id,self.get_name()))
-            return jsonify({'status':0,'data':{}, 'msg':_l('Unknown :%(name)s ID \
+            return jsonify({'status':0,'data':{}, 'msg':_('Unknown :%(name)s ID \
                     specified',name=self.get_name())})
 
     def delete(self,id):
@@ -151,7 +151,7 @@ class RESTView(FlaskView):
         else:
             current_app.logger.debug('UserID:%s trying to delete unknown ID:%s of :%s'\
                     %(current_user.id,id,self.get_name()))
-            return jsonify({'status':0,'data':{}, 'msg':_l('Unknown :%(name)s ID \
+            return jsonify({'status':0,'data':{}, 'msg':_('Unknown :%(name)s ID \
                     specified',name=self.get_name())})
 
 
@@ -406,7 +406,7 @@ class SiteModuleElementAPI(FlaskView):
         else:
             current_app.logger.debug('UserID:%s trying to access unknown ID:%s of :%s'\
                     %(current_user.id,id,self.get_name()))
-            return jsonify({'status':0,'data':{}, 'msg':_l('Unknown :%(name)s ID specified'\
+            return jsonify({'status':0,'data':{}, 'msg':_('Unknown :%(name)s ID specified'\
                     ,name=self.get_name())})
                 
     def post(self,siteid):
@@ -468,7 +468,7 @@ class SiteModuleElementAPI(FlaskView):
         else:
             current_app.logger.debug('UserID:%s trying to update unknown ID:%s of :%s'\
                     %(current_user.id,id,self.get_name()))
-            return jsonify({'status':0,'data':{}, 'msg':_l('Unknown :%(name)s ID \
+            return jsonify({'status':0,'data':{}, 'msg':_('Unknown :%(name)s ID \
                     specified',name=self.get_name())})
 
     def delete(self,siteid,id):
@@ -487,7 +487,7 @@ class SiteModuleElementAPI(FlaskView):
         else:
             current_app.logger.debug('UserID:%s trying to delete unknown ID:%s of :%s'\
                     %(current_user.id,id,self.get_name()))
-            return jsonify({'status':0,'data':{}, 'msg':_l('Unknown :%(name)s ID \
+            return jsonify({'status':0,'data':{}, 'msg':_('Unknown :%(name)s ID \
                     specified',name=self.get_name())})        
 
 

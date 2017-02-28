@@ -128,7 +128,7 @@ class Voucher(CRUDMixin,SerializerMixin,db.Model):
             len(devices) >= self.num_devices:
             current_app.logger.warning('Max device limit reached for:%s, not able to login\
                     device:%s'%(self.id,loginauth.deviceid))
-            return (None,_l('Looks like max allowed devices are already connected'))
+            return (None,_('Looks like max allowed devices are already connected'))
 
 
         #check timelimit if voucher is already used
@@ -148,7 +148,7 @@ class Voucher(CRUDMixin,SerializerMixin,db.Model):
         if not duration > 60:
             current_app.logger.warning('Time limit reached for:%s, not able to login\
                     device:%s'%(self.id,loginauth.deviceid)) 
-            return (None,_l('Looks like you have reached max time limit'))
+            return (None,_('Looks like you have reached max time limit'))
 
         time_available = int(math.floor(duration/60))
 
@@ -159,7 +159,7 @@ class Voucher(CRUDMixin,SerializerMixin,db.Model):
             if not data_used < self.bytes_t:
                 current_app.logger.warning('Max data limit reached for:%s, not able to login\
                     device:%s'%(self.id,loginauth.deviceid))
-                return (None,_l('Looks like you have reached max data limit'))
+                return (None,_('Looks like you have reached max data limit'))
             else:
                 data_available = self.bytes_t - data_used
         else:

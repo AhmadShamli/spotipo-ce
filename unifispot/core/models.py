@@ -559,6 +559,7 @@ class Loginauth(CRUDMixin,SerializerMixin,db.Model):
     state               = db.Column(db.Integer,default=LOGINAUTH_INIT)  
     relogin             = db.Column(db.Integer,default=0)  
     blocked             = db.Column(db.Integer,default=0)  
+    demo                = db.Column(db.Integer,default=0,index=True)
     site                = db.relationship(Wifisite, 
                                 backref=db.backref("loginauths"))
     device              = db.relationship(Device, backref=db.backref("loginauths", \
@@ -661,6 +662,11 @@ class Loginauth(CRUDMixin,SerializerMixin,db.Model):
         else:
             return False
 
+    def is_not_demo(self):
+        if self.demo:
+            return False
+        else:
+            return True
 
     def is_currently_active(self):
         '''check if any of the session is currently on going

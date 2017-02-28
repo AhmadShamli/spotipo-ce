@@ -79,7 +79,8 @@ class SpotipoDomain(Domain):
                     locales=locale,
                     domain="messages"
                 )
-                translations.add(plugin_translation)
+                if isinstance(plugin_translation, babel.support.Translations):
+                    translations.add(plugin_translation)
 
             cache[str(locale)] = translations
 

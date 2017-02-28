@@ -8,24 +8,24 @@ from unifispot.utils.translation import _l,_n,_
 from unifispot.core.const import *
 
 class VoucherConfigForm(Form):
-    enable_email        = BooleanField(_l('Email'),default=1)
-    enable_firstname    = BooleanField(_l('First Name'),default=1)
-    enable_lastname     = BooleanField(_l('Last Name'),default=1)
-    enable_dob          = BooleanField(_l('DOB'),default=1)
-    enable_extra1       = BooleanField(_l('Extra1'),default=1)    
-    enable_extra2       = BooleanField(_l('Extra2'),default=1)    
-    mandate_email       = BooleanField(_l('Email'),default=1)
-    mandate_firstname   = BooleanField(_l('First Name'),default=1)
-    mandate_lastname    = BooleanField(_l('Last Name'),default=1)
-    mandate_dob         = BooleanField(_l('DOB'),default=1)
-    mandate_extra1      = BooleanField(_l('Extra1'),default=1)    
-    mandate_extra2      = BooleanField(_l('Extra2'),default=1) 
-    labelfor_email      = TextField(_l('Email Field'))
-    labelfor_firstname  = TextField(_l('Firstname Field'))
-    labelfor_lastname   = TextField(_l('Lastname Field'))
-    labelfor_dob        = TextField(_l('DOB Field'))
-    labelfor_extra1     = TextField(_l('Extra Field1'))
-    labelfor_extra2     = TextField(_l('Extra Field2'))
+    enable_email        = BooleanField(_('Email'),default=1)
+    enable_firstname    = BooleanField(_('First Name'),default=1)
+    enable_lastname     = BooleanField(_('Last Name'),default=1)
+    enable_dob          = BooleanField(_('DOB'),default=1)
+    enable_extra1       = BooleanField(_('Extra1'),default=1)    
+    enable_extra2       = BooleanField(_('Extra2'),default=1)    
+    mandate_email       = BooleanField(_('Email'),default=1)
+    mandate_firstname   = BooleanField(_('First Name'),default=1)
+    mandate_lastname    = BooleanField(_('Last Name'),default=1)
+    mandate_dob         = BooleanField(_('DOB'),default=1)
+    mandate_extra1      = BooleanField(_('Extra1'),default=1)    
+    mandate_extra2      = BooleanField(_('Extra2'),default=1) 
+    labelfor_email      = TextField(_('Email Field'))
+    labelfor_firstname  = TextField(_('Firstname Field'))
+    labelfor_lastname   = TextField(_('Lastname Field'))
+    labelfor_dob        = TextField(_('DOB Field'))
+    labelfor_extra1     = TextField(_('Extra Field1'))
+    labelfor_extra2     = TextField(_('Extra Field2'))
 
 
     def populate(self):
@@ -63,36 +63,36 @@ def generate_voucherform(voucherconfig):
     return F()        
 
 class VoucherDesignForm(Form):
-    site_id         = HiddenField(_l('Site ID'))
-    logofile        = HiddenField(_l('Header File'))   
-    bgcolor         = TextField(_l('Background Color'))
-    txtcolor        = TextField(_l('Text Color'))
-    bordercolor     = TextField(_l('Border Color'))
-    showlogo        = BooleanField(_l('Show Logo'),default=1)     
-    shownotes       = BooleanField(_l('Show Notes'),default=1)
-    showqr          = BooleanField(_l('Show QRcode'),default=1)
-    showduration    = BooleanField(_l('Show Duration'),default=1)
-    showdata        = BooleanField(_l('Show Data Limit'),default=1)
-    showspeed       = BooleanField(_l('Show Speed Limit'),default=1)
+    site_id         = HiddenField(_('Site ID'))
+    logofile        = HiddenField(_('Header File'))   
+    bgcolor         = TextField(_('Background Color'))
+    txtcolor        = TextField(_('Text Color'))
+    bordercolor     = TextField(_('Border Color'))
+    showlogo        = BooleanField(_('Show Logo'),default=1)     
+    shownotes       = BooleanField(_('Show Notes'),default=1)
+    showqr          = BooleanField(_('Show QRcode'),default=1)
+    showduration    = BooleanField(_('Show Duration'),default=1)
+    showdata        = BooleanField(_('Show Data Limit'),default=1)
+    showspeed       = BooleanField(_('Show Speed Limit'),default=1)
     def populate(self):
         pass    
 
 class VoucherFilesForm(Form):
-    logofile        = FileField(_l('Logo File'))
+    logofile        = FileField(_('Logo File'))
     def populate(self):
         pass        
 
 class VoucherForm(Form):  
-    duration_val    = IntegerField(_l("Duration"),validators = [DataRequired()])
-    batchid         = IntegerField(_l("Batch ID"),[DataRequired(),NumberRange(min=1000,
-                            max=9999,message=_l('Batch ID should be a 4 digit number'))])
-    notes           = TextField(_l("Note"))
-    number          = IntegerField(_l("Create"),validators = [DataRequired()])
-    bytes_t         = IntegerField(_l("Total Data in Mb"))
-    duration_type   = SelectField(_l("Select"),coerce=int,
+    duration_val    = IntegerField(_("Duration"),validators = [DataRequired()])
+    batchid         = IntegerField(_("Batch ID"),[DataRequired(),NumberRange(min=1000,
+                            max=9999,message=_('Batch ID should be a 4 digit number'))])
+    notes           = TextField(_("Note"))
+    number          = IntegerField(_("Create"),validators = [DataRequired()])
+    bytes_t         = IntegerField(_("Total Data in Mb"))
+    duration_type   = SelectField(_("Select"),coerce=int,
                             choices=[(1,'Minutes'),(2,'Hours'),(3,'Days')] )  
-    num_devices     = IntegerField(_l("Devices Allowed"),validators = [DataRequired()])  
-    speed_dl        = IntegerField(_l("Download Speed"))
-    speed_ul        = IntegerField(_l("Upload Speed"))
+    num_devices     = IntegerField(_("Devices Allowed"),validators = [DataRequired()])  
+    speed_dl        = IntegerField(_("Download Speed"))
+    speed_ul        = IntegerField(_("Upload Speed"))
     def populate(self):
         pass        

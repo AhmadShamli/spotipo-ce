@@ -38,39 +38,39 @@ def generate_emailform(emailconfig):
     return F()
 
 class EmailConfigForm(Form):
-    enable_email        = BooleanField(_l('Email'),default=1)
-    enable_firstname    = BooleanField(_l('First Name'),default=1)
-    enable_lastname     = BooleanField(_l('Last Name'),default=1)
-    enable_dob          = BooleanField(_l('DOB'),default=1)
-    enable_extra1       = BooleanField(_l('Extra1'),default=1)    
-    enable_extra2       = BooleanField(_l('Extra2'),default=1)    
-    mandate_email       = BooleanField(_l('Email'),default=1)
-    mandate_firstname   = BooleanField(_l('First Name'),default=1)
-    mandate_lastname    = BooleanField(_l('Last Name'),default=1)
-    mandate_dob         = BooleanField(_l('DOB'),default=1)
-    mandate_extra1      = BooleanField(_l('Extra1'),default=1)    
-    mandate_extra2      = BooleanField(_l('Extra2'),default=1) 
-    labelfor_email      = TextField(_l('Email Field'))
-    labelfor_firstname  = TextField(_l('Firstname Field'))
-    labelfor_lastname   = TextField(_l('Lastname Field'))
-    labelfor_dob        = TextField(_l('DOB Field'))
-    labelfor_extra1     = TextField(_l('Extra Field1'))
-    labelfor_extra2     = TextField(_l('Extra Field2'))
-    data_limit          = IntegerField(_l('Data Limit(Mb)'),default=0)
-    time_limit          = IntegerField(_l('Time Limit(Min)'),default=0)
-    speed_ul            = IntegerField(_l('Ul Speed Limit(Kbps)'),default=0)
-    speed_dl            = IntegerField(_l('DL Speed Limit(Kbps)'),default=0)
-    session_limit_control= SelectField(_l('Restrict Sessions'),coerce=int,choices=[])
-    session_overridepass= TextField(_l('Override Password'))
-    relogin_policy      = SelectField(_l('Guest has to login'),choices=[])
+    enable_email        = BooleanField(_('Email'),default=1)
+    enable_firstname    = BooleanField(_('First Name'),default=1)
+    enable_lastname     = BooleanField(_('Last Name'),default=1)
+    enable_dob          = BooleanField(_('DOB'),default=1)
+    enable_extra1       = BooleanField(_('Extra1'),default=1)    
+    enable_extra2       = BooleanField(_('Extra2'),default=1)    
+    mandate_email       = BooleanField(_('Email'),default=1)
+    mandate_firstname   = BooleanField(_('First Name'),default=1)
+    mandate_lastname    = BooleanField(_('Last Name'),default=1)
+    mandate_dob         = BooleanField(_('DOB'),default=1)
+    mandate_extra1      = BooleanField(_('Extra1'),default=1)    
+    mandate_extra2      = BooleanField(_('Extra2'),default=1) 
+    labelfor_email      = TextField(_('Email Field'))
+    labelfor_firstname  = TextField(_('Firstname Field'))
+    labelfor_lastname   = TextField(_('Lastname Field'))
+    labelfor_dob        = TextField(_('DOB Field'))
+    labelfor_extra1     = TextField(_('Extra Field1'))
+    labelfor_extra2     = TextField(_('Extra Field2'))
+    data_limit          = IntegerField(_('Data Limit(Mb)'),default=0)
+    time_limit          = IntegerField(_('Time Limit(Min)'),default=0)
+    speed_ul            = IntegerField(_('Ul Speed Limit(Kbps)'),default=0)
+    speed_dl            = IntegerField(_('DL Speed Limit(Kbps)'),default=0)
+    session_limit_control= SelectField(_('Restrict Sessions'),coerce=int,choices=[])
+    session_overridepass= TextField(_('Override Password'))
+    relogin_policy      = SelectField(_('Guest has to login'),choices=[])
 
     def populate(self):
-        self.session_limit_control.choices = [(0,_l('No Limit')),
-                            (1,_l('Daily')),(2,_l('Monthly'))]
+        self.session_limit_control.choices = [(0,_('No Limit')),
+                            (1,_('Daily')),(2,_('Monthly'))]
         self.relogin_policy.choices=[('always','Always'),('onetime','One Time'),
                                         ('monthly','Monthly')]
 
 class EmailOverrideForm(Form):
-    password            = PasswordField(_l('Password'),validators = [Required()])
+    password            = PasswordField(_('Password'),validators = [Required()])
 
    

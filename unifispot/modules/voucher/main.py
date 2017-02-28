@@ -75,7 +75,7 @@ VoucherDesignAPI.register(module, route_base='/s/<siteid>/voucher/design/api')
 class VoucherDesignView(FlaskView):
 
 
-    @classy_menu_item('.voucher.design', _l('Design'), order=1,
+    @classy_menu_item('.voucher.design', _('Design'), order=1,
                         visible_when=site_menu)
     def index(self,siteid):
         decorators = [login_required,validate_site_ownership]
@@ -197,9 +197,9 @@ VoucherAPI.register(module, route_base='/s/<siteid>/voucher/vouchers/api/')
 class VoucherView(FlaskView):
 
 
-    @classy_menu_item('.voucher.vouchers', _l('View'), order=0,
+    @classy_menu_item('.voucher.vouchers', _('View'), order=0,
                         visible_when=site_menu)
-    @classy_menu_item('.voucher', _l('Voucher'), order=7,icon='fa-money',
+    @classy_menu_item('.voucher', _('Voucher'), order=7,icon='fa-money',
                         visible_when=site_menu)
     def index(self,siteid):
         decorators = [login_required,validate_site_ownership]
@@ -270,13 +270,14 @@ def validate_voucherconfig(f):
                                 wifisite,guesttrack)
             voucherauth = Voucherauth(siteid=wifisite.id,deviceid=guestdevice.id,
                                     account_id=wifisite.account_id)
+            voucherauth.demo = guesttrack.demo
             voucherauth.save()        
         kwargs['voucherauth'] = voucherauth
         return f(*args, **kwargs)
     return decorated_function
 
 
-def validate_voucerauth(f):
+def validate_voucherauth(f):
     '''Decorator for validating validate_paymentauth detials. 
         It validate payment auth if its already valid, no need to login again
 
@@ -286,7 +287,9 @@ def validate_voucerauth(f):
         voucherauth = kwargs.get('voucherauth')
         guesttrack  =  kwargs.get('guesttrack')
         wifisite    =  kwargs.get('wifisite')
-        if voucherauth.time_available() and voucherauth.data_available():
+        if voucherauth.is_not_demo() and \
+                voucherauth.time_available() and \
+                voucherauth.data_available():
             #update guesttrack   
             guesttrack.state        = GUESTTRACK_POSTRELOGIN
             guesttrack.loginauthid  = voucherauth.id
@@ -303,6 +306,7 @@ def validate_voucerauth(f):
 @module.route('/voucher/login/<trackid>/<voucherid>',methods = ['GET', 'POST'])
 @validate_track
 @validate_voucherconfig
+@validate_voucherauth
 def guest_login(trackid,guesttrack,wifisite,guestdevice,voucherconfig,voucherauth,voucherid=None):
     ''' Function to called if the site is configured with payment login    
     
@@ -339,7 +343,7 @@ def guest_login(trackid,guesttrack,wifisite,guestdevice,voucherconfig,voucheraut
                     wifisite,guesttrack)                  
         else:
             #transaction failed! display msg
-            flash(_l('Wrong voucher entry'), 'danger')
+            flash(_('Wrong voucher entry'), 'danger')
             guestlog_warn('in voucher.guest_login wrong voucher id',
                     wifisite,guesttrack)        
 

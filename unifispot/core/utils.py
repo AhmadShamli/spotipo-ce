@@ -160,7 +160,7 @@ def get_form_errors(form):
     form_errors = ""
     for field, errors in form.errors.items():
         for error in errors:
-            form_errors = form_errors+ _l("Error in the %(fieldname)s field - %(errors)s </br>",\
+            form_errors = form_errors+ _("Error in the %(fieldname)s field - %(errors)s </br>",\
                  fieldname=getattr(form, field).label.text,errors=error)
     return form_errors
 

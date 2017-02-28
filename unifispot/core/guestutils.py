@@ -161,7 +161,7 @@ def redirect_guest(wifisite,guesttrack):
                               'name':name,
                               'title':name.title()
                     })
-
+                #check if any of these methods are already logged in
 
 
             landingpage = Landingpage.query.filter_by(siteid=wifisite.id).first()
@@ -193,6 +193,8 @@ def redirect_guest(wifisite,guesttrack):
 
     if guesttrack.state == GUESTTRACK_POSTRELOGIN:
         #redirect guest to configured backend
+        guesttrack.state = GUESTTRACK_AUTH
+        guesttrack.save()        
         return redirect(url_for('unifispot.modules.%s.guest_auth'%\
                 wifisite.backend_type,trackid=guesttrack.trackid))
     guestlog_warn('unknown state :%s for guestrack '%guesttrack.state,wifisite,guesttrack)
@@ -329,13 +331,15 @@ def get_loginauth_validator(AuthModel,lconfigstr,modname,logintypestr):
                             AuthModel),wifisite,guesttrack)
                 loginauth = AuthModel(siteid=wifisite.id,deviceid=guestdevice.id,
                                         account_id=wifisite.account_id)
+                loginauth.demo = guesttrack.demo
                 loginauth.save()
             elif loginauth.is_blocked():
-                flash(_l("Looks like you have been blocked from using WiFi"),'danger')
+                flash(_("Looks like you have been blocked from using WiFi"),'danger')
                 landingpage = Landingpage.query.filter_by(siteid=wifisite.id).first()
                 return render_template('guest/%s/base_landing.html'%wifisite.template,\
                         wifisite=wifisite,landingpage=landingpage,trackid=guesttrack.trackid)                 
-            elif loginauth.login_completed(loginconfig) and \
+            elif loginauth.is_not_demo() and \
+                        loginauth.login_completed(loginconfig) and \
                         guest_auto_relogin_allowed(loginauth,loginconfig):
                 if loginconfig.is_limited():
                     #email auth from a previous session,
@@ -417,7 +421,7 @@ def handle_override(guesttrack,wifisite,guestdevice,loginconfig,AuthModel,Overri
             guesttrack.updatestat('relogin',1)            
             return redirect_guest(wifisite,guesttrack)
         else:
-            flash(_l('Wrong password'),'danger')
+            flash(_('Wrong password'),'danger')
 
     landingpage = Landingpage.query.filter_by(siteid=wifisite.id).first()
     return render_template('guest/%s/%s'%(wifisite.template,templatefile),\

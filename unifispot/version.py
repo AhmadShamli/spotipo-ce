@@ -1,1 +1,1 @@
-version='2.1.0-beta100' 
+version='2.1.0' 

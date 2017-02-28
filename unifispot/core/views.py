@@ -100,9 +100,9 @@ class AdminAPI(RESTView):
 class AdminManage(FlaskView):
     decorators = [login_required,admin_required]
 
-    @classy_menu_item('.manage.admin', _l('Admins'), order=0,
+    @classy_menu_item('.manage.admin', _('Admins'), order=0,
                         visible_when=admin_menu)
-    @classy_menu_item('.manage', _l('Manage'), order=1,icon='fa-cogs',
+    @classy_menu_item('.manage', _('Manage'), order=1,icon='fa-cogs',
                         visible_when=admin_menu)
     def index(self):
         return render_template('core/admins.html')
@@ -131,7 +131,7 @@ class ClientAPI(RESTView):
 class ClientManage(FlaskView):
     decorators = [login_required,admin_required]
 
-    @classy_menu_item('.manage.client', _l('Clients'),visible_when=admin_menu)
+    @classy_menu_item('.manage.client', _('Clients'),visible_when=admin_menu)
     def index(self):
         return render_template('core/clients.html')
 
@@ -195,7 +195,7 @@ class AccountAPI(RESTView):
 class AccountManage(FlaskView):
     decorators = [login_required,admin_required]
 
-    @classy_menu_item('.manage.settings', _l('UniFi Settings'),visible_when=admin_menu)
+    @classy_menu_item('.manage.settings', _('UniFi Settings'),visible_when=admin_menu)
     def index(self):
         settingsform = AccountForm()
         return render_template('core/unifi-settings.html',settingsform=settingsform)        
@@ -213,7 +213,7 @@ class MailOptionsAPI(OptionsAPI):
 class MailOptionsManage(FlaskView):
     decorators = [login_required,admin_required]
 
-    @classy_menu_item('.manage.options', _l('Mail Settings'),
+    @classy_menu_item('.manage.options', _('Mail Settings'),
                                 visible_when=admin_menu)
     def index(self):
         mailsettingsform = MailsettingsForm()
@@ -270,7 +270,7 @@ class WifisiteAPI(RESTView):
         else:
             current_app.logger.debug('UserID:%s trying to access unknown ID:%s of :%s'\
                     %(current_user.id,id,self.get_name()))
-            return jsonify({'status':0,'data':{}, 'msg':_l('Unknown :%(name)s ID specified'\
+            return jsonify({'status':0,'data':{}, 'msg':_('Unknown :%(name)s ID specified'\
                     ,name=self.get_name())})
 
     def index(self):
@@ -291,7 +291,7 @@ class WifisiteAPI(RESTView):
                                 'url':url_for('SiteDashboard:index',siteid=site.id)})
         except:
             current_app.logger.exception("Exception while trying to get site list")
-            return jsonify({'status':0,'data':'','msg':_l('Error in getting site list')})
+            return jsonify({'status':0,'data':'','msg':_('Error in getting site list')})
         else:
             return jsonify({'status':1,'data':data,'msg':'','sites_available':1})
     
@@ -356,7 +356,7 @@ class WifisiteAPI(RESTView):
         else:
             current_app.logger.debug('UserID:%s trying to update unknown ID:%s of :%s'\
                     %(current_user.id,id,self.get_name()))
-            return jsonify({'status':0,'data':{}, 'msg':_l('Unknown :%(name)s ID \
+            return jsonify({'status':0,'data':{}, 'msg':_('Unknown :%(name)s ID \
                     specified',name=self.get_name())})
     @admin_required
     def delete(self,id):
@@ -375,13 +375,13 @@ class WifisiteAPI(RESTView):
         else:
             current_app.logger.debug('UserID:%s trying to delete unknown ID:%s of :%s'\
                     %(current_user.id,id,self.get_name()))
-            return jsonify({'status':0,'data':{}, 'msg':_l('Unknown :%(name)s ID \
+            return jsonify({'status':0,'data':{}, 'msg':_('Unknown :%(name)s ID \
                     specified',name=self.get_name())})
 
 class WifisiteManage(FlaskView):
     decorators = [login_required,admin_required,validate_site_ownership]
 
-    @classy_menu_item('.settings', _l('Settings'),icon='fa-cogs',
+    @classy_menu_item('.settings', _('Settings'),icon='fa-cogs',
                             visible_when=admin_site_menu,order=1)
     def index(self,siteid):
         wifisite = Wifisite.query.get(siteid)
@@ -395,7 +395,7 @@ class SiteDashboard(FlaskView):
     decorators = [login_required]
 
 
-    @classy_menu_item('.sitedash', _l('Dashboard'),icon='fa-home',
+    @classy_menu_item('.sitedash', _('Dashboard'),icon='fa-home',
                             visible_when=site_menu,order=0)
     def index(self,siteid):
         return render_template('core/site-dashboard.html',siteid=siteid)           
@@ -541,7 +541,7 @@ class FileAPI(SiteModuleAPI):
 class LandingpageManage(FlaskView):
     decorators = [login_required,validate_site_ownership]
 
-    @classy_menu_item('.landingpage', _l('Landingpage'),icon='fa-desktop',
+    @classy_menu_item('.landingpage', _('Landingpage'),icon='fa-desktop',
                             visible_when=site_menu,order=2)
     def index(self,siteid):
         landingform = LandingPageForm()
@@ -607,7 +607,7 @@ class GuestViewAPI(SiteDataViewAPI):
 class GuestDataManage(FlaskView):
     decorators = [login_required]
 
-    @classy_menu_item('.guestdata', _l('Guests'),icon='fa-users',
+    @classy_menu_item('.guestdata', _('Guests'),icon='fa-users',
                             visible_when=site_menu,order=3)
     def index(self,siteid):
         wifisite = Wifisite.query.get(siteid)
