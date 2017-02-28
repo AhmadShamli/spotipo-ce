@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2017-02-27 22:38+0100\n"
+"POT-Creation-Date: 2017-02-28 22:09+0100\n"
 "PO-Revision-Date: 2017-02-27 07:01-0500\n"
 "Last-Translator: Pablo Choque <pablo@ofimare.com>\n"
 "Language: es\n"
@@ -77,15 +77,15 @@ msgstr "Borrado correcto de %(name)s"
 #: unifispot/templates/core/clients.html:40
 #: unifispot/templates/core/site-guestdata.html:34
 #: unifispot/templates/security/forgot_password.html:26
-#: unifispot/templates/security/login_user.html:26
+#: unifispot/templates/security/login_user.html:33
 msgid "Email"
 msgstr "Email"
 
-#: unifispot/core/forms.py:23 unifispot/core/forms.py:75
+#: unifispot/core/forms.py:23 unifispot/core/forms.py:71
 msgid "Name"
 msgstr ""
 
-#: unifispot/core/forms.py:24 unifispot/templates/security/login_user.html:29
+#: unifispot/core/forms.py:24 unifispot/templates/security/login_user.html:36
 msgid "Password"
 msgstr "Clave"
 
@@ -121,185 +121,189 @@ msgstr "Versión API del Controller"
 msgid "Mail Server"
 msgstr ""
 
-#: unifispot/core/forms.py:57
+#: unifispot/core/forms.py:55
 msgid "Mail Port"
 msgstr ""
 
-#: unifispot/core/forms.py:62
+#: unifispot/core/forms.py:56
 msgid "Mail Default Sender"
 msgstr ""
 
-#: unifispot/core/forms.py:68
+#: unifispot/core/forms.py:57
+msgid "Default Language"
+msgstr ""
+
+#: unifispot/core/forms.py:64
 msgid "Recipient Email"
 msgstr ""
 
-#: unifispot/core/forms.py:76
+#: unifispot/core/forms.py:72
 msgid "Site Timezone"
 msgstr ""
 
-#: unifispot/core/forms.py:77
+#: unifispot/core/forms.py:73
 msgid "Select Client"
 msgstr ""
 
-#: unifispot/core/forms.py:79
+#: unifispot/core/forms.py:75
 msgid "Select Site Type"
 msgstr ""
 
-#: unifispot/core/forms.py:105
+#: unifispot/core/forms.py:101
 msgid ""
 "Error while getting sitelist.                                         "
 "Please check Controller settings"
 msgstr ""
 
-#: unifispot/core/forms.py:114
+#: unifispot/core/forms.py:110
 msgid "Redirect Guest to URL"
 msgstr ""
 
-#: unifispot/core/forms.py:116
+#: unifispot/core/forms.py:112
 msgid "Additional Report Recipients"
 msgstr ""
 
-#: unifispot/core/forms.py:117
+#: unifispot/core/forms.py:113
 msgid "Select Reports Frequency"
 msgstr ""
 
-#: unifispot/core/forms.py:124
+#: unifispot/core/forms.py:120
 msgid "Site ID"
 msgstr ""
 
-#: unifispot/core/forms.py:125
+#: unifispot/core/forms.py:121
 msgid "UniFi Site"
 msgstr ""
 
-#: unifispot/core/forms.py:131
+#: unifispot/core/forms.py:127
 #, python-format
 msgid "%s Login"
 msgstr ""
 
-#: unifispot/core/forms.py:136
+#: unifispot/core/forms.py:132
 #, python-format
 msgid "%s "
 msgstr ""
 
-#: unifispot/core/forms.py:141
+#: unifispot/core/forms.py:137
 #, python-format
 msgid "Postlogin %s "
 msgstr ""
 
-#: unifispot/core/forms.py:145
+#: unifispot/core/forms.py:141
 #, python-format
 msgid "Export to %s "
 msgstr ""
 
-#: unifispot/core/forms.py:152
+#: unifispot/core/forms.py:148
 msgid "Select Template"
 msgstr ""
 
-#: unifispot/core/forms.py:160
+#: unifispot/core/forms.py:156
 msgid "Logo File"
 msgstr ""
 
-#: unifispot/core/forms.py:161
+#: unifispot/core/forms.py:157
 msgid "Background Image"
 msgstr ""
 
-#: unifispot/core/forms.py:162 unifispot/core/forms.py:201
+#: unifispot/core/forms.py:158 unifispot/core/forms.py:197
 msgid "Select T&C pdf"
 msgstr ""
 
-#: unifispot/core/forms.py:167 unifispot/core/forms.py:180
+#: unifispot/core/forms.py:163 unifispot/core/forms.py:176
 msgid "Page Background Color"
 msgstr ""
 
-#: unifispot/core/forms.py:168
+#: unifispot/core/forms.py:164
 msgid "Grid Background Color"
 msgstr ""
 
-#: unifispot/core/forms.py:169 unifispot/core/forms.py:195
+#: unifispot/core/forms.py:165 unifispot/core/forms.py:191
 msgid "Text Color"
 msgstr ""
 
-#: unifispot/core/forms.py:181
+#: unifispot/core/forms.py:177
 msgid "Header Background Color"
 msgstr ""
 
-#: unifispot/core/forms.py:182
+#: unifispot/core/forms.py:178
 msgid "Header Link"
 msgstr ""
 
-#: unifispot/core/forms.py:183
+#: unifispot/core/forms.py:179
 msgid "Header Base Font"
 msgstr ""
 
-#: unifispot/core/forms.py:184
+#: unifispot/core/forms.py:180
 msgid "Top Background Color"
 msgstr ""
 
-#: unifispot/core/forms.py:185
+#: unifispot/core/forms.py:181
 msgid "Top Text Color"
 msgstr ""
 
-#: unifispot/core/forms.py:186
+#: unifispot/core/forms.py:182
 msgid "Top Font"
 msgstr ""
 
-#: unifispot/core/forms.py:187
+#: unifispot/core/forms.py:183
 msgid "Top Content"
 msgstr ""
 
-#: unifispot/core/forms.py:188
+#: unifispot/core/forms.py:184
 msgid "Middle Background Color"
 msgstr ""
 
-#: unifispot/core/forms.py:189
+#: unifispot/core/forms.py:185
 msgid "Middle Text Color"
 msgstr ""
 
-#: unifispot/core/forms.py:190
+#: unifispot/core/forms.py:186
 msgid "Bottom Base Font"
 msgstr ""
 
-#: unifispot/core/forms.py:191
+#: unifispot/core/forms.py:187
 msgid "Bottom Background Color"
 msgstr ""
 
-#: unifispot/core/forms.py:192
+#: unifispot/core/forms.py:188
 msgid "Bottom Text Color"
 msgstr ""
 
-#: unifispot/core/forms.py:193 unifispot/core/forms.py:196
+#: unifispot/core/forms.py:189 unifispot/core/forms.py:192
 msgid "Base Font"
 msgstr ""
 
-#: unifispot/core/forms.py:194
+#: unifispot/core/forms.py:190
 msgid "Footer Background Color"
 msgstr ""
 
-#: unifispot/core/forms.py:197
+#: unifispot/core/forms.py:193
 msgid "Footer Content"
 msgstr ""
 
-#: unifispot/core/forms.py:198
+#: unifispot/core/forms.py:194
 msgid "Button Color"
 msgstr ""
 
-#: unifispot/core/forms.py:199
+#: unifispot/core/forms.py:195
 msgid "Button Text Color"
 msgstr ""
 
-#: unifispot/core/forms.py:200
+#: unifispot/core/forms.py:196
 msgid "Button Border Color"
 msgstr ""
 
-#: unifispot/core/forms.py:202
+#: unifispot/core/forms.py:198
 msgid "Copyright Text"
 msgstr ""
 
-#: unifispot/core/guestutils.py:337
+#: unifispot/core/guestutils.py:355
 msgid "Looks like you have been blocked from using WiFi"
 msgstr ""
 
-#: unifispot/core/guestutils.py:424
+#: unifispot/core/guestutils.py:442
 msgid "Wrong password"
 msgstr ""
 
@@ -325,9 +329,10 @@ msgstr ""
 msgid "UniFi Settings"
 msgstr "Configuración Unifi"
 
-#: unifispot/core/views.py:216
-msgid "Mail Settings"
-msgstr ""
+#: unifispot/core/views.py:216 unifispot/templates/core/mailsettings.html:13
+#: unifispot/templates/core/mailsettings.html:19
+msgid "General Settings"
+msgstr "Configuración General"
 
 #: unifispot/core/views.py:236
 msgid "Error while trying to send test email"
@@ -386,47 +391,47 @@ msgstr "Se ha producido un error mientras                  se subía el fichero"
 msgid "Landingpage"
 msgstr ""
 
-#: unifispot/core/views.py:610
+#: unifispot/core/views.py:611
 msgid "Guests"
 msgstr ""
 
-#: unifispot/templates/macros.html:136 unifispot/templates/macros.html:167
-#: unifispot/templates/macros.html:202
+#: unifispot/templates/macros.html:136 unifispot/templates/macros.html:174
+#: unifispot/templates/macros.html:209
 msgid "Close"
 msgstr "Cerrar"
 
 #: unifispot/templates/core/mailsettings.html:44
 #: unifispot/templates/core/site-landing.html:32
-#: unifispot/templates/macros.html:137 unifispot/templates/macros.html:168
-#: unifispot/templates/macros.html:203 unifispot/templates/macros.html:234
+#: unifispot/templates/macros.html:141 unifispot/templates/macros.html:175
+#: unifispot/templates/macros.html:210 unifispot/templates/macros.html:241
 msgid "Save"
 msgstr "Guardar"
 
-#: unifispot/templates/macros.html:235
+#: unifispot/templates/macros.html:242
 msgid "Save & Preview"
 msgstr "Guardar y Previsualizar"
 
-#: unifispot/templates/macros.html:321
+#: unifispot/templates/macros.html:328
 msgid "Speed in Kbps"
 msgstr "Velocidad en Kbps"
 
-#: unifispot/templates/macros.html:472
+#: unifispot/templates/macros.html:479
 msgid "Unifi Controller"
 msgstr "Unifi Controller"
 
-#: unifispot/templates/macros.html:478
+#: unifispot/templates/macros.html:485
 msgid "Unifi Controller IP"
 msgstr "IP del Controller Unifi"
 
-#: unifispot/templates/macros.html:484
+#: unifispot/templates/macros.html:491
 msgid "Unifi Controller Port"
 msgstr "Puerto del Controller Unifi"
 
-#: unifispot/templates/macros.html:490
+#: unifispot/templates/macros.html:497
 msgid "Unifi Admin"
 msgstr "Administrador Unifi"
 
-#: unifispot/templates/macros.html:496
+#: unifispot/templates/macros.html:503
 msgid "Unifi Password"
 msgstr "Clave Unifi"
 
@@ -495,22 +500,21 @@ msgstr "Tipos de Inicio de Sesión"
 msgid "Social Activity"
 msgstr "Actividad Social"
 
-#: unifispot/templates/core/mailsettings.html:13
-#: unifispot/templates/core/mailsettings.html:19
-msgid "General Settings"
-msgstr "Configuración General"
-
 #: unifispot/templates/core/mailsettings.html:16
 msgid "Send Test Email"
 msgstr "Enviar Email de prueba"
+
+#: unifispot/templates/core/mailsettings.html:16
+msgid "Test"
+msgstr ""
 
 #: unifispot/templates/core/mailsettings.html:33
 msgid "Application must be restarted for these settings to take effect"
 msgstr "Debe reiniciar la aplicación para que los cambios tengan efecto"
 
 #: unifispot/templates/core/mailsettings.html:45
-msgid "Test"
-msgstr "Prueba"
+msgid "Test Email Settings"
+msgstr ""
 
 #: unifispot/templates/core/site-element.html:28
 #: unifispot/templates/core/site-generic.html:34
@@ -584,14 +588,14 @@ msgstr "Bienvenid@ a nuestro Servicio Wifi"
 
 #: unifispot/templates/guest/default/base_landing.html:169
 #: unifispot/templates/security/forgot_password.html:52
-#: unifispot/templates/security/login_user.html:55
+#: unifispot/templates/security/login_user.html:62
 #: unifispot/templates/security/reset_password.html:57
 msgid "Powered By"
 msgstr "Powered By"
 
 #: unifispot/templates/guest/default/base_landing.html:169
 #: unifispot/templates/security/forgot_password.html:52
-#: unifispot/templates/security/login_user.html:55
+#: unifispot/templates/security/login_user.html:62
 #: unifispot/templates/security/reset_password.html:57
 msgid "Spotipo"
 msgstr "Spotipo"
@@ -631,7 +635,7 @@ msgstr "Por favor, inicie sesión utilizando"
 #: unifispot/templates/guest/default/phone_landing.html:23
 #: unifispot/templates/guest/default/voucher_landing.html:24
 #: unifispot/templates/security/login_user.html:4
-#: unifispot/templates/security/login_user.html:32
+#: unifispot/templates/security/login_user.html:39
 msgid "Login"
 msgstr "Inicio Sesión"
 
@@ -706,15 +710,15 @@ msgstr "Ponga su dirección de correo para reiniciar la clave."
 msgid "Recover Password"
 msgstr "Recuperar Clave"
 
-#: unifispot/templates/security/login_user.html:21
+#: unifispot/templates/security/login_user.html:25
 msgid "Welcome to Spotipo"
 msgstr "Bienvenid@ a Spotipo"
 
-#: unifispot/templates/security/login_user.html:22
+#: unifispot/templates/security/login_user.html:29
 msgid "Hotspot Management System."
 msgstr "Gestión de Servicio Wifi."
 
-#: unifispot/templates/security/login_user.html:33
+#: unifispot/templates/security/login_user.html:40
 msgid "Forgot password?"
 msgstr "¿Ha perdido su clave?"
 
@@ -741,4 +745,13 @@ msgstr "Vuelva a introducir la clave nueva"
 #: unifispot/templates/security/reset_password.html:34
 msgid "Reset Password"
 msgstr "Cambiar Clave"
+
+#~ msgid "Mail Settings"
+#~ msgstr ""
+
+#~ msgid "Test"
+#~ msgstr "Prueba"
+
+#~ msgid "Test Email"
+#~ msgstr ""
 

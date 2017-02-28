@@ -153,7 +153,15 @@ def get_notifications():
         from unifispot.core.models import Wifisite
         celery_get_notification()            
 
+@manager.command
+def send_weekly_reports():
+    from unifispot.modules.analytics.tasks import celery_weekly_report  
+    celery_weekly_report()
 
+@manager.command
+def send_monthly_reports():
+    from unifispot.modules.analytics.tasks import celery_monthly_report  
+    celery_monthly_report()
 
 @manager.option('-l', '--lang', help='Language',dest='lang')
 @manager.option('-p', '--plugin', help='Adds a new language to a plugin.',

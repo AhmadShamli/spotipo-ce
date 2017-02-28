@@ -2,6 +2,7 @@ from functools import wraps
 import logging
 import arrow
 import uuid
+import importlib
 from flask import abort,current_app,url_for,redirect,flash
 from flask import render_template
 from flask_security import current_user
@@ -156,17 +157,34 @@ def redirect_guest(wifisite,guesttrack):
             ltypes =[]
             for method in methodslist:
                 name = method.split('_')[1]
-                ltypes.append({'url':url_for('unifispot.modules.%s.guest_login'%\
+                ltype = {'url':url_for('unifispot.modules.%s.guest_login'%\
                                 name,trackid=guesttrack.trackid),
-                              'name':name,
-                              'title':name.title()
-                    })
+                          'name':name,
+                          'title':name.title(),
+                          'lconfig':None
+                    }
                 #check if any of these methods are already logged in
-
+                lmodule = importlib.import_module('unifispot.modules.%s.main'%\
+                                name)    
+                loginconfig = lmodule.get_login_config(wifisite,
+                                            guesttrack)  
+                ltype['lconfig'] = loginconfig                                                          
+                if lmodule.check_device_relogin(wifisite,guesttrack,loginconfig):
+                    #device can successfully relogin using lmodule
+                    #redirect
+                    return  redirect(url_for('unifispot.modules.%s.guest_login'%\
+                                name,trackid=guesttrack.trackid))
+                else:
+                    guestlog_debug("Device doesn't seems to have logged in before"
+                                    ,wifisite,guesttrack)
+                
+                ltypes.append(ltype)
+                
 
             landingpage = Landingpage.query.filter_by(siteid=wifisite.id).first()
             return render_template('guest/%s/multi_landing.html'%wifisite.template,
-                            wifisite=wifisite,landingpage=landingpage,ltypes=ltypes)              
+                            wifisite=wifisite,landingpage=landingpage,
+                            ltypes=ltypes,trackid=guesttrack.trackid)              
 
         elif len(methodslist) == 1:
             #only one login type configured
@@ -429,6 +447,26 @@ def handle_override(guesttrack,wifisite,guestdevice,loginconfig,AuthModel,Overri
             override_form=override_form,trackid=guesttrack.trackid)      
 
 
+def loginauth_check_relogin(wifisite,guesttrack,AuthModel,loginconfig):
+    ''''  General function to check if a given loginauth is valid for auto relogin
+    '''
+    loginauth = AuthModel(siteid=wifisite.id,deviceid=guesttrack.deviceid,
+                            account_id=wifisite.account_id)
+
+    if loginauth and not loginauth.is_blocked() \
+        and loginauth.is_not_demo() and \
+        loginauth.login_completed(loginconfig) and \
+                        guest_auto_relogin_allowed(loginauth,loginconfig):
+
+        #so far so good, now check if data/time limit has expired
+        if loginconfig.is_limited():
+            starttime = loginconfig.get_limit_starttime()  
+            if not validate_loginauth_usage(wifisite,guesttrack,
+                                loginconfig,loginauth,starttime):
+                return False
+        return True
+    else:
+        return False
 
 
 def validate_scan2login(url):

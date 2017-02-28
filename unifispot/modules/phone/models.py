@@ -5,12 +5,12 @@ import arrow
 from unifispot.core.db import db,FORMAT_DATETIME,JSONEncodedDict
 from unifispot.core.const import *
 from unifispot.core.models import Loginauth,Wifisite
-from unifispot.utils.modelhelpers import SerializerMixin,CRUDMixin
+from unifispot.utils.modelhelpers import SerializerMixin,CRUDMixin,LoginconfigMixin
 from unifispot.utils.translation import format_datetime
 
 
 
-class Phoneconfig(CRUDMixin,SerializerMixin,db.Model): 
+class Phoneconfig(LoginconfigMixin,CRUDMixin,SerializerMixin,db.Model): 
     id                  = db.Column(db.Integer, primary_key=True)
     account_id          = db.Column(db.Integer, db.ForeignKey('account.id'))
     siteid              = db.Column(db.Integer, db.ForeignKey('wifisite.id'))    

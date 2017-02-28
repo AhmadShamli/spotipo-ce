@@ -237,7 +237,35 @@ def voucher_print(siteid=None,voucherid=None):
     return render_template("voucher_print.html",vouchers=vouchers,voucherdesign=voucherdesign)
 
 
-##------guest views----------------------------------------
+#----------------guest related
+def get_login_config(wifisite,guesttrack):
+    '''This method needs to be added to all login plugins
+        Called by redirec_guest when rendering multi landing page
+        return loginconfig object for the current login method
+
+    '''
+    #get and validated voucherconfig
+    voucherconfig = Voucherconfig.query.filter_by(siteid=wifisite.id).first()
+    if not voucherconfig:
+        guestlog_warn('empty voucherconfig, aborting',wifisite,guesttrack)
+        abort(404)
+    return voucherconfig   
+
+
+def check_device_relogin(wifisite,guesttrack,loginconfig):
+    '''This method needs to be added to all login plugins
+        Called by redirec_guest when rendering multi landing page
+        return True if the given device can be logged in successfully
+
+    '''    
+    voucherauth = Voucherauth.query.filter_by(siteid=wifisite.id,
+                    deviceid=guesttrack.deviceid).first()
+    if  voucherauth and voucherauth.is_not_demo() and \
+                voucherauth.time_available() and \
+                voucherauth.data_available():
+        return True
+    else:
+        return False
 
 def validate_voucherconfig(f):
     '''Decorator for validating voucherconfig detials. 
@@ -256,8 +284,9 @@ def validate_voucherconfig(f):
             guestlog_warn('trying to access voucher login for  \
                     non configured site',wifisite,guesttrack)
             abort(404)
-        #get and validated emailconfig
-        voucherconfig = Voucherconfig.query.filter_by(siteid=wifisite.id).first()
+        #get and validated voucherconfig
+        voucherconfig = Voucherconfig.query.filter_by(
+                                    siteid=wifisite.id).first()
         if not voucherconfig:
             guestlog_warn('empty voucherconfig, aborting',wifisite,guesttrack)
             abort(404)

@@ -4,12 +4,12 @@ from wtforms import BooleanField,TextField,IntegerField
 from unifispot.core.db import db,FORMAT_DATETIME,JSONEncodedDict
 from unifispot.core.const import *
 from unifispot.core.models import Loginauth,Wifisite
-from unifispot.utils.modelhelpers import SerializerMixin,CRUDMixin
+from unifispot.utils.modelhelpers import SerializerMixin,CRUDMixin,LoginconfigMixin
 from unifispot.utils.translation import format_datetime
 
 
 
-class Fbconfig(CRUDMixin,SerializerMixin,db.Model): 
+class Fbconfig(LoginconfigMixin,CRUDMixin,SerializerMixin,db.Model): 
     id                  = db.Column(db.Integer, primary_key=True)
     account_id          = db.Column(db.Integer, db.ForeignKey('account.id'))
     siteid              = db.Column(db.Integer, db.ForeignKey('wifisite.id'))     
@@ -37,6 +37,7 @@ class Fbconfig(CRUDMixin,SerializerMixin,db.Model):
     __form_fields_avoid__ = ['id','siteid','account_id']
 
     __form_fields_modifiers__ =  { }
+
 
 class Fbauth(Loginauth):
     fbprofileid     = db.Column(db.String(200),index=True) 

@@ -5,6 +5,7 @@ from flask_babelplus import Domain, get_locale,Babel
 from spotipo_plugins import get_enabled_plugins
 import os
 
+from unifispot.utils.options import get_option_value
 from unifispot.utils.translation import SpotipoDomain
 
 babel = Babel()
@@ -34,8 +35,9 @@ def configure(app):
                 session['lang'] = override
             else:
                 # use default language if set
-                if app.config.get('BABEL_DEFAULT_LOCALE'):
-                    session['lang'] = app.config.get('BABEL_DEFAULT_LOCALE')
+                babel_locale   = get_option_value('BABEL_LOCALE','en')
+                if babel_locale:
+                    session['lang'] = babel_locale
                 else:
                     # get best matching language
                     if app.config.get('BABEL_LANGUAGES'):

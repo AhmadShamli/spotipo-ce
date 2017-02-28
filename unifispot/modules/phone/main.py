@@ -15,7 +15,8 @@ from unifispot.core.guestutils import validate_track,init_track,redirect_guest,\
                                 guestlog_warn,guestlog_info,guestlog_error,\
                                 guestlog_debug,guestlog_exception,\
                                 assign_guest_entry,validate_loginauth_usage,\
-                                get_loginauth_validator,handle_override
+                                get_loginauth_validator,handle_override,\
+                                loginauth_check_relogin
 
 from unifispot.core.baseviews import SiteModuleAPI
 from .models import Phoneconfig,Phoneauth
@@ -43,6 +44,35 @@ class PhoneConfigAPI(SiteModuleAPI):
         return 'module_config_phone.html'
 
 PhoneConfigAPI.register(module, route_base='/s/<siteid>/phone/config')
+
+#----------------guest related
+def get_login_config(wifisite,guesttrack):
+    '''This method needs to be added to all login plugins
+        Called by redirec_guest when rendering multi landing page
+        return loginconfig object for the current login method
+
+    '''
+    #get and validated phoneconfig
+    phoneconfig = Phoneconfig.query.filter_by(siteid=wifisite.id).first()
+    if not phoneconfig:
+        guestlog_warn('empty phoneconfig, creating default one',wifisite,guesttrack)
+        phoneconfig = Phoneconfig()
+        phoneconfig.siteid = wifisite.id
+        client = Client.query.get(wifisite.client_id)
+        phoneconfig.account_id = client.account_id
+        phoneconfig.save()
+    return phoneconfig   
+
+
+def check_device_relogin(wifisite,guesttrack,loginconfig):
+    '''This method needs to be added to all login plugins
+        Called by redirec_guest when rendering multi landing page
+        return True if the given device can be logged in successfully
+
+    '''    
+    return loginauth_check_relogin(wifisite,guesttrack,Phoneauth,loginconfig)
+
+
 
 
 def validate_phoneconfig(f):

@@ -1,123 +1,123 @@
 {% macro render(form) -%}
 
-{{form.hidden_tag() }}
-{% for field in form %}
-{% if field.type not in ['CSRFTokenField', 'HiddenField']%}
-    <div class="form-group {% if field.errors %}error{% endif %}" id="{{field.id}}-form-group">
-	<label class="col-sm-4 control-label" >{{ field.label(for=field.id) }}</label>
-    {% if field.type == 'TextAreaField'%}
-        <div class="col-xs-8">
-            {{ field(class_="form-control",rows=5)}}
-        </div>
-	{% elif field.type == 'SelectMultipleField1'%}
-        <div class="col-xs-8">
-		{% for value, label, _ in field.iter_choices() %}
-        	<div class="checkbox">
-            	<label>
-                	<input type="checkbox" name="{{ field.id }}" id="{{ field.id }}" value="{{ value }}">	{{ label }}
-                </label>
-        	</div>
-    		{% endfor %}
-        </div>
-	{% elif field.type == 'MultiListTable' %}
-        <div class="col-xs-8">
-        {% for value, label, _ in field.iter_choices() %}
-            <div class="checkbox">
-            <label>
-                    <input type="checkbox" name="{{ field.id }}" id="{{ field.id }}" value="{{ value }}">   {{ label }}
-             </label>
+    {{form.hidden_tag() }}
+    {% for field in form %}
+    {% if field.type not in ['CSRFTokenField', 'HiddenField']%}
+        <div class="form-group {% if field.errors %}error{% endif %}" id="{{field.id}}-form-group">
+    	<label class="col-sm-4 control-label" >{{ field.label(for=field.id) }}</label>
+        {% if field.type == 'TextAreaField'%}
+            <div class="col-xs-8">
+                {{ field(class_="form-control",rows=5)}}
             </div>
-        
-        {% endfor %}
-        </div>
-    {% elif field.type == 'FileField' %}
-        <div class="col-sm-8">
-            {{ field(class_="form-control",**{'data-url':request.script_root+"/upload/"})}}
-            <img id="imgpreview" src="#" style="visibility: hidden;" class="img-thumbnail">
-            <div id="progress">
-                <div class="bar" style="width: 0%;background: green;height: 18px;"></div>
+    	{% elif field.type == 'SelectMultipleField1'%}
+            <div class="col-xs-8">
+    		{% for value, label, _ in field.iter_choices() %}
+            	<div class="checkbox">
+                	<label>
+                    	<input type="checkbox" name="{{ field.id }}" id="{{ field.id }}" value="{{ value }}">	{{ label }}
+                    </label>
+            	</div>
+        		{% endfor %}
             </div>
+    	{% elif field.type == 'MultiListTable' %}
+            <div class="col-xs-8">
+            {% for value, label, _ in field.iter_choices() %}
+                <div class="checkbox">
+                <label>
+                        <input type="checkbox" name="{{ field.id }}" id="{{ field.id }}" value="{{ value }}">   {{ label }}
+                 </label>
+                </div>
+            
+            {% endfor %}
+            </div>
+        {% elif field.type == 'FileField' %}
+            <div class="col-sm-8">
+                {{ field(class_="form-control",**{'data-url':request.script_root+"/upload/"})}}
+                <img id="imgpreview" src="#" style="visibility: hidden;" class="img-thumbnail">
+                <div id="progress">
+                    <div class="bar" style="width: 0%;background: green;height: 18px;"></div>
+                </div>
+            </div>
+        {% elif field.type == 'BooleanField' %}
+            <div class="col-md-8">
+                <div class="checkbox-list">
+                <label>
+                        <input type="checkbox" name="{{ field.id }}" id="{{ field.id }}" value="1"> 
+                 </label>
+                </div>       
+            </div>
+        {%else%} 
+
+    	
+    		<div class="col-sm-4">
+    	        {{ field(class_="form-control")}}
+    		</div>
+    	{%endif%}
+            {% if field.errors %}
+                  {% for error in field.errors %}
+                   <span class="help-inline text-red"><strong>[{{ error }}]</strong></span><br>
+                  {% endfor %}
+            {% endif %}
         </div>
+     {% endif %}
+    {% endfor %}
+{% endmacro %}
+
+{% macro render_vertical(form) -%}
+
+    {{form.hidden_tag() }}
+    {% for field in form %}
+    {% if field.type not in ['CSRFTokenField', 'HiddenField']%}
+        <div class="form-group {% if field.errors %}error{% endif %}">
+        <label class="control-label" >{{ field.label(for=field.id) }}</label> 
+                    {% if field.type == 'FileField' %}  
+                            <a href="#" id="remove-{{ field.id }}"><i class="fa fa-times"></i></a> {%endif%}
+        {% if field.type == 'TextAreaField'%}
+            <div >
+                {{ field(class_="form-control",rows=5)}}
+            </div>
+        {% elif field.type == 'SelectMultipleField1'%}
+            <div >
+            {% for value, label, _ in field.iter_choices() %}
+                <div class="checkbox">
+                    <label>
+                        <input type="checkbox" name="{{ field.id }}" id="{{ field.id }}" value="{{ value }}">   {{ label }}
+                    </label>
+                </div>
+                {% endfor %}
+            </div>
+            </div>
+        {% elif field.type == 'FileField' %}
+            <div >
+                {{ field()}}
+
+            </div>
     {% elif field.type == 'BooleanField' %}
-        <div class="col-md-8">
+        <div class="col-md-1">
             <div class="checkbox-list">
             <label>
                     <input type="checkbox" name="{{ field.id }}" id="{{ field.id }}" value="1"> 
              </label>
             </div>       
         </div>
-    {%else%} 
-
-	
-		<div class="col-sm-4">
-	        {{ field(class_="form-control")}}
-		</div>
-	{%endif%}
-        {% if field.errors %}
-              {% for error in field.errors %}
-               <span class="help-inline text-red"><strong>[{{ error }}]</strong></span><br>
-              {% endfor %}
-        {% endif %}
-    </div>
- {% endif %}
-{% endfor %}
-{% endmacro %}
-
-{% macro render_vertical(form) -%}
-
-{{form.hidden_tag() }}
-{% for field in form %}
-{% if field.type not in ['CSRFTokenField', 'HiddenField']%}
-    <div class="form-group {% if field.errors %}error{% endif %}">
-    <label class="control-label" >{{ field.label(for=field.id) }}</label> 
-                {% if field.type == 'FileField' %}  
-                        <a href="#" id="remove-{{ field.id }}"><i class="fa fa-times"></i></a> {%endif%}
-    {% if field.type == 'TextAreaField'%}
-        <div >
-            {{ field(class_="form-control",rows=5)}}
-        </div>
-    {% elif field.type == 'SelectMultipleField1'%}
-        <div >
-        {% for value, label, _ in field.iter_choices() %}
-            <div class="checkbox">
-                <label>
-                    <input type="checkbox" name="{{ field.id }}" id="{{ field.id }}" value="{{ value }}">   {{ label }}
-                </label>
+    {%else%}  
+        
+            <div >
+                {{ field(class_="form-control")}}
             </div>
-            {% endfor %}
+        {%endif%}
+            {% if field.errors %}
+                  {% for error in field.errors %}
+                   <span class="help-inline text-red"><strong>[{{ error }}]</strong></span><br>
+                  {% endfor %}
+            {% endif %}
         </div>
-        </div>
-    {% elif field.type == 'FileField' %}
-        <div >
-            {{ field()}}
-
-        </div>
-{% elif field.type == 'BooleanField' %}
-    <div class="col-md-1">
-        <div class="checkbox-list">
-        <label>
-                <input type="checkbox" name="{{ field.id }}" id="{{ field.id }}" value="1"> 
-         </label>
-        </div>       
-    </div>
-{%else%}  
-    
-        <div >
-            {{ field(class_="form-control")}}
-        </div>
-    {%endif%}
-        {% if field.errors %}
-              {% for error in field.errors %}
-               <span class="help-inline text-red"><strong>[{{ error }}]</strong></span><br>
-              {% endfor %}
-        {% endif %}
-    </div>
- {% endif %}
-{% endfor %}
+     {% endif %}
+    {% endfor %}
 {% endmacro %}
 
 
-{% macro modal_form(form,name,title) -%}
+{% macro modal_form(form,name,title,btntxt=None) -%}
     <div class="row">
         <div class="col-md-12">
             <div class="modal fade" id="{{name}}" tabindex="-1" role="basic" aria-hidden="true">
@@ -134,7 +134,14 @@
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn default" data-dismiss="modal" id="{{name}}-close-button">{{_('Close')}}</button>
-                            <button type="button" class="btn blue" id="{{name}}-save-button">{{_('Save')}}</button>
+                            <button type="button" class="btn blue" id="{{name}}-save-button">
+                            {% if btntxt %}
+                                {{btntxt}}
+                            {%else%}
+                                {{_('Save')}}
+                            {%endif%}
+
+                            </button>
                         </div>
                     </div>
                     <!-- /.modal-content -->

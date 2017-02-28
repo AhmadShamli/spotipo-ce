@@ -51,15 +51,11 @@ class AccountForm(Form):
         pass
 
 class MailsettingsForm(Form):
-    mail_server     = TextField(_('Mail Server'))
-    #mail_username   = TextField(_('Mail Username'))
-    #mail_password   = PasswordField(_('Mail Password'))
-    mail_port       = TextField(_('Mail Port'))
-    #mail_use_tls    = SelectField(_('Mail Enable TLS'),coerce=int,
-    #                            choices=[(0,'No'),(1,'Yes')])
-    #mail_use_ssl    = SelectField(_('Mail Enable SSL'),coerce=int,
-    #                            choices=[(0,'No'),(1,'Yes')])
-    mail_default_sender= TextField(_('Mail Default Sender'))    
+    mail_server         = TextField(_('Mail Server'))
+    mail_port           = TextField(_('Mail Port'))
+    mail_default_sender = TextField(_('Mail Default Sender'))    
+    babel_locale        = SelectField(_('Default Language'),
+                                choices=[('en','English'),('es','Spanish')])
 
     def populate(self):
         pass

@@ -7,11 +7,14 @@ from celery.task.schedules import crontab
 from celery.decorators import periodic_task
 from dateutil import tz
 from flask_mail import Message,Attachment
+from sqlalchemy import and_,or_
 
 from unifispot.core.models import Wifisite,Guestsession,Guest
 from unifispot.ext.celeryext import celery
+from unifispot.ext.mail import mail
 from unifispot.core.utils import send_email
 from unifispot.utils.options import get_option_value
+from unifispot.utils.translation import _l,_n,_
 
 from .methods import update_daily_stat
 
@@ -78,19 +81,20 @@ def generate_report(siteid,startday,endday):
                     Guest.created_at >= startday,
                     Guest.created_at <= endday)).all()
 
-    csvList = '\n'.join(','.join(row.to_list()) for row in entries)  
+    csvList = '\n'.join(','.join(row.to_row()) for row in entries)  
 
 
     filename = "Report_%s_to_%s.csv"%(start_date,end_date)  
     attachment = Attachment(filename=filename,
                             content_type='txt/plain',
                             data=csvList)
-    msg = Message("Wifi usage report for the period :%s to :%s"%(start_date,end_date),
+    msg = Message(_("Wifi usage report for the period :%s to :%s"%(start_date,
+                        end_date)),
                     recipients=[site.client.email,site.reports_list],
                     attachments =[attachment])
 
-    msg.body  = "Dear %s,\n\n"\
+    msg.body  = _("Dear %s,\n\n"\
             "\tPlease find the wifi usage report for the period of starting from:%s to %s \n"\
             "\nRegards\n"\
-            "Admin"%(site.name,start_date,end_date)
+            "Admin"%(site.name,start_date,end_date))
     mail.send(msg)

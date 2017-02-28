@@ -5,12 +5,12 @@ import arrow
 from unifispot.core.db import db,FORMAT_DATETIME,JSONEncodedDict
 from unifispot.core.const import *
 from unifispot.core.models import Loginauth,Wifisite
-from unifispot.utils.modelhelpers import SerializerMixin,CRUDMixin
+from unifispot.utils.modelhelpers import SerializerMixin,CRUDMixin,LoginconfigMixin
 from unifispot.utils.translation import format_datetime
 
 
 
-class Emailconfig(CRUDMixin,SerializerMixin,db.Model): 
+class Emailconfig(LoginconfigMixin,CRUDMixin,SerializerMixin,db.Model): 
     id                  = db.Column(db.Integer, primary_key=True)
     account_id          = db.Column(db.Integer, db.ForeignKey('account.id'))
     siteid              = db.Column(db.Integer, db.ForeignKey('wifisite.id'))    
@@ -53,35 +53,6 @@ class Emailconfig(CRUDMixin,SerializerMixin,db.Model):
     __form_fields_modifiers__ =  { 'enable_fields':'form_to_modeljson',
                            'mandate_fields':'form_to_modeljson',
                            'labelfor_fields':'form_to_modeljson', }
-
-    def is_limited(self):
-        #check if any limits are configured (daily/monthly)                           
-        if self.session_limit_control:
-            return True
-        else:
-            return False
-
-    def is_daily_limited(self):
-        if self.session_limit_control == 1:
-            return True
-        else:
-            return False
-
-    def is_monthly_limited(self):
-        if self.session_limit_control == 2:
-            return True
-        else:
-            return False          
-
-    def get_limit_starttime(self):
-        tzinfo = tz.gettz(self.site.timezone)
-        if self.is_daily_limited():               
-            starttime = arrow.now(tzinfo).floor('day').naive
-        elif self.is_monthly_limited():
-            starttime = arrow.now(tzinfo).floor('month').naive
-        else:
-            starttime = arrow.utcnow().naive
-        return starttime
 
 
 class Emailauth(Loginauth):

@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 import warnings
+import os
 from flask.exthook import ExtDeprecationWarning
 #warnings.simplefilter("ignore", category=ExtDeprecationWarning)
 # The above hack is needed because flask_mongoengine and flask_cache
@@ -15,7 +16,9 @@ from unifispot.core.app import UnifispotApp
 
 def create_app_base(config=None, test=False, ext_list=None, 
                     **settings):
-    app = UnifispotApp(__name__,instance_relative_config=True)
+    app = UnifispotApp(__name__,
+            instance_path=os.path.join(os.path.abspath(os.curdir),'instance'),
+            instance_relative_config=True)
     # Load the default configuration
     app.config.from_object('config.default')
 

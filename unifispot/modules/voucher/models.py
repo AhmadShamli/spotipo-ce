@@ -9,12 +9,13 @@ from unifispot.core.db import db,FORMAT_DATETIME,JSONEncodedDict
 from unifispot.core.const import *
 from unifispot.core.models import Loginauth,Wifisite
 from unifispot.utils.modelhelpers import SerializerMixin,CRUDMixin,ExportMixin
+from unifispot.utils.modelhelpers import LoginconfigMixin
 from unifispot.utils.translation import format_datetime
 from unifispot.utils.translation import _l,_n,_
 
 
 
-class Voucherconfig(CRUDMixin,SerializerMixin,db.Model): 
+class Voucherconfig(LoginconfigMixin,CRUDMixin,SerializerMixin,db.Model): 
     id                  = db.Column(db.Integer, primary_key=True)
     account_id          = db.Column(db.Integer, db.ForeignKey('account.id'))
     siteid              = db.Column(db.Integer, db.ForeignKey('wifisite.id'))    

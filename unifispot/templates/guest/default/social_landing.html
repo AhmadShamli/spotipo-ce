@@ -59,7 +59,12 @@
                                     clearInterval( tid );
                                     $.unblockUI();
                                     uri = "{{url_for('unifispot.modules.facebook.fb_login_check',trackid=trackid,_external=True)}}";
+                                    {%if auth_fb_post %}
                                      window.location = "https://www.facebook.com/dialog/oauth?client_id={{fb_appid}}&scope=email,publish_actions&redirect_uri="+uri
+                                    {%else%}
+                                     window.location = "https://www.facebook.com/dialog/oauth?client_id={{fb_appid}}&scope=email&redirect_uri="+uri
+                                     {%endif%}
+
                                 });
 
                             }, 1000); //5 seconds    

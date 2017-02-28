@@ -213,7 +213,7 @@ class MailOptionsAPI(OptionsAPI):
 class MailOptionsManage(FlaskView):
     decorators = [login_required,admin_required]
 
-    @classy_menu_item('.manage.options', _('Mail Settings'),
+    @classy_menu_item('.manage.options', _('General Settings'),
                                 visible_when=admin_menu)
     def index(self):
         mailsettingsform = MailsettingsForm()
@@ -568,7 +568,8 @@ class LandingpagePreview(FlaskView):
             ltypes.append({'url':url_for('unifispot.modules.%s.guest_login'%\
                             name,trackid=''),
                           'name':name,
-                          'title':name.title()
+                          'title':name.title(),
+                          'lconfig':None
                 })        
         return render_template('guest/%s/multi_landing.html'%wifisite.template,\
                 wifisite=wifisite,landingpage=landingpage,ltypes=ltypes)        

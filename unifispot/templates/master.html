@@ -153,7 +153,9 @@
 
         <!-- footer content -->
         <footer>
-          &copy; 2016-2017 Nibblecomm IVS
+          {% if not emit_event('branding-permission-available')  %}
+            &copy; 2016-2017 Nibblecomm IVS
+          {%endif%}
 
           <div class="pull-right">
           {{"Version"|print_version}}

@@ -15,7 +15,8 @@ from unifispot.core.guestutils import validate_track,init_track,redirect_guest,\
                                 guestlog_warn,guestlog_info,guestlog_error,\
                                 guestlog_debug,guestlog_exception,\
                                 assign_guest_entry,validate_loginauth_usage,\
-                                get_loginauth_validator,handle_override
+                                get_loginauth_validator,handle_override,\
+                                loginauth_check_relogin
 
 from unifispot.core.baseviews import SiteModuleAPI
 from .models import Emailconfig,Emailauth
@@ -42,6 +43,34 @@ class EmailConfigAPI(SiteModuleAPI):
         return 'module_config_email.html'
 
 EmailConfigAPI.register(module, route_base='/s/<siteid>/email/config')
+
+
+def get_login_config(wifisite,guesttrack):
+    '''This method needs to be added to all login plugins
+        Called by redirec_guest when rendering multi landing page
+        return loginconfig object for the current login method
+
+    '''
+    emailconfig = Emailconfig.query.filter_by(siteid=wifisite.id).first()
+    if not emailconfig:
+        guestlog_warn('empty emailconfig, creating default one',wifisite,guesttrack)
+        emailconfig = Emailconfig()
+        emailconfig.siteid = wifisite.id
+        client = Client.query.get(wifisite.client_id)
+        emailconfig.account_id = client.account_id
+        emailconfig.save() 
+    return emailconfig   
+
+
+def check_device_relogin(wifisite,guesttrack,loginconfig):
+    '''This method needs to be added to all login plugins
+        Called by redirec_guest when rendering multi landing page
+        return True if the given device can be logged in successfully
+
+    '''    
+    return loginauth_check_relogin(wifisite,guesttrack,Emailauth,loginconfig)
+
+
 
 
 def validate_emailconfig(f):

@@ -14,7 +14,7 @@ from unifispot.core.models import Wifisite,Guest,Landingpage
 from unifispot.core.guestutils import validate_track,init_track,redirect_guest,\
                                 guestlog_warn,guestlog_info,guestlog_error,\
                                 guestlog_debug,guestlog_exception,assign_guest_entry,\
-                                get_loginauth_validator
+                                get_loginauth_validator,loginauth_check_relogin
 from unifispot.core.baseviews import SiteModuleAPI
 from .models import Fbconfig,Fbauth
 from .forms import FbConfigForm,CheckinForm,FbOverrideForm
@@ -38,6 +38,31 @@ class FbConfigAPI(SiteModuleAPI):
 
 FbConfigAPI.register(module, route_base='/s/<siteid>/facebook/config')
 
+#----------------------guest related
+
+def get_login_config(wifisite,guesttrack):
+    '''This method needs to be added to all login plugins
+        Called by redirec_guest when rendering multi landing page
+        return loginconfig object for the current login method
+
+    '''
+    fbconfig = Fbconfig.query.filter_by(siteid=wifisite.id).first()
+    if not fbconfig:
+        guestlog_warn('trying to access fb_login without configuring ',
+                        wifisite,guesttrack)
+        abort(404)
+    return fbconfig   
+
+
+def check_device_relogin(wifisite,guesttrack,loginconfig):
+    '''This method needs to be added to all login plugins
+        Called by redirec_guest when rendering multi landing page
+        return True if the given device can be logged in successfully
+
+    '''    
+    return loginauth_check_relogin(wifisite,guesttrack,Fbauth,loginconfig)
+
+
 def validate_fbconfig(f):
     '''Decorator for validating fbconfig detials. 
         It injects  emailconfigobjects in kwargs
@@ -56,7 +81,8 @@ def validate_fbconfig(f):
         #get and validated fbconfig
         fbconfig = Fbconfig.query.filter_by(siteid=wifisite.id).first()
         if not fbconfig:
-            guestlog_warn('trying to access fb_login without configuring ',wifisite,guesttrack)
+            guestlog_warn('trying to access fb_login without configuring ',
+                        wifisite,guesttrack)
             abort(404)
         kwargs['fbconfig'] = fbconfig
         return f(*args, **kwargs)
@@ -71,10 +97,11 @@ def guest_login(trackid,guesttrack,wifisite,guestdevice,fbconfig,loginauth):
     
     '''    
     fb_appid = fbconfig.fb_appid
+    auth_fb_post = fbconfig.auth_fb_post
     landingpage = Landingpage.query.filter_by(siteid=wifisite.id).first()
     return render_template('guest/%s/social_landing.html'%wifisite.template,
                 wifisite=wifisite,landingpage=landingpage,
-                fb_appid=fb_appid,trackid=trackid)   
+                fb_appid=fb_appid,trackid=trackid,auth_fb_post=auth_fb_post)   
 
 @module.route('/fb/login/check/<trackid>',methods = ['GET', 'POST'])
 @validate_track
@@ -248,12 +275,22 @@ def fb_checkin(trackid,guesttrack,wifisite,guestdevice,fbconfig,loginauth):
                 guestlog_warn("no guest associated with guestdevice",wifisite,guesttrack)
                 return redirect_guest(wifisite,guesttrack)
 
+            loginauth.fbcheckedin = 1
+            loginauth.save()
+
             guest.fbcheckedin = 1
             guest.save()
             #check if guest needs to be redirected to asklike 
             #page
-            if fbconfig.auth_fb_like and guest.fbliked != 1:
-                return redirect(url_for('unifispot.modules.facebook.fb_like',trackid=trackid))
+            if fbconfig.auth_fb_like:
+                if guest.fbliked != 1:
+                    return redirect(url_for('unifispot.\
+                            modules.facebook.fb_like',trackid=trackid))
+                else:
+                    #to ensure all the loginauth related to a guest
+                    #is marked as fb liked
+                    loginauth.fbliked = 1
+                    loginauth.save()
             else:
                 #redirect guest to auth page
                 loginauth.populate_auth_details(fbconfig)
@@ -304,6 +341,9 @@ def fb_like(trackid,guesttrack,wifisite,guestdevice,fbconfig,loginauth):
             return redirect_guest(wifisite,guesttrack)        
         guest.fbliked = 1
         guest.save()
+
+        loginauth.fbliked = 1
+        loginauth.save()
 
         guesttrack.updatestat('fbliked',1)
 

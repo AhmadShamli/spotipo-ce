@@ -13,7 +13,7 @@
 {% block title %}{{_('General Settings')}} {% endblock %}
 
 {% block mainContent %}
-{{modal_form(testemailform,'testemailmodal',_("Send Test Email"))}}
+{{modal_form(testemailform,'testemailmodal',_("Send Test Email"),_('Test'))}}
 <div class="page-title">
   <div class="title_left">
     <h3>{{_('General Settings')}}</h3>
@@ -42,7 +42,7 @@
               <div class="form-group">
                   <div class="col-md-6 col-sm-6 col-xs-12 col-md-offset-3">
                     <button id='optionsform-save-button' class="btn btn-success" value=''>{{_('Save')}}</button>
-                    <button id='testemailmodal-add-new' class="btn btn-success" value=''>{{_('Test')}}</button>                    
+                    <button id='testemailmodal-add-new' class="btn btn-primary" value=''>{{_('Test Email Settings')}}</button>                    
                   </div>
               </div>              
 

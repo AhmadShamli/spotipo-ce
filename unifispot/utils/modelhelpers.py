@@ -5,6 +5,7 @@ from flask_babelplus import format_datetime as _format_datetime
 from sqlalchemy.exc import SQLAlchemyError
 from sqlalchemy.orm.properties import ColumnProperty
 from unifispot.core.db import db
+from dateutil import tz
 
 
 class JSONEncoder(BaseJSONEncoder):
@@ -219,3 +220,51 @@ class CRUDMixin(object):
                 method_field[formfield] = value      
         return method_field     
     ##------------special methods to handle JSON type data ends   
+
+
+class LoginconfigMixin(object):
+    """A mixin that provides basic functionalities needed for a loginconfig model
+    """        
+    def is_limited(self):
+        #check if any limits are configured (daily/monthly)   
+        if hasattr(self,'session_limit_control'):                        
+            if self.session_limit_control:
+                return True
+            else:
+                return False
+        else:
+            return False
+
+    def is_daily_limited(self):
+        if hasattr(self,'session_limit_control'):         
+            if self.session_limit_control == 1:
+                return True
+            else:
+                return False
+        else:
+            return False
+
+    def is_monthly_limited(self):
+        if hasattr(self,'session_limit_control'):
+            if self.session_limit_control == 2:
+                return True
+            else:
+                return False         
+        else:
+            return False                 
+
+    def get_limit_starttime(self):
+        if hasattr(self,'session_limit_control'):
+            if hasattr(self,'site'):
+                tzinfo = tz.gettz(self.site.timezone)
+            else:
+                tzinfo = tz.gettz('UTC')                
+            if self.is_daily_limited():               
+                starttime = arrow.now(tzinfo).floor('day').naive
+            elif self.is_monthly_limited():
+                starttime = arrow.now(tzinfo).floor('month').naive
+            else:
+                starttime = arrow.utcnow().naive                
+        else:
+            starttime = arrow.utcnow().naive
+        return starttime        
