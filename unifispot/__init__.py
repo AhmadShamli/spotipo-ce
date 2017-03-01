@@ -17,7 +17,6 @@ from unifispot.core.app import UnifispotApp
 def create_app_base(config=None, test=False, ext_list=None, 
                     **settings):
     app = UnifispotApp(__name__,
-            instance_path=os.path.join(os.path.abspath(os.curdir),'instance'),
             instance_relative_config=True)
     # Load the default configuration
     app.config.from_object('config.default')
