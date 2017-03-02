@@ -41,9 +41,9 @@ def init_data():
         except :
             app.logger.debug( "No Account table Entry found,could be running migration ")
         else:
+            enc_pass        = encrypt_password('password')
             if not account:
-                #create default admin user
-                enc_pass        = encrypt_password('password')
+                #create default admin user                
                 account         = Account()
                 account.token = str(uuid.uuid4())
                 db.session.add(account)
