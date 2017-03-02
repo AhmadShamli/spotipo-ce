@@ -44,6 +44,14 @@ IF ERRORLEVEL 1 (
     EXIT /B
 ) 
 
+REM check and stop apache service
+SC QUERY Apache24 > NUL
+IF ERRORLEVEL 1060 GOTO STOPAPACHE
+net stop Apache24
+ECHO STOPPING Apache24
+:SKIPAPACHESTOP
+
+
 cd C:\spotipo
 
 REM create instance directory if not exists
