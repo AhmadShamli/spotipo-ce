@@ -261,6 +261,7 @@ def check_device_relogin(wifisite,guesttrack,loginconfig):
     voucherauth = Voucherauth.query.filter_by(siteid=wifisite.id,
                     deviceid=guesttrack.deviceid).first()
     if  voucherauth and voucherauth.is_not_demo() and \
+                voucherauth.voucherid and \
                 voucherauth.time_available() and \
                 voucherauth.data_available():
         return True
@@ -317,6 +318,7 @@ def validate_voucherauth(f):
         guesttrack  =  kwargs.get('guesttrack')
         wifisite    =  kwargs.get('wifisite')
         if voucherauth.is_not_demo() and \
+                voucherauth.voucherid and \
                 voucherauth.time_available() and \
                 voucherauth.data_available():
             #update guesttrack   

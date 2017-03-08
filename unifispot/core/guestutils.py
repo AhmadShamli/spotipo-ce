@@ -172,10 +172,12 @@ def redirect_guest(wifisite,guesttrack):
                 if lmodule.check_device_relogin(wifisite,guesttrack,loginconfig):
                     #device can successfully relogin using lmodule
                     #redirect
+                    guestlog_debug("Device seems to have logged in before in :%s"%name
+                                    ,wifisite,guesttrack)                    
                     return  redirect(url_for('unifispot.modules.%s.guest_login'%\
                                 name,trackid=guesttrack.trackid))
                 else:
-                    guestlog_debug("Device doesn't seems to have logged in before"
+                    guestlog_debug("Device doesn't seems to have logged in beforein :%s"%name
                                     ,wifisite,guesttrack)
                 
                 ltypes.append(ltype)
@@ -356,7 +358,7 @@ def get_loginauth_validator(AuthModel,lconfigstr,modname,logintypestr):
                 landingpage = Landingpage.query.filter_by(siteid=wifisite.id).first()
                 return render_template('guest/%s/base_landing.html'%wifisite.template,\
                         wifisite=wifisite,landingpage=landingpage,trackid=guesttrack.trackid)                 
-            elif loginauth.is_not_demo() and \
+            elif guesttrack.is_not_demo() and \
                         loginauth.login_completed(loginconfig) and \
                         guest_auto_relogin_allowed(loginauth,loginconfig):
                 if loginconfig.is_limited():
@@ -453,18 +455,27 @@ def loginauth_check_relogin(wifisite,guesttrack,AuthModel,loginconfig):
     loginauth = AuthModel(siteid=wifisite.id,deviceid=guesttrack.deviceid,
                             account_id=wifisite.account_id)
 
-    if loginauth and not loginauth.is_blocked() \
-        and loginauth.is_not_demo() and \
-        loginauth.login_completed(loginconfig) and \
-                        guest_auto_relogin_allowed(loginauth,loginconfig):
+    if loginauth: 
+        is_blocked      = loginauth.is_blocked()
+        is_not_demo     = guesttrack.is_not_demo() 
+        is_loggedin     = loginauth.login_completed(loginconfig)
+        is_allowed      = guest_auto_relogin_allowed(loginauth,loginconfig)
 
-        #so far so good, now check if data/time limit has expired
-        if loginconfig.is_limited():
-            starttime = loginconfig.get_limit_starttime()  
-            if not validate_loginauth_usage(wifisite,guesttrack,
-                                loginconfig,loginauth,starttime):
-                return False
-        return True
+        guestlog_debug('relogin status for :%s :%s :%s :%s :%s'%\
+                (AuthModel.__name__,is_blocked,is_not_demo,
+                    is_loggedin,is_allowed),wifisite,guesttrack)
+
+        if  ( not is_blocked and  is_not_demo and is_loggedin and is_allowed):        
+            #so far so good, now check if data/time limit has expired
+            if loginconfig.is_limited():
+                starttime = loginconfig.get_limit_starttime()  
+                if not validate_loginauth_usage(wifisite,guesttrack,
+                                    loginconfig,loginauth,starttime):
+                    return False
+
+            return True
+        else:
+            return False
     else:
         return False
 
