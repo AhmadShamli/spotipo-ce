@@ -37,7 +37,7 @@ def init_data():
         import uuid 
         try:
             account = Account.query.filter_by(id=1).first()
-            admin_user = Admin.query.filter_by(id=1).first()
+            users = Admin.query.count()
         except :
             app.logger.debug( "No Account table Entry found,could be running migration ")
         else:
@@ -48,7 +48,7 @@ def init_data():
                 account.token = str(uuid.uuid4())
                 db.session.add(account)
                 db.session.commit()
-            if not admin_user:
+            if not users:
                 admin_user = Admin(email='admin@admin.com',password=enc_pass,displayname= "Admin User",active=1)
                 admin_user.account_id = account.id
                 db.session.add(admin_user)
