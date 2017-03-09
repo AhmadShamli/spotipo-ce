@@ -44,12 +44,24 @@ IF ERRORLEVEL 1 (
     EXIT /B
 ) 
 
+
 REM check and stop apache service
 SC QUERY Apache24 > NUL
-IF ERRORLEVEL 1060 GOTO STOPAPACHE
-net stop Apache24
-ECHO STOPPING Apache24
+IF ERRORLEVEL 1060 GOTO SKIPAPACHESTOP
+net stop Apache24 
 :SKIPAPACHESTOP
+
+REM check and stop celery service
+SC QUERY celerydservice > NUL
+IF ERRORLEVEL 1060 GOTO SKIPCELERYSTOP
+net stop celerydservice 
+:SKIPCELERYSTOP
+
+REM check and stop celerybeat service
+SC QUERY celerybeatservice > NUL
+IF ERRORLEVEL 1060 GOTO SKIPCELERYBEATSTOP
+net stop celerybeatservice 
+:SKIPCELERYBEATSTOP
 
 
 cd C:\spotipo
