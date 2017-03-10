@@ -67,14 +67,7 @@ case "$1" in
 
     fi
 
-    ps cax | grep supervisor > /dev/null
-
-    if [ $? -eq 0 ]; then
-      echo "Stopping Supervisor"
-      service supervisor stop
-        
-    fi    
-
+    service supervisor stop
     $INSTALLDIR/.env/bin/pip install -r $INSTALLDIR/requirements/linux.txt
 
     if [ ! -d $INSTALLDIR/migrations ]; then

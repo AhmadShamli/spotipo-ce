@@ -452,9 +452,9 @@ def handle_override(guesttrack,wifisite,guestdevice,loginconfig,AuthModel,Overri
 def loginauth_check_relogin(wifisite,guesttrack,AuthModel,loginconfig):
     ''''  General function to check if a given loginauth is valid for auto relogin
     '''
-    loginauth = AuthModel(siteid=wifisite.id,deviceid=guesttrack.deviceid,
-                            account_id=wifisite.account_id)
-
+    loginauth = AuthModel.query.filter_by(siteid=wifisite.id,
+                            deviceid=guesttrack.deviceid,
+                            account_id=wifisite.account_id).first()
     if loginauth: 
         is_blocked      = loginauth.is_blocked()
         is_not_demo     = guesttrack.is_not_demo() 
