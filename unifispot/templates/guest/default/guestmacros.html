@@ -6,14 +6,14 @@
       <!--  {{ field() }}-->
       <div class="form-group {% if field.errors %}error{% endif %}" id="{{field.id}}-form-group">
             {{ field(class_="form-control", placeholder=field.label.text)}}
-
-       </div><!-- //form-group-->
       {% if field.errors %}
         {% for error in field.errors %}
             <span class="alert alert-danger">[{{ error }}]</span></br></br>
         {% endfor %}
       {% endif %}     
     {% endif %}
+       </div><!-- //form-group-->
+
 {% endfor %}
 {%endmacro%}
 
