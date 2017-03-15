@@ -279,7 +279,7 @@ class Wifisite(CRUDMixin,SerializerMixin,db.Model):
         methods = getattr(self,methodtype)
         num = 0
         if methods:
-            for key,val in methods.iterm():
+            for key,val in methods.items():
                 if val:
                     num = num +1 
         else:
@@ -782,6 +782,13 @@ class Guesttrack(CRUDMixin,SerializerMixin,db.Model):
             return self.extrainfo.get(key)
         else:
             return None
+
+
+    def is_not_demo(self):
+        if self.demo:
+            return False
+        else:
+            return True            
 
 class Guestsession(CRUDMixin,SerializerMixin,db.Model):
     ''' Class to represent guest session. Each session is associated to a Guest and will have a state associated with it.

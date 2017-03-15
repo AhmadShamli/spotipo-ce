@@ -82,7 +82,7 @@ class AdminAPI(RESTView):
     '''
     decorators = [login_required,admin_required,get_account_validator('Admin'),
                     prevent_self_delete]
-    displaycolumns = ['email','displayname','id']
+    displaycolumns = ['displayname', 'email', 'id']
     displayfilters = {'id' :render_dt_buttons}
 
     def get_modal_obj(self):
@@ -113,8 +113,8 @@ class ClientAPI(RESTView):
 
     '''
     decorators = [login_required,admin_required,get_account_validator('Client')]
-    displaycolumns = ['email','displayname','id']
-    displayfilters = {'id' :render_dt_buttons}    
+    displaycolumns = ['displayname', 'email', 'id']
+    displayfilters = {'id' :render_dt_buttons}
 
     def get_modal_obj(self):
         return Client
