@@ -32,12 +32,13 @@ def get_analytics(id=None):
         end_date    = arrow.now() 
         start_date  = end_date.replace(days=-29)   
     if id:
-        wifisite = Wifisite.query.get(1)     
+        wifisite = Wifisite.query.get(id)     
         if not wifisite or ( current_user.type == 'admin' and \
                 wifisite.account_id != current_user.account_id) or\
                 (current_user.type =='client' and wifisite.client_id != current_user.id):
             current_app.logger.error('User:%s trying to access invalid/unauth site:%s'%\
                             (current_user.id,id))
+            return jsonify({'status':0})
         basequery = Sitestat.query.filter(Sitestat.siteid==id)
     else:
         if current_user.type == 'client':
