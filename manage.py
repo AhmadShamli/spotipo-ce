@@ -1,6 +1,7 @@
 #! flask/bin/python
 from os.path import abspath
 import arrow
+import getpass
 
 from flask import current_app
 from flask_script import Manager
@@ -130,6 +131,42 @@ def reset_admin():
         admin = User.query.filter_by(id=1).first()
         enc_pass        = encrypt_password('password')
         admin.password = enc_pass
+        db.session.commit()
+
+@manager.command
+def reset_pass():
+    with app.app_context():
+        from unifispot.core.models import User
+        from flask_security.utils import encrypt_password
+
+        def get_admin(iteration=1):
+            if (iteration > 1):
+                print "Invalid id entered. Try again"
+            admin_id =  raw_input("Select the id of admin you want to reset password: ")
+            selected_admin = User.query.get(admin_id)
+            if not selected_admin:
+                return get_admin(iteration=iteration+1)
+            else:
+                return selected_admin
+
+        def get_password(iteration=1):
+            if (iteration > 1):
+                print "Passwords did not match. Try again"
+            password1 =  getpass.getpass("Give a new password: ")
+            password2 =  getpass.getpass("Confirm new password: ")
+            if(password1 != password2):
+                return get_password(iteration=iteration+1)
+            else:
+                return password1
+
+        admins = User.query.all()
+        print "id\temail"
+        for admin in admins:
+            print admin.id, "\t", admin.email
+        selected_admin = get_admin()
+        password = get_password()
+        enc_pass = encrypt_password(password)
+        selected_admin.password = enc_pass
         db.session.commit()
 
 @manager.command
