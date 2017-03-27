@@ -284,8 +284,7 @@ def fb_checkin(trackid,guesttrack,wifisite,guestdevice,fbconfig,loginauth):
             #page
             if fbconfig.auth_fb_like:
                 if guest.fbliked != 1:
-                    return redirect(url_for('unifispot.\
-                            modules.facebook.fb_like',trackid=trackid))
+                    return redirect(url_for('unifispot.modules.facebook.fb_like',trackid=trackid))
                 else:
                     #to ensure all the loginauth related to a guest
                     #is marked as fb liked
