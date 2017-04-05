@@ -96,6 +96,13 @@ def guest_portal(sitekey):
     demo        = request.args.get('demo')
     utcnow      = arrow.utcnow().naive
   
+    
+    ua = request.headers.get('User-Agent')
+    if ua and 'CaptiveNetworkSupport' in ua:
+        current_app.logger.debug('Detected apple CNA, sending our ERROR response')
+        return '''<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN"><HTML><HEAD>
+                    <TITLE>ERROR</TITLE></HEAD><BODY>ERROR</BODY></HTML>'''
+
     if not devicemac or not apmac:
         current_app.logger.error("Guest portal called with empty ap_mac/user_mac URL:%s"\
                 %request.url)
