@@ -47,7 +47,7 @@ def celery_session_monitor(*args, **kwargs):
                         #check for data limit only if its enabled
                         data_available = loginauth.data_available()
                         current_app.logger.debug('celery_session_monitor - Data used:%s data available :%s in logintauth ID:%s'\
-                            %(data_used,data_available,loginauth.id))                            
+                            %(data_mb,data_available,loginauth.id))                            
                         if data_mb > data_available:
                             current_app.logger.debug('celery_session_monitor.mac_kick MAC:%s site:%s'%\
                                                 (mac,site.name))
@@ -132,7 +132,7 @@ def celery_session_history(*args, **kwargs):
             if loginauth.data_is_limited():
                 data_available = loginauth.data_available()
                 current_app.logger.debug('celery_session_history - Data used:%s data available :%s in logintauth ID:%s'\
-                            %(data_used,data_available,loginauth.id))                
+                            %(data_mb,data_available,loginauth.id))                
                 if data_mb > data_available:
                     site = Wifisite.query.get(siteid)
                     account = Account.query.get(site.account_id)

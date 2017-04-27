@@ -68,6 +68,8 @@ case "$1" in
     fi
 
     service supervisor stop
+    find $INSTALLDIR/unifispot/ -name \*.pyc 
+
     $INSTALLDIR/.env/bin/pip install -r $INSTALLDIR/requirements/linux.txt
 
     if [ ! -d $INSTALLDIR/migrations ]; then
