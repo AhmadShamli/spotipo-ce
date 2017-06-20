@@ -115,7 +115,7 @@ class ExportMixin(object):
                 rv.update(modifier(self,key))
         lst = []
         for key in public:
-            lst.append(str(rv[key]))
+            lst.append(rv[key])
 
         return lst
 

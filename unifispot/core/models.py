@@ -423,10 +423,11 @@ class Guest(ExportMixin,CRUDMixin,SerializerMixin,db.Model):
     def guest_details_to_str(self,key):
         '''Convert detatils, which are like extra info collected into a string format'''
         if self.details:
-            return {key: ','.join('{}:{}'.format(k, v) \
-                 for k,v in sorted(self.details.items()))}
+            return {key: u','.join([u'{0}:{1}'.format(k,v)\
+                        for k,v in self.details.items()])}   
         else:
             return {}
+
             
     def get_device_phonenumber(self):
         for device in self.devices:

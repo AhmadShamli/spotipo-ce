@@ -585,10 +585,10 @@ class GuestViewAPI(SiteDataViewAPI):
 
     def _show_details(row):
         if row and row.details:
-            return ','.join('{}:{}'.format(k, v) for k,v in \
-                    sorted(row.details.items()))
+            return u','.join([u'{0}:{1}'.format(k,v) \
+                    for k,v in row.details.items()])
         else:
-            return ''
+            return u''
 
     def _show_date(row):
         return arrow.get(row.created_at).format('DD-MM-YYYY') 
