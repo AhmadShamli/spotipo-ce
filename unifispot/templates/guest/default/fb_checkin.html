@@ -9,7 +9,7 @@
     </div>
 </div>
 <form class="m-t" role="form" method="POST" id='fb-form' 
-            action="{{url_for('unifispot.modules.facebook.fb_checkin',trackid=trackid)}}">
+            action="{{checkin_url}}">
     {{checkinform.hidden_tag() }}
     <p style="text-align: center"> {{_('Check Into')}}<strong>{{location}}</strong></p>
     <div class="fb-page" data-href="{{fb_page|safe}}" data-small-header="true" data-adapt-container-width="true" data-hide-cover="false" data-show-facepile="false" data-show-posts="false">

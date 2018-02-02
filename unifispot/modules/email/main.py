@@ -71,6 +71,19 @@ def check_device_relogin(wifisite,guesttrack,loginconfig):
     return loginauth_check_relogin(wifisite,guesttrack,Emailauth,loginconfig)
 
 
+def get_multilanding_html(wifisite,guesttrack):
+    '''This method needs to be added to all login plugins
+        Called by redirec_guest when rendering multi landing page
+        return HTML for buttons or otherwise that needs to be rendered
+        on the multilanding.html page
+
+    '''
+    loginurl = url_for('unifispot.modules.email.guest_login',
+                            trackid=guesttrack.trackid)
+    return '''<p> 
+                <a class="btn btn-block btn-social btn-email" href="%s?from_multilanding=1" id="email-login">
+                <span class="fa fa-envelope"></span> <strong>'''%loginurl+_('Login with Email')+ ''' </strong>
+            </a>   </p> '''
 
 
 def validate_emailconfig(f):

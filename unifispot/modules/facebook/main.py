@@ -1,3 +1,4 @@
+import json
 import arrow
 import logging
 import validators
@@ -10,6 +11,7 @@ from flask import request,abort,render_template,url_for,redirect,flash,current_a
 from unifispot.utils.translation import _l,_n,_
 from unifispot.core.const import *
 from unifispot.core.app import UnifispotModule
+from unifispot.core.utils import render_guest_template
 from unifispot.core.models import Wifisite,Guest,Landingpage
 from unifispot.core.guestutils import validate_track,init_track,redirect_guest,\
                                 guestlog_warn,guestlog_info,guestlog_error,\
@@ -17,7 +19,7 @@ from unifispot.core.guestutils import validate_track,init_track,redirect_guest,\
                                 get_loginauth_validator,loginauth_check_relogin
 from unifispot.core.baseviews import SiteModuleAPI
 from .models import Fbconfig,Fbauth
-from .forms import FbConfigForm,CheckinForm,FbOverrideForm
+from .forms import FbConfigForm,CheckinForm,FbOverrideForm,generate_fbform
 
 
 module = UnifispotModule('facebook','login', __name__, template_folder='templates')
@@ -63,6 +65,45 @@ def check_device_relogin(wifisite,guesttrack,loginconfig):
     return loginauth_check_relogin(wifisite,guesttrack,Fbauth,loginconfig)
 
 
+def get_multilanding_html(wifisite,guesttrack):
+    '''This method needs to be added to all login plugins
+        Called by redirec_guest when rendering multi landing page
+        return HTML for buttons or otherwise that needs to be rendered
+        on the multilanding.html page
+
+    '''
+    loginurl = url_for('unifispot.modules.facebook.guest_login',
+                            trackid=guesttrack.trackid)
+    return '''<p> 
+                <a class="btn btn-block btn-social btn-facebook" href="%s?from_multilanding=1" id="facebook-login">
+                <span class="fa fa-facebook"></span><strong>'''%loginurl+_('Login with Facebook')+ ''' </strong>
+            </a>   </p> '''
+
+
+def get_trackid_from_parameters(f):
+    '''Decorator for getting trackid from parameters instead of URL part
+        needed for facebook
+        It injects  trackid  in kwargs
+    '''
+    @wraps(f)
+    def decorated_function(*args, **kwargs):
+        state  = request.args.get('state')
+        if not state:
+            flash('State not found','danger')
+            abort(404)
+        try:
+            trackid = json.loads(state).get('trackid')
+            if not trackid:
+                flash('Track id not found','danger')
+                abort(404)
+        except Exception as e:
+            flash('Invalid state value','danger')
+            abort(404)
+        kwargs['trackid'] = trackid
+        return f(*args, **kwargs)
+    return decorated_function
+
+
 def validate_fbconfig(f):
     '''Decorator for validating fbconfig detials. 
         It injects  emailconfigobjects in kwargs
@@ -98,12 +139,39 @@ def guest_login(trackid,guesttrack,wifisite,guestdevice,fbconfig,loginauth):
     '''    
     fb_appid = fbconfig.fb_appid
     auth_fb_post = fbconfig.auth_fb_post
-    landingpage = Landingpage.query.filter_by(siteid=wifisite.id).first()
-    return render_template('guest/%s/social_landing.html'%wifisite.template,
-                wifisite=wifisite,landingpage=landingpage,
-                fb_appid=fb_appid,trackid=trackid,auth_fb_post=auth_fb_post)   
+    return_url = url_for('unifispot.modules.facebook.fb_login_check',
+                         _external=True)
+    data = {"trackid": trackid}
+    state = json.dumps(data)
 
-@module.route('/fb/login/check/<trackid>',methods = ['GET', 'POST'])
+    extra_profile_fields = fbconfig.get_extra_profile_fields()
+
+    url = "https://www.facebook.com/dialog/oauth?client_id=%s&scope=email,%s&redirect_uri=%s&state=%s"%(fb_appid,extra_profile_fields,return_url,state)
+
+    #if the guest is coming from multi landing and 
+    #consent is not enabled,directly send to FB redirect
+    from_multilanding = request.args.get('from_multilanding') 
+    if from_multilanding and not fbconfig.optinout_enabled():
+        return redirect(url)
+
+
+    fbform = generate_fbform(fbconfig)
+
+    if fbform.validate_on_submit():
+        #form submitted 
+        if fbconfig.optinout_enabled():
+            guesttrack.updateextrainfo('consent',fbform.consent.data)
+        return redirect(url)
+
+    else:
+        landingpage = Landingpage.query.filter_by(siteid=wifisite.id).first()
+        return render_guest_template('social_landing.html',wifisite.template,
+                    wifisite=wifisite,landingpage=landingpage,
+                    fb_appid=fb_appid,auth_fb_post=auth_fb_post,
+                    fbform=fbform,url=url)
+
+@module.route('/fb/login/check/',methods = ['GET', 'POST'])
+@get_trackid_from_parameters
 @validate_track
 @validate_fbconfig
 @get_loginauth_validator(Fbauth,'fbconfig','facebook','auth_facebook')
@@ -112,13 +180,14 @@ def fb_login_check(trackid,guesttrack,wifisite,guestdevice,fbconfig,loginauth):
 
     '''
     code  = request.args.get('code')
+    state  = request.args.get('state')
     access_token = None
     fb_appid = fbconfig.fb_appid   
     fb_app_secret = fbconfig.fb_app_secret    
     if code:    
         #URL called after OAuth
         redirect_uri = url_for('unifispot.modules.facebook.fb_login_check',
-                                trackid=trackid,_external=True)
+                                _external=True)
         try:
             at  = GraphAPI().get_access_token_from_code(code, redirect_uri, 
                         fb_appid, fb_app_secret)
@@ -179,7 +248,7 @@ def fb_login_check(trackid,guesttrack,wifisite,guestdevice,fbconfig,loginauth):
 
     #check if either checkin/like configured
     if fbconfig.auth_fb_post == 1:
-        return redirect(url_for('unifispot.modules.facebook.fb_checkin',trackid=trackid))
+        return redirect(url_for('unifispot.modules.facebook.fb_checkin')+'?state={}'.format(state))
     elif fbconfig.auth_fb_like == 1 and newguest.fbliked != 1:
         return redirect(url_for('unifispot.modules.facebook.fb_like',trackid=trackid))
     else:
@@ -195,7 +264,8 @@ def fb_login_check(trackid,guesttrack,wifisite,guestdevice,fbconfig,loginauth):
         return redirect_guest(wifisite,guesttrack)
 
 
-@module.route('/fb/checkin/<trackid>',methods = ['GET', 'POST'])
+@module.route('/fb/checkin/',methods = ['GET', 'POST'])
+@get_trackid_from_parameters
 @validate_track
 @validate_fbconfig
 @get_loginauth_validator(Fbauth,'fbconfig','facebook','auth_facebook')
@@ -204,12 +274,14 @@ def fb_checkin(trackid,guesttrack,wifisite,guestdevice,fbconfig,loginauth):
 
     '''
     code  = request.args.get('code')
+    state  = request.args.get('state')
     access_token = None
     fb_appid = fbconfig.fb_appid   
     fb_app_secret = fbconfig.fb_app_secret 
     fb_page = fbconfig.fb_page        
     redirect_uri = url_for('unifispot.modules.facebook.fb_checkin',
-                trackid=trackid,_external=True)    
+                _external=True)
+    checkin_url = url_for('unifispot.modules.facebook.fb_checkin')+'?state={}'.format(state)  
     if code:
         #URL called after OAuth        
         try:
@@ -247,7 +319,7 @@ def fb_checkin(trackid,guesttrack,wifisite,guestdevice,fbconfig,loginauth):
                          fbauth',wifisite,guesttrack)        
         
         params={'client_id':fb_appid,'redirect_uri':redirect_uri,
-                        'scope':'publish_actions '}
+                'scope':'publish_actions ','state':state}
         url = 'https://www.facebook.com/dialog/oauth?'+urllib.urlencode(params)
         return redirect(url,code=302)            
 
@@ -313,7 +385,7 @@ def fb_checkin(trackid,guesttrack,wifisite,guestdevice,fbconfig,loginauth):
                         loc.get('city',''),loc.get('country',''))
     return render_template("guest/%s/fb_checkin.html"%wifisite.template,
                             landingpage = landingpage,
-                            app_id=fb_appid,trackid=trackid,fb_page=fb_page,
+                            app_id=fb_appid,checkin_url=checkin_url,fb_page=fb_page,
                             location=location,checkinform=checkinform)
 
 

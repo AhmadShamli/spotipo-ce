@@ -1,10 +1,11 @@
 # coding: utf -8
 import logging
 from functools import wraps
-from flask import redirect,url_for,abort,current_app,request,jsonify
+from flask import redirect,url_for,abort,current_app,request,jsonify,render_template
 from flask_security import current_user
 from flask_mail import Message
 import hashlib
+from jinja2.loaders import TemplateNotFound
 
 from unifispot.ext.mail import mail
 from unifispot.ext.redis import redis
@@ -163,6 +164,30 @@ def get_form_errors(form):
             form_errors = form_errors+ _("Error in the %(fieldname)s field - %(errors)s </br>",\
                  fieldname=getattr(form, field).label.text,errors=error)
     return form_errors
+
+
+def render_guest_template(file_name,template_name, **context):
+    """
+    This renders a template from the given theme. For example::
+
+    """
+
+    
+
+    try:
+        def current_guest_theme (filename): return 'guest/%s/%s'%(template_name,filename)
+        base_landing = 'guest/%s/base_landing.html'%template_name
+        return render_template('guest/%s/%s'%(template_name,file_name),base_landing=base_landing,
+                                    current_guest_theme=current_guest_theme,**context)
+    except TemplateNotFound:
+        current_app.logger.exception('Exception while trying to load %s from template %s'%(file_name,template_name))
+
+        def current_guest_theme (filename): return 'guest/%s/%s'%('default',filename)
+
+        base_landing = 'guest/%s/base_landing.html'%template_name      
+        
+        return render_template('guest/default/%s'%(file_name),base_landing=base_landing,
+                                    current_guest_theme=current_guest_theme,**context)
 
 
 def compare_versions(version1,version2):

@@ -268,6 +268,23 @@ def check_device_relogin(wifisite,guesttrack,loginconfig):
     else:
         return False
 
+
+def get_multilanding_html(wifisite,guesttrack):
+    '''This method needs to be added to all login plugins
+        Called by redirec_guest when rendering multi landing page
+        return HTML for buttons or otherwise that needs to be rendered
+        on the multilanding.html page
+
+    '''
+    loginurl = url_for('unifispot.modules.voucher.guest_login',
+                            trackid=guesttrack.trackid)
+
+    return '''<p> 
+                <a class="btn btn-block btn-social btn-voucher" href="%s?from_multilanding=1" id="voucher-login">
+                <span class="fa fa-tags"></span><strong> '''%loginurl+_('Login with Voucher')+ ''' </strong>
+            </a>   </p> '''
+
+
 def validate_voucherconfig(f):
     '''Decorator for validating voucherconfig detials. 
         It injects  voucherconfig in kwargs
