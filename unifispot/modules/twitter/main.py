@@ -5,7 +5,6 @@ import urllib
 import tweepy
 from flask_security import current_user
 from functools import wraps
-from user_agents import parse
 from flask import request,abort,render_template,url_for,redirect,flash,\
             current_app,session
 

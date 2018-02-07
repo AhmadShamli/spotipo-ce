@@ -17,7 +17,7 @@ decorator==4.0.11
 enum34==1.1.6
 -e git+https://github.com/unifispot/facebook-sdk@ad0a36300bc02720d052072e1d2679a4716003f4#egg=facebook_sdk
 factory-boy==2.8.1
-Faker==0.7.4 
+Faker==0.7.4
 Flask==0.12
 Flask-Assets==0.12
 Flask-Babel==0.11.1
@@ -49,6 +49,8 @@ MarkupSafe==0.23
 maxminddb==1.2.3
 MySQL-python==1.2.5
 ndg-httpsclient==0.4.2
+oauth2client==4.1.2
+oauthlib==2.0.6
 olefile==0.44
 packaging==16.8
 passlib==1.7.1
@@ -56,7 +58,8 @@ paypalrestsdk==1.12.0
 Pillow==4.0.0
 premailer==3.0.1
 py==1.4.32
-pyasn1==0.2.2
+pyasn1==0.4.2
+pyasn1-modules==0.2.1
 -e git+https://github.com/unifispot/pycard@7847297287d847ec4f21ef968e9c654017f9d532#egg=pycard
 pycparser==2.17
 pymongo==3.4.0
@@ -72,13 +75,16 @@ raven==6.0.0
 redis==2.10.5
 requests==2.13.0
 requests-cache==0.4.13
+requests-oauthlib==0.8.0
+rsa==3.4.2
 simplejson==3.10.0
-six==1.10.0
+six==1.11.0
 speaklater==1.3
 -e git+https://github.com/Nibblecomm/spotipo-plugins.git@e6e2aea0e3dc359e0bd8640738dc89403e0e8958#egg=Spotipo_Plugins
 SQLAlchemy==1.1.5
 stripe==1.48.1
 timezones==1.9.7
+tweepy==3.5.0
 twilio==5.7.0
 -e git+https://github.com/unifispot/unifispot-datatables.git@2c82cb81aae1a55bc2ce0cf8d7942e58f5a86d81#egg=unifispot_datatables
 -e git+https://github.com/unifispot/unifispot-menu.git@a475af75e825fdf968dcaefb0f2284169f647580#egg=Unifispot_Menu

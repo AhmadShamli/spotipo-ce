@@ -702,3 +702,30 @@
     {% endif %}
     </div>
 {% endmacro %}
+
+{% macro render_field_checkbox(field,helptext=None) -%}
+    <div class="form-group-5px {% if field.errors %}error{% endif %}" id="{{field.id}}-form-group">
+    <label class="col-md-4  control-label" >{{ field.label(for=field.id) }}</label>
+
+
+    <div class="input-group m-b col-xs-1">
+        <div class="checkbox">
+            <label>
+              {{field}}
+              {% if helptext %}
+                <i class="fa fa-info-circle" rel="tooltip" title="{{helptext}}" data-toggle="tooltip" data-placement="right" title="{{helptext}}""></i>
+            {%endif%}
+            </label>
+            
+        </div>   
+       
+                                               
+    </div>
+
+    {% if field.errors %}
+      {% for error in field.errors %}
+       <span class="help-inline text-red"><strong>[{{ error }}]</strong></span><br>
+      {% endfor %}
+    {% endif %}
+    </div>
+{% endmacro %}

@@ -415,6 +415,7 @@ class Guest(ExportMixin,CRUDMixin,SerializerMixin,db.Model):
     details     = db.Column(JSONEncodedDict(255)) #used for handling extra details
     site        = db.relationship(Wifisite, backref=db.backref("guests", \
                                 cascade="all,delete"))
+    twitterid = db.Column(db.String(60))
 
     __export_titles__ = ['Firstname','Lastname','Email','Phone Number','Age Range',"DOB",'Extra',"Created on"]
     __export_public__ = ['firstname','lastname','email','phonenumber','agerange','dob','details','created_at']
@@ -476,6 +477,12 @@ class Guest(ExportMixin,CRUDMixin,SerializerMixin,db.Model):
             self.dob = arrow.get(dob,'MM/DD/YYYY').format('DD/MM/YYYY')        
         if age_range:
             self.agerange = '%s-%s'%(age_range.get('min',''),age_range.get('max',''))
+
+    def populate_from_tw_profile(self,profile,wifisite):
+        name = profile.get('name')
+        self.twitterid= profile.get('id')
+        self.firstname  = name.split()[0]
+        self.lastname = name.split()[-1]
 
     def get_query(self,siteid,startdate,enddate):
 
