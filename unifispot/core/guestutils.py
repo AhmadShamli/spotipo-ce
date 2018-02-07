@@ -235,7 +235,7 @@ def show_message(wifisite,guesttrack):
         
 
 
-def assign_guest_entry(wifisite,guesttrack,form=None,fbprofile=None):
+def assign_guest_entry(wifisite,guesttrack,form=None,fbprofile=None,gpprofile=None):
     #method to add/update guest entry and trigger export plugins
     new = False
     guest = None
@@ -263,6 +263,22 @@ def assign_guest_entry(wifisite,guesttrack,form=None,fbprofile=None):
             guesttrack.updatestat('newguest',1)
         #update guest
         guest.populate_from_fb_profile(fbprofile,wifisite)
+        guest.save()
+    elif gpprofile:
+        guest = Guest.query.filter_by(googleid=gpprofile.get('id'),siteid=wifisite.id).first()
+        if not guest:
+            guest = Guest(siteid=wifisite.id)
+            new = True
+            #update newguestcounter
+            guesttrack.updatestat('newguest',1)
+        #update guest
+        guest.populate_from_gp_profile(gpprofile,wifisite)
+        #check if phonenumber is given as part of guesttrack
+        if guesttrack.getextrainfo('phonenumber'):
+            guest.phonenumber = guesttrack.getextrainfo('phonenumber')
+        #check if consent is set in guesttrack, used by facebook module
+        if guesttrack.getextrainfo('consent'):
+            guest.newsletter = guesttrack.getextrainfo('consent')
         guest.save()
 
     #send desired signals
