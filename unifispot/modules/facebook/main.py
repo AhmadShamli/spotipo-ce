@@ -11,7 +11,6 @@ from flask import request,abort,render_template,url_for,redirect,flash,current_a
 from unifispot.utils.translation import _l,_n,_
 from unifispot.core.const import *
 from unifispot.core.app import UnifispotModule
-from unifispot.core.utils import render_guest_template
 from unifispot.core.models import Wifisite,Guest,Landingpage
 from unifispot.core.guestutils import validate_track,init_track,redirect_guest,\
                                 guestlog_warn,guestlog_info,guestlog_error,\
@@ -165,10 +164,11 @@ def guest_login(trackid,guesttrack,wifisite,guestdevice,fbconfig,loginauth):
 
     else:
         landingpage = Landingpage.query.filter_by(siteid=wifisite.id).first()
-        return render_guest_template('social_landing.html',wifisite.template,
+        return render_template('guest/%s/social_landing.html'%(wifisite.template),
                     wifisite=wifisite,landingpage=landingpage,
                     fb_appid=fb_appid,auth_fb_post=auth_fb_post,
                     fbform=fbform,url=url)
+
 
 @module.route('/fb/login/check/',methods = ['GET', 'POST'])
 @get_trackid_from_parameters

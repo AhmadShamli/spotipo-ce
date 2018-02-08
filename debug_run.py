@@ -27,4 +27,4 @@ logging.StreamHandler().setFormatter(logging.Formatter('%(asctime)s %(levelname)
 app.logger.addHandler(file_handler)
 logging.getLogger().addHandler(file_handler)
 
-app.run(host='0.0.0.0',debug = True)
+app.run(host='0.0.0.0',port=80,debug = True)
