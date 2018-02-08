@@ -1,0 +1,10 @@
+{
+    "identifier": "twitter",
+    "name": "Twitter Login",
+    "author": "sudheesh",
+    "website": "http://spotipo.com",
+    "license": "AGPL",
+    "description": "Twitter login plugin for Spotipo",
+    "version": "0.1",
+    "type": "login"
+}
