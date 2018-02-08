@@ -1,0 +1,10 @@
+{
+    "identifier": "google",
+    "name": "Google Plus Login",
+    "author": "sudheesh",
+    "website": "http://spotipo.com",
+    "license": "AGPL",
+    "description": "Google login plugin for Spotipo",
+    "version": "0.1",
+    "type": "login"
+}
