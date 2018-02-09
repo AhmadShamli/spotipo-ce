@@ -77,7 +77,7 @@ def get_multilanding_html(wifisite,guesttrack):
                             trackid=guesttrack.trackid)
     return '''<p>
                 <a class="btn btn-google block full-width m-b" href="%s?from_multilanding=1" id="google-login">
-                <strong>Login with Google Plus </strong>
+                <span class="fa fa-google"></span><strong>Login with Google Plus </strong>
             </a>   </p> '''%loginurl
 
 
