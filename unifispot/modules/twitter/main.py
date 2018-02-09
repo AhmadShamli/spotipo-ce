@@ -74,7 +74,7 @@ def get_multilanding_html(wifisite,guesttrack):
                             trackid=guesttrack.trackid)
     return '''<p>
                 <a class="btn btn-twitter block full-width m-b" href="%s?from_multilanding=1" id="twitter-login">
-                <strong>Login with Twitter </strong>
+                <span class="fa fa-twitter"></span><strong>Login with Twitter </strong>
             </a>   </p> '''%loginurl
 
 

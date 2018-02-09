@@ -4,11 +4,9 @@
   <ul id="myTab" class="nav nav-tabs bar_tabs" role="tablist">
     <li role="presentation" class="active"><a href="#tab_content1" id="home-tab" role="tab" data-toggle="tab" aria-expanded="true">{{('Fields')}}</a>
     </li>
-    <li role="presentation" ><a href="#tab_content2" id="home-tab" role="tab" data-toggle="tab" aria-expanded="true">{{('App Settings')}}</a>
+    <li role="presentation" class=""><a href="#tab_content2" role="tab" id="profile-tab" data-toggle="tab" aria-expanded="false">{{('Session Control')}}</a>
     </li>
-    <li role="presentation" class=""><a href="#tab_content3" role="tab" id="profile-tab" data-toggle="tab" aria-expanded="false">{{('Session Control')}}</a>
-    </li>
-    <li role="presentation" class=""><a href="#tab_content4" role="tab" id="profile-tab" data-toggle="tab" aria-expanded="false">{{('Login Policy')}}</a>
+    <li role="presentation" class=""><a href="#tab_content3" role="tab" id="profile-tab" data-toggle="tab" aria-expanded="false">{{('Login Policy')}}</a>
     </li>
   </ul>
   <div id="myTabContent" class="tab-content">
@@ -16,17 +14,6 @@
     <div role="tabpanel" class="tab-pane fade active in" id="tab_content1" aria-labelledby="home-tab">
         <div class="form-horizontal">
         {{itemform.hidden_tag() }}
-
-        {{render_field_selection(itemform.optinout_label,itemform.optinout_enable,itemform.optinout_mandatory)}}
-
-        {{render_field_checkbox(itemform.optinout_default)}}
-
-
-        </div>
-
-    </div>
-    <div role="tabpanel" class="tab-pane fade" id="tab_content2" aria-labelledby="profile-tab">
-        <div class="form-horizontal">
         {{render_field_with_erros(itemform.consumer_key)}}
         {{render_field_with_erros(itemform.consumer_secret)}}
 
@@ -34,7 +21,7 @@
 
         </div>
     </div>
-    <div role="tabpanel" class="tab-pane fade" id="tab_content3" aria-labelledby="profile-tab">
+    <div role="tabpanel" class="tab-pane fade" id="tab_content2" aria-labelledby="profile-tab">
         <div class="form-horizontal">
         {{render_field_with_erros(itemform.session_limit_control)}}
         {{render_field_with_erros(itemform.session_overridepass)}}
@@ -46,7 +33,7 @@
 
         </div>
     </div>
-    <div role="tabpanel" class="tab-pane fade" id="tab_content4" aria-labelledby="policy-tab">
+    <div role="tabpanel" class="tab-pane fade" id="tab_content3" aria-labelledby="policy-tab">
         <div class="form-horizontal">
         {{render_field_with_erros(itemform.relogin_policy)}}
          </div>

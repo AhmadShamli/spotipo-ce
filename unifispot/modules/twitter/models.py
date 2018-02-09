@@ -29,10 +29,6 @@ class Twconfig(LoginconfigMixin,CRUDMixin,SerializerMixin,db.Model):
         '''Initial values for fields
 
         '''
-        self.optinout_fields = {'optinout_enable':0,
-                                'optinout_label':"I have read and agree to T&C",
-                                'optinout_default':1,'optinout_mandatory':0}
-
 
     #serializer arguement
     __json_hidden__ = []
