@@ -5,6 +5,7 @@ from flask import redirect,url_for,abort,current_app,request,jsonify
 from flask_security import current_user
 from flask_mail import Message
 import hashlib
+from jinja2.loaders import TemplateNotFound
 
 from unifispot.ext.mail import mail
 from unifispot.ext.redis import redis

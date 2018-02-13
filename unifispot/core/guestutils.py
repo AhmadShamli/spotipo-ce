@@ -167,8 +167,11 @@ def redirect_guest(wifisite,guesttrack):
                 lmodule = importlib.import_module('unifispot.modules.%s.main'%\
                                 name)    
                 loginconfig = lmodule.get_login_config(wifisite,
-                                            guesttrack)  
-                ltype['lconfig'] = loginconfig                                                          
+                                            guesttrack)
+                loginhtml = lmodule.get_multilanding_html(wifisite,
+                                            guesttrack)
+                ltype['lconfig'] = loginconfig
+                ltype['loginhtml'] = loginhtml
                 if lmodule.check_device_relogin(wifisite,guesttrack,loginconfig):
                     #device can successfully relogin using lmodule
                     #redirect
