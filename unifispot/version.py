@@ -1,1 +1,1 @@
-version='2.1.0-beta25' 
+version='2.1.0-beta30' 
